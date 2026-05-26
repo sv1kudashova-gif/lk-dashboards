@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>НеАвто — Roadmap аналитики</title>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--dark:#38056C;--mid:#9A92FF;--green:#79FF3A;--light:#CCC8FF;--white:#FFFFFF;--bg:#F5F4FB;--text:#1A1A2E;--muted:#6B6B8A;--border:#CCC8FF;--r:12px;--r-sm:8px;--good:#38A169;--warn:#DD6B20;--bad:#E53E3E;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Golos Text',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+.nav{background:var(--dark);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;position:sticky;top:0;z-index:100;}
+.nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:5px;background:var(--green);}
+.nav-logo{display:flex;align-items:center;gap:10px;}
+.nav-dot{width:28px;height:28px;background:var(--green);border-radius:6px;display:flex;align-items:center;justify-content:center;}
+.nav-dot svg{width:15px;height:15px;stroke:var(--dark);fill:none;stroke-width:2.5;}
+.nav-brand{color:var(--white);font-size:15px;font-weight:600;}
+.nav-sub{color:var(--light);font-size:11px;}
+.nav-back{color:var(--white);font-size:13px;padding:6px 14px;border-radius:6px;cursor:pointer;border:none;background:rgba(154,146,255,0.2);font-family:inherit;}
+.nav-back:hover{background:rgba(154,146,255,0.35);}
+
+.main{max-width:960px;margin:0 auto;padding:2rem 1.5rem 3rem;}
+
+.hero{background:var(--dark);border-radius:var(--r);padding:1.5rem 2rem;margin-bottom:2rem;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;}
+.hero::before{content:'';position:absolute;right:-50px;top:-50px;width:200px;height:200px;background:var(--mid);opacity:0.07;border-radius:50%;}
+.hero::after{content:'';position:absolute;right:0;top:0;bottom:0;width:5px;background:var(--green);}
+.hero-h{color:var(--white);font-size:20px;font-weight:600;margin-bottom:4px;}
+.hero-s{color:var(--light);font-size:12px;}
+.hero-stats{display:flex;gap:2rem;flex-shrink:0;}
+.hero-stat-val{font-size:22px;font-weight:600;color:var(--green);line-height:1;}
+.hero-stat-lbl{font-size:10px;color:var(--mid);margin-top:3px;}
+
+.progress-bar-wrap{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1rem 1.25rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:16px;}
+.progress-label{font-size:12px;color:var(--muted);white-space:nowrap;}
+.progress-track{flex:1;height:8px;background:#EEF0FF;border-radius:4px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--good);border-radius:4px;transition:width 0.5s;}
+.progress-pct{font-size:13px;font-weight:600;color:var(--good);white-space:nowrap;}
+
+.sec-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--dark);margin:2rem 0 0.875rem;display:flex;align-items:center;gap:8px;}
+.sec-label::before{content:'';width:3px;height:14px;background:var(--green);border-radius:2px;flex-shrink:0;}
+
+.priority-badge{display:inline-flex;align-items:center;font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;margin-left:8px;text-transform:none;letter-spacing:0;}
+.p1{background:#FEE2E2;color:#9B2C2C;}
+.p2{background:#FEEBC8;color:#7B341E;}
+.p3{background:#E2E8F0;color:#4A5568;}
+.done-badge{background:#C6F6D5;color:#276749;}
+
+.section-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:12px;}
+.section-header{background:#F7F6FF;border-bottom:1px solid var(--border);padding:0.75rem 1.25rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;}
+.section-header:hover{background:#EEEEFF;}
+.section-title{font-size:13px;font-weight:600;color:var(--dark);display:flex;align-items:center;gap:8px;}
+.section-meta{font-size:11px;color:var(--muted);}
+.chev{width:16px;height:16px;stroke:var(--mid);fill:none;stroke-width:2;transition:transform 0.2s;}
+.chev.open{transform:rotate(180deg);}
+.section-body{display:none;}
+.section-body.open{display:block;}
+
+.checklist-item{display:flex;align-items:flex-start;gap:12px;padding:0.75rem 1.25rem;border-bottom:1px solid var(--border);transition:background 0.12s;}
+.checklist-item:last-child{border-bottom:none;}
+.checklist-item:hover{background:#FAFAFE;}
+.checklist-item.is-done{opacity:0.6;}
+.checklist-item.is-done .item-title{text-decoration:line-through;color:var(--muted);}
+
+.checkbox{width:18px;height:18px;border:2px solid var(--border);border-radius:4px;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;margin-top:1px;}
+.checkbox.checked{background:var(--good);border-color:var(--good);}
+.checkbox.checked::after{content:'✓';color:white;font-size:11px;font-weight:700;}
+
+.item-content{flex:1;min-width:0;}
+.item-title{font-size:13px;color:var(--text);line-height:1.4;margin-bottom:2px;}
+.item-sub{font-size:11px;color:var(--muted);line-height:1.45;}
+
+.item-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.deadline-btn{font-size:11px;color:var(--muted);border:1px solid var(--border);border-radius:6px;padding:3px 8px;cursor:pointer;background:transparent;font-family:inherit;white-space:nowrap;transition:border-color 0.15s;}
+.deadline-btn:hover{border-color:var(--mid);color:var(--dark);}
+.deadline-btn.has-date{color:var(--dark);border-color:var(--mid);background:#F7F6FF;}
+.deadline-input{font-size:11px;border:1px solid var(--mid);border-radius:6px;padding:3px 8px;font-family:inherit;outline:none;color:var(--dark);}
+
+.sub-items{padding:0 0 0 2.5rem;background:#FAFAFE;}
+.sub-item{display:flex;align-items:flex-start;gap:10px;padding:0.5rem 1.25rem 0.5rem 0;border-bottom:1px solid var(--border);transition:background 0.12s;}
+.sub-item:last-child{border-bottom:none;}
+.sub-item:hover{background:#F0EEFF;}
+.sub-item.is-done .sub-title{text-decoration:line-through;color:var(--muted);}
+.sub-checkbox{width:15px;height:15px;border:1.5px solid var(--border);border-radius:3px;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;margin-top:2px;}
+.sub-checkbox.checked{background:var(--good);border-color:var(--good);}
+.sub-checkbox.checked::after{content:'✓';color:white;font-size:9px;font-weight:700;}
+.sub-title{font-size:12px;color:var(--text);flex:1;}
+.sub-deadline{font-size:10px;color:var(--muted);border:1px solid var(--border);border-radius:5px;padding:2px 7px;cursor:pointer;background:transparent;font-family:inherit;white-space:nowrap;}
+.sub-deadline:hover{border-color:var(--mid);}
+.sub-deadline.has-date{color:var(--dark);border-color:var(--mid);background:#F7F6FF;}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-logo">
+    <div class="nav-dot"><svg viewBox="0 0 16 16"><polyline points="2,12 6,7 10,9 14,4"/></svg></div>
+    <div><div class="nav-brand">Ренессанс Страхование</div><div class="nav-sub">НеАвто — Roadmap аналитики ЛК</div></div>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <button class="nav-back" onclick="window.location.href='lk-analytics-hub.html'">← Главная</button>
+  </div>
+</nav>
+
+<div class="main">
+
+  <div class="hero">
+    <div>
+      <div class="hero-h">НеАвто — Roadmap аналитики</div>
+      <div class="hero-s">Продажи · Качество · Активность пользователей · Сервисы</div>
+    </div>
+    <div class="hero-stats">
+      <div><div class="hero-stat-val" id="done-count">0</div><div class="hero-stat-lbl">выполнено</div></div>
+      <div><div class="hero-stat-val" id="total-count">0</div><div class="hero-stat-lbl">всего пунктов</div></div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <span class="progress-label">Прогресс реализации</span>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    <span class="progress-pct" id="progress-pct">0%</span>
+  </div>
+
+  <!-- ПРОДАЖИ -->
+  <div class="sec-label">Продажи</div>
+
+  <!-- Воронка продаж -->
+  <div class="section-card">
+    <div class="section-header" onclick="toggleSection('funnel')">
+      <div class="section-title">
+        Воронка продаж по шагам
+        <span class="priority-badge p1">1 приоритет</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="section-meta" id="meta-funnel">0 / 7</span>
+        <svg class="chev" id="chev-funnel" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+    <div class="section-body" id="body-funnel">
+      <div class="checklist-item" data-id="f1">
+        <div class="checkbox" onclick="toggleCheck(this)"></div>
+        <div class="item-content">
+          <div class="item-title">Вызов методов (оформление по шагам)</div>
+          <div class="item-sub">Кальк / сохранение / импорт / проверки / оплата</div>
+        </div>
+        <div class="item-actions"><button class="deadline-btn" onclick="editDeadline(this)">+ Срок</button></div>
+      </div>
+      <div class="checklist-item" data-id="f2">
+        <div class="checkbox" onclick="toggleCheck(this)"></div>
+        <div class="item-content"><div class="item-title">Отображать сколько не дошли до следующего шага</div></div>
+        <div class="item-actions"><button class="deadline-btn" onclick="editDeadline(this)">+ Срок</button></div>
+      </div>
+      <div class="checklist-item" data-id="f3">
+        <div class="checkbox" onclick="toggleCheck(this)"></div>
+        <div class="item-content"><div class="item-title">Итоговая конверсия (нажали кальк → оформили)</div></div>
+        <div class="item-actions"><button class="deadline-btn" onclick="editDeadline(this)">+ Срок</button></div>
+      </div>
+      <div class="checklist-item" data-id="f4">
+        <div class="checkbox" onclick="toggleCheck(this)"></div>
+        <div class="item-content"><div class="item-title">Средняя премия</div></div>
+        <div class="item-actions"><button class="deadline-btn" onclick="editDeadline(this)">+ Срок</button></div>
+      </div>
+      <div class="checklist-item" data-id="f5">
+        <div class="checkbox" onclick="toggleCheck(this)"></div>
+        <div class="item-content"><div class="item-title">Средний коэффициент Андера</div></div>
+        <div class="item-actions"><button class="deadline-btn" onclick="editDeadline(this)">+ Срок</button></div>
+      </div>
+      <div class="checklist-item" data-id="f6">
+        <div class="checkbox" onclick="toggleCheck(this)"></div>
+        <div class="item-content"><div class="item-title">Средняя скидка из КВ</div></div>
+        <div class="item-actions"><button class="deadline-btn" onclick="editDeadline(this)">+ Срок</button></div>
+      </div>
+      <div class="checklist-item" data-id="f7">
+        <div class="checkbox" onclick="toggleCheck(this)"></div>
+        <div class="item-content"><div class="item-title">Средний коэффициент продавца</div></div>
+        <div class="item-actions"><button class="deadline-btn" onclick="editDeadline(this)">+ Срок</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Фильтры 1 приоритет -->
+  <div class="section-card">
+    <div class="section-header" onclick="toggleSection('filters1')">
+      <div class="section-title">Фильтры воронки <span class="priority-badge p1">1 приоритет</span></div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="section-meta" id="meta-filters1">0 / 10</span>
+        <svg class="chev" id="chev-filters1" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+    <div class="section-body" id="body-filters1">
+      <div class="checklist-item" data-id="fi1"><div class="checkbox" onclick="toggleCheck(this)"></div><div class="item-content"><div class="item-title">Тип (НБ / Прола / Переход)</div></div><div class="item-actions"><button class="deadline-btn" onclick="editDeadline(this)">+ Срок</button></div></div>
+      <div class="checklist-item" data-id="fi2"><div class="checkbox" onclick="toggleCheck(this)"></div><div class="item-content"><div class="item-title">Группа СС (до 5 млн, от 5 млн и т.д.)</div></div><div class="item-actions"><button class="deadline-btn" onclick="editDeadline(this)">+ Срок</button></div></div>
+      <div class="checklist-item" data-id="fi3"><div class="checkbox" onclick="toggleCheck(this)"></div><div class="item-content"><div class="item-title">Канал продаж</div></div><div class="item-actions"><button class="deadline-btn" onclick="editDeadline(this)">+ Срок</button></div></div>
+      <div class="checklist-item" data-id="fi4"><div class="checkbox" onclick="toggleCheck(this)"></div><div class="item-content"><div class="item-title">Филиал</div></div><div class="item-actions"><button class="deadline-btn" onclick="editDeadline(this)">+ Срок</button></div></div>
+      <div class="checklist-item" data-id="fi5"><div class="checkbox" onclick="toggleCheck(this)"></div><div class="item-content"><div class="item-title">Группа КП</div></div><div class="item-actions"><button class="deadline-btn" onclick="editDeadline(this)">+ Срок</button></div></div>
+      <div class="checklist-item" data-id="fi6"><div class="checkbox" onclick="toggleCheck(this)"></div><div class="item-content"><div class="item-title">Период</div></div><div class="item-actions"><button class="deadline-btn" onclick="editDeadline(this)">+ Срок</button></div></div>
+      <div class="checklist-item" data-id="fi7"><div class="checkbox" onclick="toggleCheck(this)"></div><div class="item-content"><div class="item-title">Продукт</div></div><div class="item-actions"><button class="deadline-btn" onclick="editDeadline(this)">+ Срок</button></div></div>
+      <div class="checklist-item" data-id="fi8"><div class="checkbox" onclick="toggleCheck(this)"></div><div class="item-content"><div class="item-title">Источник (КС / АПИ и т.д.)</div></div><div class="item-actions"><button class="deadline-btn" onclick="editDeadline(this)">+ Срок</button></div></div>
+      <div class="checklist-item" data-id="fi9"><div class="checkbox" onclick="toggleCheck(this)"></div><div class="item-content"><div class="item-title">Тип оплаты</div></div><div class="item-actions"><button class="deadline-btn" onclick="editDeadline(this)">+ Срок</button></div></div>
+      <div class="checklist-item" data-id="fi10"><div class="checkbox" onclick="toggleCheck(this)"></div><div class="item-content"><div class="item-title">Группа премий</div></div><div class="item-actions"><button class="deadline-btn" onclick="editDeadline(this)">+ Срок</button></div></div>
+    </div>
+  </div>
+
+  <!-- Фильтры 2 приоритет -->
+  <div class="section-card">
+    <div class="section-header" onclick="toggleSection('filters2')">
+      <div class="section-title">Фильтры воронки — расширенные <span class="priority-badge p2">2 приоритет</span></div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="section-meta" id="meta-filters2">0 / 7</span>
+        <svg class="chev" id="chev-filters2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+    <div class="section-body" id="body-filters2">
+      <div class="checklist-item" data-id="fi21"><div class="checkbox" onclick="toggleCheck(this)"></div><div class="item-content"><div class="item-title">Покрытие</div><div class="item-sub">Отделка / конструктив / ГО / движимое имущество и т.д.</div></div><div class="item-actions"><button class="deadline-btn" onclick="editDeadline(this)">+ Срок</button></div></div>
+      <div class="checklist-item" data-id="fi22"><div class="checkbox" onclick="toggleCheck(this)"></div><div class="item-content"><div class="item-title">Объект (дом / баня / гараж)</div></div><div class="item-actions"><button class="deadline-btn" onclick="editDeadline(this)">+ Срок</button></div></div>
+      <div class="checklist-item" data-id="fi23"><div class="checkbox" onclick="toggleCheck(this)"></div><div class="item-content"><div class="item-title">Метка «Распродажа» (да / нет)</div></div><div class="item-actions"><button class="deadline-btn" onclick="editDeadline(this)">+ Срок</button></div></div>
+      <div class="checklist-item" data-id="fi24"><div class="checkbox" onclick="toggleCheck(this)"></div><div class="item-content"><div class="item-title">Доп риски (мультивыбор)</div></div><div class="item-actions"><button class="deadline-btn" onclick="editDeadline(this)">+ Срок</button></div></div>
+      <div class="checklist-item" data-id="fi25"><div class="checkbox" onclick="toggleCheck(this)"></div><div class="item-content"><div class="item-title">Коэффициент Андера</div><div class="item-sub">Средний коэффициент, какая доля с коэффициентом в разрезе НБ/Прола — была или нет</div></div><div class="item-actions"><button class="deadline-btn" onclick="editDeadline(this)">+ Срок</button></div></div>
+      <div class="checklist-item" data-id="fi26"><div class="checkbox" onclick="toggleCheck(this)"></div><div class="item-content"><div class="item-title">Скидка из КВ — была или нет</div></div><div class="item-actions"><button class="deadline-btn" onclick="editDeadline(this)">+ Срок</button></div></div>
+      <div class="checklist-item" data-id="fi27"><div class="checkbox" onclick="toggleCheck(this)"></div><div class="item-content"><div class="item-title">Коэффициент продавца (надбавка) — была или нет</div></div><div class="item-actions"><button class="deadline-btn" onclick="editDeadline(this)">+ Срок</button></div></div>
+    </div>
+  </div>
+
+  <!-- Готово -->
+  <div class="section-card">
+    <div class="section-header" onclick="toggleSection('done')">
+      <div class="section-title">Готово <span class="priority-badge done-badge">✓ Реализовано</span></div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="section-meta" id="meta-done">0 / 3</span>
+        <svg class="chev" id="chev-done" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+    <div class="section-body" id="body-done">
+      <div class="checklist-item is-done" data-id="d1">
+        <div class="checkbox checked" onclick="toggleCheck(this)"></div>
+        <div class="item-content"><div class="item-title">Уровень пролонгации + апсейлы в пролонгации для увеличения СС</div><div class="item-sub">Ссылка на отчёт Виталика</div></div>
+        <div class="item-actions"><button class="deadline-btn has-date" onclick="editDeadline(this)">Готово</button></div>
+      </div>
+      <div class="checklist-item is-done" data-id="d2">
+        <div class="checkbox checked" onclick="toggleCheck(this)"></div>
+        <div class="item-content"><div class="item-title">Активные агенты по ИФЛ от всех агентов</div><div class="item-sub">Единый отчёт по эффективности и активности агентов · ссылка на отчёт Виталика</div></div>
+        <div class="item-actions"><button class="deadline-btn has-date" onclick="editDeadline(this)">Готово</button></div>
+      </div>
+      <div class="checklist-item" data-id="d3">
+        <div class="checkbox" onclick="toggleCheck(this)"></div>
+        <div class="item-content"><div class="item-title">Отчёты по конкурсам</div><div class="item-sub">Минорная задача</div></div>
+        <div class="item-actions"><span class="priority-badge p3" style="margin:0;">3 приоритет</span><button class="deadline-btn" onclick="editDeadline(this)">+ Срок</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- КАЧЕСТВО -->
+  <div class="sec-label">Качество</div>
+
+  <div class="section-card">
+    <div class="section-header" onclick="toggleSection('quality')">
+      <div class="section-title">Метрики качества <span class="priority-badge p1">1 приоритет</span></div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="section-meta" id="meta-quality">0 / 3</span>
+        <svg class="chev" id="chev-quality" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+    <div class="section-body" id="body-quality">
+      <div class="checklist-item" data-id="q1"><div class="checkbox" onclick="toggleCheck(this)"></div><div class="item-content"><div class="item-title">PSI</div></div><div class="item-actions"><button class="deadline-btn" onclick="editDeadline(this)">+ Срок</button></div></div>
+      <div class="checklist-item" data-id="q2"><div class="checkbox" onclick="toggleCheck(this)"></div><div class="item-content"><div class="item-title">Full-digital процесс по НеАвто</div><div class="item-sub">Только ОА + ОТА после оформления</div></div><div class="item-actions"><button class="deadline-btn" onclick="editDeadline(this)">+ Срок</button></div></div>
+      <div class="checklist-item" data-id="q3"><div class="checkbox" onclick="toggleCheck(this)"></div><div class="item-content"><div class="item-title">Статистика по тех. ошибкам</div></div><div class="item-actions"><button class="deadline-btn" onclick="editDeadline(this)">+ Срок</button></div></div>
+      <div class="checklist-item" data-id="q4"><div class="checkbox" onclick="toggleCheck(this)"></div><div class="item-content"><div class="item-title">Скорость расчёта / импорта</div></div><div class="item-actions"><span class="priority-badge p2" style="margin:0;">2 приоритет</span><button class="deadline-btn" onclick="editDeadline(this)">+ Срок</button></div></div>
+      <div class="checklist-item" data-id="q5"><div class="checkbox" onclick="toggleCheck(this)"></div><div class="item-content"><div class="item-title">Время оформления</div><div class="item-sub">С возможностью выбрать touchtime</div></div><div class="item-actions"><span class="priority-badge p3" style="margin:0;">3 приоритет</span><button class="deadline-btn" onclick="editDeadline(this)">+ Срок</button></div></div>
+    </div>
+  </div>
+
+  <!-- АКТИВНОСТЬ ЯМ -->
+  <div class="sec-label">Активность пользователя (ЯМ)</div>
+
+  <div class="section-card">
+    <div class="section-header" onclick="toggleSection('ym')">
+      <div class="section-title">Яндекс.Метрика <span class="priority-badge p1">1 приоритет</span></div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="section-meta" id="meta-ym">0 / 3</span>
+        <svg class="chev" id="chev-ym" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+    <div class="section-body" id="body-ym">
+      <div class="checklist-item" data-id="ym1"><div class="checkbox" onclick="toggleCheck(this)"></div><div class="item-content"><div class="item-title">Нужен идентификатор партнёра и идентификатор котировки</div></div><div class="item-actions"><button class="deadline-btn" onclick="editDeadline(this)">+ Срок</button></div></div>
+      <div class="checklist-item" data-id="ym2"><div class="checkbox" onclick="toggleCheck(this)"></div><div class="item-content"><div class="item-title">Посмотреть на какие тултипы нажимают</div><div class="item-sub">Чтобы понять что непонятно пользователям</div></div><div class="item-actions"><button class="deadline-btn" onclick="editDeadline(this)">+ Срок</button></div></div>
+      <div class="checklist-item" data-id="ym3"><div class="checkbox" onclick="toggleCheck(this)"></div><div class="item-content"><div class="item-title">Продажа по главной УЗ или по субучётке</div></div><div class="item-actions"><button class="deadline-btn" onclick="editDeadline(this)">+ Срок</button></div></div>
+    </div>
+  </div>
+
+</div>
+
+<footer style="text-align:center;color:var(--muted);font-size:11px;padding:2rem 0 1rem;border-top:1px solid var(--border);margin-top:2rem;max-width:960px;margin-left:auto;margin-right:auto;">
+  Ренессанс Страхование · НеАвто Roadmap · <span id="fy"></span>
+</footer>
+
+<script>
+document.getElementById('fy').textContent = new Date().getFullYear();
+
+const STORAGE_KEY = 'nonauto_checklist_v1';
+
+function loadState() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch { return {}; }
+}
+function saveState(state) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+let state = loadState();
+
+function toggleCheck(checkbox) {
+  const item = checkbox.closest('.checklist-item, .sub-item');
+  const id = item.dataset.id;
+  const isDone = !checkbox.classList.contains('checked');
+  checkbox.classList.toggle('checked', isDone);
+  item.classList.toggle('is-done', isDone);
+  state[id] = state[id] || {};
+  state[id].done = isDone;
+  saveState(state);
+  updateProgress();
+}
+
+function editDeadline(btn) {
+  const item = btn.closest('.checklist-item, .sub-item');
+  const id = item.dataset.id;
+  const current = (state[id] && state[id].deadline) || '';
+  const input = document.createElement('input');
+  input.type = 'date';
+  input.className = 'deadline-input';
+  input.value = current;
+  btn.replaceWith(input);
+  input.focus();
+  function done() {
+    const val = input.value;
+    state[id] = state[id] || {};
+    state[id].deadline = val;
+    saveState(state);
+    const newBtn = document.createElement('button');
+    newBtn.className = 'deadline-btn' + (val ? ' has-date' : '');
+    newBtn.onclick = function(){ editDeadline(this); };
+    newBtn.textContent = val ? formatDate(val) : '+ Срок';
+    input.replaceWith(newBtn);
+  }
+  input.addEventListener('blur', done);
+  input.addEventListener('change', done);
+}
+
+function formatDate(d) {
+  if (!d) return '+ Срок';
+  const [y,m,day] = d.split('-');
+  return `${day}.${m}.${y}`;
+}
+
+function toggleSection(id) {
+  const body = document.getElementById('body-' + id);
+  const chev = document.getElementById('chev-' + id);
+  body.classList.toggle('open');
+  chev.classList.toggle('open');
+}
+
+function updateProgress() {
+  const allItems = document.querySelectorAll('[data-id]');
+  const total = allItems.length;
+  const done = document.querySelectorAll('.checkbox.checked, .sub-checkbox.checked').length;
+  document.getElementById('done-count').textContent = done;
+  document.getElementById('total-count').textContent = total;
+  const pct = total ? Math.round(done / total * 100) : 0;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-pct').textContent = pct + '%';
+
+  // Update section metas
+  document.querySelectorAll('.section-body').forEach(body => {
+    const id = body.id.replace('body-', '');
+    const items = body.querySelectorAll('[data-id]');
+    const doneInSection = body.querySelectorAll('.checkbox.checked, .sub-checkbox.checked').length;
+    const meta = document.getElementById('meta-' + id);
+    if (meta) meta.textContent = `${doneInSection} / ${items.length}`;
+  });
+}
+
+// Restore state on load
+function restoreState() {
+  Object.entries(state).forEach(([id, val]) => {
+    const item = document.querySelector(`[data-id="${id}"]`);
+    if (!item) return;
+    if (val.done) {
+      const cb = item.querySelector('.checkbox, .sub-checkbox');
+      if (cb) { cb.classList.add('checked'); item.classList.add('is-done'); }
+    }
+    if (val.deadline) {
+      const btn = item.querySelector('.deadline-btn');
+      if (btn && btn.textContent.includes('Срок')) {
+        btn.textContent = formatDate(val.deadline);
+        btn.classList.add('has-date');
+      }
+    }
+  });
+  updateProgress();
+}
+
+// Open all sections by default
+document.querySelectorAll('.section-body').forEach(b => b.classList.add('open'));
+document.querySelectorAll('.chev').forEach(c => c.classList.add('open'));
+
+restoreState();
+</script>
+</body>
+</html>

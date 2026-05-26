@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Аналитика ЛК Партнёра — Ренессанс Страхование</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ren-dark: #38056C;
+    --ren-mid: #9A92FF;
+    --ren-green: #79FF3A;
+    --ren-light: #CCC8FF;
+    --ren-white: #FFFFFF;
+    --ren-bg: #F5F4FB;
+    --text-primary: #1A1A2E;
+    --text-secondary: #6B6B8A;
+    --border: #CCC8FF;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Golos Text', system-ui, sans-serif;
+    background: var(--ren-bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* HEADER */
+  .site-header {
+    background: var(--ren-dark);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .site-header::after {
+    content: '';
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 6px;
+    background: var(--ren-green);
+  }
+  .header-logo {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .logo-dot {
+    width: 28px; height: 28px;
+    background: var(--ren-green);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .logo-dot svg { width: 16px; height: 16px; }
+  .logo-title { color: var(--ren-white); font-size: 15px; font-weight: 600; }
+  .logo-sub { color: var(--ren-light); font-size: 11px; margin-top: 1px; }
+  .header-date { color: var(--ren-mid); font-size: 12px; padding-right: 12px; }
+
+  /* MAIN LAYOUT */
+  .main { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem 3rem; }
+
+  /* HERO */
+  .hero {
+    background: var(--ren-dark);
+    border-radius: var(--radius);
+    padding: 1.75rem 2rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    right: -40px; top: -40px;
+    width: 180px; height: 180px;
+    background: var(--ren-mid);
+    opacity: 0.08;
+    border-radius: 50%;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 5px;
+    background: var(--ren-green);
+  }
+  .hero-title { color: var(--ren-white); font-size: 22px; font-weight: 600; margin-bottom: 4px; }
+  .hero-sub { color: var(--ren-light); font-size: 13px; }
+  .hero-stats { display: flex; gap: 2rem; }
+  .hero-stat-val { color: var(--ren-green); font-size: 22px; font-weight: 600; line-height: 1; }
+  .hero-stat-label { color: var(--ren-mid); font-size: 11px; margin-top: 3px; }
+
+  /* SECTION LABEL */
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ren-dark);
+    margin: 2rem 0 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-label::before {
+    content: '';
+    display: inline-block;
+    width: 3px; height: 14px;
+    background: var(--ren-green);
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  /* CARDS GRID */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-bottom: 0.5rem;
+  }
+  .report-card {
+    background: var(--ren-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem 1.125rem;
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+    transition: border-color 0.15s, box-shadow 0.15s, transform 0.12s;
+  }
+  .report-card:hover {
+    border-color: var(--ren-mid);
+    box-shadow: 0 4px 16px rgba(56,5,108,0.10);
+    transform: translateY(-1px);
+  }
+  .report-card.featured {
+    border: 1.5px solid var(--ren-mid);
+  }
+  .card-icon {
+    width: 36px; height: 36px;
+    border-radius: var(--radius-sm);
+    background: #EEEEFF;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 10px;
+    flex-shrink: 0;
+  }
+  .card-icon svg { width: 18px; height: 18px; stroke: var(--ren-dark); }
+  .card-icon.green { background: #EDFFD6; }
+  .card-icon.green svg { stroke: #3B6D11; }
+  .card-title { font-size: 13px; font-weight: 600; color: var(--ren-dark); margin-bottom: 3px; line-height: 1.35; }
+  .card-meta { font-size: 11px; color: var(--text-secondary); line-height: 1.4; }
+  .card-badge {
+    display: inline-block;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-top: 8px;
+    font-weight: 600;
+  }
+  .badge-live { background: #EDFFD6; color: #3B6D11; }
+  .badge-wip { background: #FAEEDA; color: #854F0B; }
+  .badge-soon { background: #F1EFE8; color: #5F5E5A; }
+
+  /* ACCORDION */
+  .accordion {
+    background: var(--ren-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+  .accordion-header {
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .accordion-header:hover { background: #F7F6FF; }
+  .accordion-header-left { display: flex; align-items: center; gap: 12px; }
+  .accordion-icon {
+    width: 32px; height: 32px;
+    border-radius: var(--radius-sm);
+    background: #EEEEFF;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .accordion-icon svg { width: 16px; height: 16px; stroke: var(--ren-dark); }
+  .accordion-title { font-size: 14px; font-weight: 600; color: var(--ren-dark); }
+  .accordion-count { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+  .chevron {
+    width: 20px; height: 20px;
+    stroke: var(--ren-mid);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+  .chevron.open { transform: rotate(180deg); }
+  .accordion-body { display: none; border-top: 1px solid var(--border); }
+  .accordion-body.open { display: block; }
+  .accordion-link {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1.25rem;
+    text-decoration: none;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.12s;
+    gap: 10px;
+  }
+  .accordion-link:last-child { border-bottom: none; }
+  .accordion-link:hover { background: #F7F6FF; }
+  .accordion-link.disabled { opacity: 0.5; pointer-events: none; cursor: default; }
+  .link-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--ren-light);
+    flex-shrink: 0;
+  }
+  .link-dot.live { background: #3B6D11; }
+  .link-text { font-size: 13px; color: var(--ren-dark); flex: 1; }
+  .link-badge { font-size: 10px; font-weight: 600; white-space: nowrap; }
+  .ext-icon { width: 14px; height: 14px; stroke: var(--ren-mid); flex-shrink: 0; }
+
+  /* INFO NOTE */
+  .info-note {
+    background: #EEEEFF;
+    border: 1px solid var(--ren-light);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem 1rem;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 1rem;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    line-height: 1.5;
+  }
+  .info-note svg { width: 16px; height: 16px; stroke: var(--ren-mid); flex-shrink: 0; margin-top: 1px; }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 11px;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-logo">
+    <div class="logo-dot">
+      <svg viewBox="0 0 16 16" fill="none" stroke="#38056C" stroke-width="2"><circle cx="8" cy="8" r="5"/><path d="M8 5v3l2 2"/></svg>
+    </div>
+    <div>
+      <div class="logo-title">Ренессанс Страхование</div>
+      <div class="logo-sub">Аналитика ЛК Партнёра</div>
+    </div>
+  </div>
+  <div class="header-date" id="header-date"></div>
+</header>
+
+<main class="main">
+
+  <div class="hero">
+    <div>
+      <div class="hero-title">Единое окно метрик</div>
+      <div class="hero-sub">Поведение пользователей · Продажи · Качество</div>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="hero-stat-val">25 276</div>
+        <div class="hero-stat-label">визитов янв–май</div>
+      </div>
+      <div>
+        <div class="hero-stat-val">6</div>
+        <div class="hero-stat-label">отчётов подключено</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ПОВЕДЕНИЕ -->
+  <div class="section-label">Поведение пользователей</div>
+  <div class="cards-grid">
+    <a href="#" onclick="alert('Откройте Claude и напишите: Покажи дашборд Яндекс Метрики по ЛК Партнёра'); return false;" class="report-card featured">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+      </div>
+      <div class="card-title">Дашборд Яндекс.Метрики</div>
+      <div class="card-meta">Визиты, глубина просмотра, воронка выпуска полиса</div>
+      <span class="card-badge badge-live">● Готов</span>
+    </a>
+    <a href="#" onclick="alert('Откройте Claude и напишите: Проанализируй события ЯМ счётчика 101232508 и скажи чего не хватает'); return false;" class="report-card">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+      </div>
+      <div class="card-title">Аудит событий ЯМ</div>
+      <div class="card-meta">Анализ настроенных целей и пробелов в аналитике</div>
+      <span class="card-badge badge-wip">○ В работе</span>
+    </a>
+  </div>
+
+  <!-- ПРОДАЖИ -->
+  <div class="section-label">Метрики по продажам</div>
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc('sales')">
+      <div class="accordion-header-left">
+        <div class="accordion-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        </div>
+        <div>
+          <div class="accordion-title">Метрики по продажам</div>
+          <div class="accordion-count">4 отчёта · 2 доступны</div>
+        </div>
+      </div>
+      <svg class="chevron" id="chevron-sales" viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="accordion-body" id="body-sales">
+      <a href="https://datalens.ru/i4s2ncbgsl463-otchet-po-prodazham-v-novom-lk-prodavca" target="_blank" class="accordion-link">
+        <div class="link-dot live"></div>
+        <span class="link-text">Отчёт по продажам в ЛК Партнёра</span>
+        <span class="card-badge badge-live link-badge">● Готов</span>
+        <svg class="ext-icon" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </a>
+      <div class="accordion-link disabled">
+        <div class="link-dot"></div>
+        <span class="link-text">Отчёт по продажам в фабрике</span>
+        <span class="card-badge badge-soon link-badge">Скоро</span>
+      </div>
+      <a href="https://datalens.ru/sv3lwmgbgskad-otchet-po-krossam-k-osago-fl-v-novom-lk-prodavca" target="_blank" class="accordion-link">
+        <div class="link-dot live"></div>
+        <span class="link-text">Отчёт по кросс-продажам</span>
+        <span class="card-badge badge-live link-badge">● Готов</span>
+        <svg class="ext-icon" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </a>
+      <div class="accordion-link disabled">
+        <div class="link-dot"></div>
+        <span class="link-text">Отчёт по котировкам</span>
+        <span class="card-badge badge-soon link-badge">Скоро</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- КАЧЕСТВО -->
+  <div class="section-label">Метрики качества</div>
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc('quality')">
+      <div class="accordion-header-left">
+        <div class="accordion-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div>
+          <div class="accordion-title">Метрики качества</div>
+          <div class="accordion-count">4 отчёта · 1 доступен</div>
+        </div>
+      </div>
+      <svg class="chevron" id="chevron-quality" viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="accordion-body" id="body-quality">
+      <div class="accordion-link disabled">
+        <div class="link-dot"></div>
+        <span class="link-text">Статистика по ошибкам</span>
+        <span class="card-badge badge-soon link-badge">Скоро</span>
+      </div>
+      <div class="accordion-link disabled">
+        <div class="link-dot"></div>
+        <span class="link-text">Статистика по Службе заботы</span>
+        <span class="card-badge badge-soon link-badge">Скоро</span>
+      </div>
+      <a href="https://datalens.ru/28vb6s5idqkyp-renprofil-osnovnoy" target="_blank" class="accordion-link">
+        <div class="link-dot live"></div>
+        <span class="link-text">Метрики автозаполнения (ЕК)</span>
+        <span class="card-badge badge-live link-badge">● Готов</span>
+        <svg class="ext-icon" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </a>
+      <div class="accordion-link disabled">
+        <div class="link-dot"></div>
+        <span class="link-text">Метрики full-digital процесса</span>
+        <span class="card-badge badge-soon link-badge">Скоро</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-note">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    DataLens блокирует встраивание через iframe по политике X-Frame-Options. Для встраивания включи Public Embedding в настройках каждого чарта в DataLens, или используй DataLens API для получения данных напрямую.
+  </div>
+
+  <div class="footer">
+    Ренессанс Страхование · Аналитика ЛК Партнёра · <span id="footer-year"></span>
+  </div>
+
+</main>
+
+<script>
+  const now = new Date();
+  document.getElementById('header-date').textContent = now.toLocaleDateString('ru-RU', {day:'numeric',month:'long',year:'numeric'});
+  document.getElementById('footer-year').textContent = now.getFullYear();
+
+  function toggleAcc(id) {
+    const body = document.getElementById('body-' + id);
+    const chevron = document.getElementById('chevron-' + id);
+    const isOpen = body.classList.contains('open');
+    body.classList.toggle('open', !isOpen);
+    chevron.classList.toggle('open', !isOpen);
+  }
+</script>
+
+</body>
+</html>

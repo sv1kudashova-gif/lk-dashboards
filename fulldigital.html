@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Full-Digital процесс — Ренессанс Страхование</title>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --dark: #38056C;
+  --mid: #9A92FF;
+  --green: #79FF3A;
+  --light: #CCC8FF;
+  --white: #FFFFFF;
+  --bg: #F5F4FB;
+  --text: #1A1A2E;
+  --muted: #6B6B8A;
+  --border: #CCC8FF;
+  --r: 12px;
+  --r-sm: 8px;
+  --good: #38A169;
+  --warn: #DD6B20;
+  --bad: #E53E3E;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Golos Text', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* NAV */
+.nav { background: var(--dark); height: 56px; display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; position: sticky; top: 0; z-index: 100; }
+.nav::after { content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 5px; background: var(--green); }
+.nav-logo { display: flex; align-items: center; gap: 10px; }
+.nav-dot { width: 28px; height: 28px; background: var(--green); border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+.nav-dot svg { width: 15px; height: 15px; stroke: var(--dark); fill: none; stroke-width: 2.5; }
+.nav-brand { color: var(--white); font-size: 15px; font-weight: 600; }
+.nav-sub { color: var(--light); font-size: 11px; }
+.nav-back { color: var(--white); font-size: 13px; padding: 6px 14px; border-radius: 6px; cursor: pointer; border: none; background: rgba(154,146,255,0.2); font-family: inherit; }
+.nav-back:hover { background: rgba(154,146,255,0.35); }
+.nav-date { color: var(--mid); font-size: 12px; padding-right: 10px; }
+
+.main { max-width: 1040px; margin: 0 auto; padding: 2rem 1.5rem 3rem; }
+
+/* COMING SOON BANNER */
+.coming-banner {
+  background: linear-gradient(135deg, var(--dark) 0%, #5a1a9e 100%);
+  border-radius: var(--r);
+  padding: 2rem 2.5rem;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+.coming-banner::before {
+  content: '';
+  position: absolute;
+  right: -60px; top: -60px;
+  width: 240px; height: 240px;
+  background: var(--mid);
+  opacity: 0.08;
+  border-radius: 50%;
+}
+.coming-banner::after {
+  content: '';
+  position: absolute;
+  right: 0; top: 0; bottom: 0;
+  width: 5px;
+  background: var(--green);
+}
+.coming-left { }
+.coming-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(121,255,58,0.15);
+  border: 1px solid rgba(121,255,58,0.3);
+  color: var(--green);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.coming-tag::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+.coming-h { color: var(--white); font-size: 22px; font-weight: 600; margin-bottom: 6px; }
+.coming-s { color: var(--light); font-size: 13px; line-height: 1.5; max-width: 500px; }
+.coming-right { text-align: center; flex-shrink: 0; }
+.coming-icon { font-size: 48px; line-height: 1; }
+.coming-caption { color: var(--mid); font-size: 11px; margin-top: 6px; }
+
+/* SECTION LABEL */
+.sec-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--dark); margin: 2rem 0 1rem; display: flex; align-items: center; gap: 8px; }
+.sec-label::before { content: ''; width: 3px; height: 14px; background: var(--green); border-radius: 2px; flex-shrink: 0; }
+.sec-label .badge-concept { font-size: 10px; background: #FAEEDA; color: #854F0B; padding: 2px 8px; border-radius: 20px; text-transform: none; letter-spacing: 0; font-weight: 600; }
+
+/* CONCEPT NOTE */
+.concept-note {
+  background: #EEEEFF;
+  border: 1px solid var(--light);
+  border-radius: var(--r-sm);
+  padding: 0.875rem 1.125rem;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 1.25rem;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  line-height: 1.55;
+}
+.concept-note svg { width: 16px; height: 16px; stroke: var(--mid); fill: none; stroke-width: 2; flex-shrink: 0; margin-top: 1px; }
+
+/* TABLE CARD */
+.table-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+.table-header {
+  background: var(--dark);
+  padding: 0.875rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.table-header-left { display: flex; align-items: center; gap: 10px; }
+.table-icon { width: 28px; height: 28px; background: rgba(121,255,58,0.15); border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+.table-icon svg { width: 14px; height: 14px; stroke: var(--green); fill: none; stroke-width: 2; }
+.table-title { color: var(--white); font-size: 14px; font-weight: 600; }
+.table-subtitle { color: var(--light); font-size: 11px; }
+.table-total-badge { background: rgba(154,146,255,0.2); border: 1px solid rgba(154,146,255,0.3); color: var(--light); font-size: 12px; font-weight: 500; padding: 4px 12px; border-radius: 20px; }
+
+/* TABLE */
+table { width: 100%; border-collapse: collapse; }
+thead tr { background: #F7F6FF; border-bottom: 2px solid var(--border); }
+thead th { padding: 0.75rem 1rem; font-size: 11px; font-weight: 600; color: var(--muted); text-align: left; text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; }
+thead th.num { text-align: right; }
+tbody tr { border-bottom: 1px solid var(--border); transition: background 0.12s; }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: #F7F6FF; }
+tbody tr.group-header { background: #F0EEFF; }
+tbody tr.group-header td { font-size: 11px; font-weight: 600; color: var(--mid); padding: 0.5rem 1rem; letter-spacing: 0.05em; text-transform: uppercase; }
+tbody tr.subtotal { background: #FAFAFE; }
+tbody tr.subtotal td { font-weight: 600; color: var(--dark); }
+tbody tr.total-row { background: var(--dark); }
+tbody tr.total-row td { color: var(--white); font-weight: 600; }
+tbody tr.no-checks td { color: var(--warn); }
+td { padding: 0.75rem 1rem; font-size: 13px; color: var(--text); }
+td.num { text-align: right; font-variant-numeric: tabular-nums; }
+td.pct { text-align: right; font-variant-numeric: tabular-nums; }
+.pct-bar-wrap { display: flex; align-items: center; gap: 8px; justify-content: flex-end; }
+.pct-bar { height: 4px; border-radius: 2px; flex-shrink: 0; }
+.type-tag { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 10px; margin-left: 6px; vertical-align: middle; }
+.tag-auto { background: #EBF8FF; color: #2B6CB0; }
+.tag-manual { background: #FFF5F5; color: #9B2C2C; }
+.tag-both { background: #EBF8FF; color: #2B6CB0; }
+.row-indent td:first-child { padding-left: 2rem; }
+
+/* SLA TABLE */
+.sla-header-auto { background: #EBF8FF; color: #2B6CB0; }
+.sla-header-manual { background: #FFF5F5; color: #9B2C2C; }
+.sla-ok { color: var(--good); font-weight: 600; }
+.sla-warn { color: var(--warn); font-weight: 600; }
+.sla-bad { color: var(--bad); font-weight: 600; }
+.progress-wrap { display: flex; align-items: center; gap: 8px; }
+.progress-track { flex: 1; height: 6px; background: #EEF0FF; border-radius: 3px; overflow: hidden; min-width: 60px; }
+.progress-fill { height: 100%; border-radius: 3px; }
+.progress-lbl { font-size: 12px; font-weight: 600; white-space: nowrap; }
+
+/* WATERMARK */
+.watermark-overlay {
+  pointer-events: none;
+  position: relative;
+}
+.watermark-overlay::after {
+  content: 'КОНЦЕПТ — данные условные';
+  position: absolute;
+  bottom: 12px;
+  right: 16px;
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(154,146,255,0.4);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* KPI ROW */
+.kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 1.5rem; }
+.kpi-sm { background: var(--white); border: 1px solid var(--border); border-radius: var(--r); padding: 0.875rem 1rem; position: relative; overflow: hidden; }
+.kpi-sm::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; }
+.kpi-sm.k-total::after { background: var(--mid); }
+.kpi-sm.k-checks::after { background: var(--good); }
+.kpi-sm.k-no-checks::after { background: var(--warn); }
+.kpi-sm.k-auto::after { background: #2B6CB0; }
+.kpi-lbl { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+.kpi-val { font-size: 20px; font-weight: 600; color: var(--dark); line-height: 1; }
+.kpi-sub { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+footer { text-align: center; color: var(--muted); font-size: 11px; padding: 2rem 0 1rem; border-top: 1px solid var(--border); margin-top: 2rem; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-logo">
+    <div class="nav-dot"><svg viewBox="0 0 16 16"><polyline points="2,12 6,7 10,9 14,4"/></svg></div>
+    <div><div class="nav-brand">Ренессанс Страхование</div><div class="nav-sub">Full-Digital процесс</div></div>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <button class="nav-back" onclick="window.location.href='lk-analytics-hub.html'">← Главная</button>
+    <div class="nav-date" id="nav-date"></div>
+  </div>
+</nav>
+
+<div class="main">
+
+  <!-- COMING SOON BANNER -->
+  <div class="coming-banner">
+    <div class="coming-left">
+      <div class="coming-tag">В разработке</div>
+      <div class="coming-h">Метрики Full-Digital процесса</div>
+      <div class="coming-s">Скоро здесь появятся реальные данные о прохождении полисов через автоматические и ручные проверки. Ниже представлен концепт отчёта с примерными данными.</div>
+    </div>
+    <div class="coming-right">
+      <div class="coming-icon">⚙️</div>
+      <div class="coming-caption">Ожидаемый запуск: Q3 2026</div>
+    </div>
+  </div>
+
+  <!-- KPI -->
+  <div class="sec-label">Ключевые показатели — Каско <span class="badge-concept">Концепт</span></div>
+
+  <div class="kpi-row">
+    <div class="kpi-sm k-total">
+      <div class="kpi-lbl">Всего котировок</div>
+      <div class="kpi-val">12 847</div>
+      <div class="kpi-sub">за период</div>
+    </div>
+    <div class="kpi-sm k-checks">
+      <div class="kpi-lbl">Прошли проверки</div>
+      <div class="kpi-val">6 401</div>
+      <div class="kpi-sub">49.8% от всех</div>
+    </div>
+    <div class="kpi-sm k-no-checks">
+      <div class="kpi-lbl">Без проверок</div>
+      <div class="kpi-val">6 446</div>
+      <div class="kpi-sub">50.2% от всех</div>
+    </div>
+    <div class="kpi-sm k-auto">
+      <div class="kpi-lbl">Авто-проверки</div>
+      <div class="kpi-val">1 254</div>
+      <div class="kpi-sub">ОА + ПСО авто</div>
+    </div>
+  </div>
+
+  <!-- CONCEPT NOTE -->
+  <div class="concept-note">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    Данные в таблицах условные и сгенерированы для демонстрации структуры отчёта. Формулы расчёта долей корректны. После подключения реального источника данные заменятся автоматически.
+  </div>
+
+  <!-- TABLE 1: KASKO CHECKS -->
+  <div class="sec-label">Таблица 1 — Проверки котировок Каско <span class="badge-concept">Концепт</span></div>
+
+  <div class="table-card watermark-overlay">
+    <div class="table-header">
+      <div class="table-header-left">
+        <div class="table-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+        <div>
+          <div class="table-title">Распределение котировок по проверкам</div>
+          <div class="table-subtitle">Автоматические и ручные проверки · ОТА · УРМ · ОА · ПСО</div>
+        </div>
+      </div>
+      <div class="table-total-badge">Всего: 12 847 котировок</div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:35%">Проверка / Тип</th>
+          <th class="num">Кол-во котировок</th>
+          <th class="num">Доля от всех котировок</th>
+          <th style="width:25%">Визуализация</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <!-- OTA -->
+        <tr class="group-header"><td colspan="4">ОТА — Отдел технической андеррайтинга</td></tr>
+        <tr>
+          <td>
+            ОТА
+            <span class="type-tag tag-manual">ручная</span>
+          </td>
+          <td class="num">1 914</td>
+          <td class="pct">14.9%</td>
+          <td>
+            <div class="pct-bar-wrap">
+              <div class="pct-bar" style="width:80px;background:#CCC8FF;"><div style="width:14.9%;height:100%;background:var(--dark);border-radius:2px;"></div></div>
+            </div>
+          </td>
+        </tr>
+
+        <!-- URM -->
+        <tr class="group-header"><td colspan="4">УРМ — Управление рисками и моделирования</td></tr>
+        <tr>
+          <td>
+            УРМ
+            <span class="type-tag tag-manual">ручная</span>
+          </td>
+          <td class="num">912</td>
+          <td class="pct">7.1%</td>
+          <td>
+            <div class="pct-bar-wrap">
+              <div class="pct-bar" style="width:80px;background:#CCC8FF;"><div style="width:7.1%;height:100%;background:var(--dark);border-radius:2px;"></div></div>
+            </div>
+          </td>
+        </tr>
+
+        <!-- OA -->
+        <tr class="group-header"><td colspan="4">ОА — Отдел андеррайтинга</td></tr>
+        <tr>
+          <td>
+            ОА — автоматическая
+            <span class="type-tag tag-auto">авто</span>
+          </td>
+          <td class="num">740</td>
+          <td class="pct">5.8%</td>
+          <td>
+            <div class="pct-bar-wrap">
+              <div class="pct-bar" style="width:80px;background:#CCC8FF;"><div style="width:5.8%;height:100%;background:#2B6CB0;border-radius:2px;"></div></div>
+            </div>
+          </td>
+        </tr>
+        <tr class="row-indent">
+          <td>
+            ОА — ручная
+            <span class="type-tag tag-manual">ручная</span>
+          </td>
+          <td class="num">1 450</td>
+          <td class="pct">11.3%</td>
+          <td>
+            <div class="pct-bar-wrap">
+              <div class="pct-bar" style="width:80px;background:#CCC8FF;"><div style="width:11.3%;height:100%;background:var(--dark);border-radius:2px;"></div></div>
+            </div>
+          </td>
+        </tr>
+        <tr class="subtotal">
+          <td>ОА — итого</td>
+          <td class="num">2 190</td>
+          <td class="pct">17.0%</td>
+          <td>
+            <div class="pct-bar-wrap">
+              <div class="pct-bar" style="width:80px;background:#CCC8FF;"><div style="width:17%;height:100%;background:var(--mid);border-radius:2px;"></div></div>
+            </div>
+          </td>
+        </tr>
+
+        <!-- PSO -->
+        <tr class="group-header"><td colspan="4">ПСО — Подразделение специальных операций</td></tr>
+        <tr>
+          <td>
+            ПСО — автоматическая
+            <span class="type-tag tag-auto">авто</span>
+          </td>
+          <td class="num">514</td>
+          <td class="pct">4.0%</td>
+          <td>
+            <div class="pct-bar-wrap">
+              <div class="pct-bar" style="width:80px;background:#CCC8FF;"><div style="width:4%;height:100%;background:#2B6CB0;border-radius:2px;"></div></div>
+            </div>
+          </td>
+        </tr>
+        <tr class="row-indent">
+          <td>
+            ПСО — ручная
+            <span class="type-tag tag-manual">ручная</span>
+          </td>
+          <td class="num">871</td>
+          <td class="pct">6.8%</td>
+          <td>
+            <div class="pct-bar-wrap">
+              <div class="pct-bar" style="width:80px;background:#CCC8FF;"><div style="width:6.8%;height:100%;background:var(--dark);border-radius:2px;"></div></div>
+            </div>
+          </td>
+        </tr>
+        <tr class="subtotal">
+          <td>ПСО — итого</td>
+          <td class="num">1 385</td>
+          <td class="pct">10.8%</td>
+          <td>
+            <div class="pct-bar-wrap">
+              <div class="pct-bar" style="width:80px;background:#CCC8FF;"><div style="width:10.8%;height:100%;background:var(--mid);border-radius:2px;"></div></div>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Без проверок -->
+        <tr class="no-checks" style="border-top:2px dashed var(--border);">
+          <td><strong>Без проверок</strong></td>
+          <td class="num"><strong>6 446</strong></td>
+          <td class="pct"><strong>50.2%</strong></td>
+          <td>
+            <div class="pct-bar-wrap">
+              <div class="pct-bar" style="width:80px;background:#CCC8FF;"><div style="width:50.2%;height:100%;background:var(--warn);border-radius:2px;"></div></div>
+            </div>
+          </td>
+        </tr>
+
+        <!-- TOTAL -->
+        <tr class="total-row">
+          <td>ИТОГО котировок</td>
+          <td class="num">12 847</td>
+          <td class="pct">100%</td>
+          <td></td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <!-- TABLE 2: SLA -->
+  <div class="sec-label">Таблица 2 — SLA по проверкам Каско <span class="badge-concept">Концепт</span></div>
+
+  <div class="table-card watermark-overlay">
+    <div class="table-header">
+      <div class="table-header-left">
+        <div class="table-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <div>
+          <div class="table-title">SLA по времени обработки проверок</div>
+          <div class="table-subtitle">Среднее время · P90 · Доля нарушений SLA</div>
+        </div>
+      </div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:20%">Проверка</th>
+          <th class="num">Кол-во</th>
+          <th class="num">SLA цель</th>
+          <th class="num">Среднее время</th>
+          <th style="width:25%">Среднее vs цель</th>
+          <th class="num">P90</th>
+          <th class="num">Нарушения SLA</th>
+          <th style="width:20%">Доля нарушений</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr>
+          <td><strong>ОА</strong><span class="type-tag tag-auto">авто</span><span class="type-tag tag-manual">ручная</span></td>
+          <td class="num">2 190</td>
+          <td class="num">4 ч</td>
+          <td class="num sla-ok">3.2 ч</td>
+          <td>
+            <div class="progress-wrap">
+              <div class="progress-track">
+                <div class="progress-fill" style="width:80%;background:var(--good);"></div>
+              </div>
+              <span class="progress-lbl sla-ok">80%</span>
+            </div>
+          </td>
+          <td class="num sla-warn">6.1 ч</td>
+          <td class="num">182</td>
+          <td>
+            <div class="progress-wrap">
+              <div class="progress-track">
+                <div class="progress-fill" style="width:8.3%;background:var(--warn);"></div>
+              </div>
+              <span class="progress-lbl sla-warn">8.3%</span>
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td><strong>ОТА</strong><span class="type-tag tag-manual">ручная</span></td>
+          <td class="num">1 914</td>
+          <td class="num">24 ч</td>
+          <td class="num sla-ok">18.7 ч</td>
+          <td>
+            <div class="progress-wrap">
+              <div class="progress-track">
+                <div class="progress-fill" style="width:78%;background:var(--good);"></div>
+              </div>
+              <span class="progress-lbl sla-ok">78%</span>
+            </div>
+          </td>
+          <td class="num sla-bad">31.4 ч</td>
+          <td class="num">232</td>
+          <td>
+            <div class="progress-wrap">
+              <div class="progress-track">
+                <div class="progress-fill" style="width:12.1%;background:var(--bad);"></div>
+              </div>
+              <span class="progress-lbl sla-bad">12.1%</span>
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td><strong>УРМ</strong><span class="type-tag tag-manual">ручная</span></td>
+          <td class="num">912</td>
+          <td class="num">48 ч</td>
+          <td class="num sla-ok">22.3 ч</td>
+          <td>
+            <div class="progress-wrap">
+              <div class="progress-track">
+                <div class="progress-fill" style="width:46%;background:var(--good);"></div>
+              </div>
+              <span class="progress-lbl sla-ok">46%</span>
+            </div>
+          </td>
+          <td class="num sla-ok">44.8 ч</td>
+          <td class="num">43</td>
+          <td>
+            <div class="progress-wrap">
+              <div class="progress-track">
+                <div class="progress-fill" style="width:4.7%;background:var(--good);"></div>
+              </div>
+              <span class="progress-lbl sla-ok">4.7%</span>
+            </div>
+          </td>
+        </tr>
+
+        <tr class="subtotal">
+          <td><strong>Итого</strong></td>
+          <td class="num">5 016</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td>—</td>
+          <td class="num">—</td>
+          <td class="num">457</td>
+          <td>
+            <div class="progress-wrap">
+              <div class="progress-track">
+                <div class="progress-fill" style="width:9.1%;background:var(--warn);"></div>
+              </div>
+              <span class="progress-lbl sla-warn">9.1%</span>
+            </div>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ИФЛ PLACEHOLDER -->
+  <div class="sec-label">Таблица 3 — ИФЛ <span class="badge-concept">В разработке</span></div>
+  <div class="table-card" style="opacity:0.5;pointer-events:none;">
+    <div class="table-header">
+      <div class="table-header-left">
+        <div class="table-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+        <div>
+          <div class="table-title">Проверки котировок ИФЛ</div>
+          <div class="table-subtitle">Структура аналогична Каско · Данные появятся позже</div>
+        </div>
+      </div>
+    </div>
+    <div style="padding:3rem;text-align:center;color:var(--muted);font-size:13px;">
+      <div style="font-size:32px;margin-bottom:12px;">🏗</div>
+      Раздел в разработке — данные по ИФЛ появятся в следующей итерации
+    </div>
+  </div>
+
+</div>
+
+<footer>Ренессанс Страхование · Full-Digital процесс · Концепт отчёта · <span id="fy"></span></footer>
+
+<script>
+document.getElementById('nav-date').textContent = new Date().toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'});
+document.getElementById('fy').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
