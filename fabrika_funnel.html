@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Воронка продаж — Фабрика</title>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--dark:#38056C;--mid:#9A92FF;--green:#79FF3A;--light:#CCC8FF;--white:#FFFFFF;--bg:#F5F4FB;--text:#1A1A2E;--muted:#6B6B8A;--border:#CCC8FF;--r:12px;--r-sm:8px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Golos Text',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+.nav{background:var(--dark);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;position:sticky;top:0;z-index:100;}
+.nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:5px;background:var(--green);}
+.nav-logo{display:flex;align-items:center;gap:10px;}
+.nav-dot{width:28px;height:28px;background:var(--green);border-radius:6px;display:flex;align-items:center;justify-content:center;}
+.nav-dot svg{width:15px;height:15px;stroke:var(--dark);fill:none;stroke-width:2.5;}
+.nav-brand{color:var(--white);font-size:15px;font-weight:600;}
+.nav-sub{color:var(--light);font-size:11px;}
+.nav-back{color:var(--white);font-size:13px;padding:6px 14px;border-radius:6px;cursor:pointer;border:none;background:rgba(154,146,255,0.2);font-family:inherit;}
+.nav-back:hover{background:rgba(154,146,255,0.35);}
+
+.main{max-width:1040px;margin:0 auto;padding:2rem 1.5rem 4rem;}
+
+.hero{background:var(--dark);border-radius:var(--r);padding:1.5rem 2rem;margin-bottom:2rem;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;}
+.hero::before{content:'';position:absolute;right:-50px;top:-50px;width:200px;height:200px;background:var(--mid);opacity:0.07;border-radius:50%;}
+.hero::after{content:'';position:absolute;right:0;top:0;bottom:0;width:5px;background:var(--green);}
+.hero-h{color:var(--white);font-size:20px;font-weight:600;margin-bottom:4px;}
+.hero-s{color:var(--light);font-size:12px;}
+.hero-badge{background:rgba(121,255,58,0.15);border:1px solid rgba(121,255,58,0.3);color:var(--green);font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px;white-space:nowrap;}
+
+.concept-banner{background:#FFF8E1;border:1px solid #FFD54F;border-radius:var(--r);padding:0.875rem 1.25rem;margin-bottom:1.75rem;display:flex;align-items:center;gap:10px;font-size:13px;color:#7B5A00;}
+.concept-banner svg{flex-shrink:0;width:18px;height:18px;stroke:#F59E0B;fill:none;stroke-width:2;}
+
+.sec-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--dark);margin:2rem 0 0.875rem;display:flex;align-items:center;gap:8px;}
+.sec-label::before{content:'';width:3px;height:14px;background:var(--green);border-radius:2px;flex-shrink:0;}
+
+/* FILTERS */
+.filters-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:1.5rem;}
+.filters-head{background:#F7F6FF;border-bottom:1px solid var(--border);padding:0.75rem 1.25rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;}
+.filters-head:hover{background:#EEEEFF;}
+.filters-title{font-size:13px;font-weight:600;color:var(--dark);display:flex;align-items:center;gap:8px;}
+.p1-badge{display:inline-flex;align-items:center;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;background:#FEE2E2;color:#9B2C2C;}
+.filters-body{padding:1.25rem;}
+.filters-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.875rem;}
+.filter-item{display:flex;flex-direction:column;gap:4px;}
+.filter-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;}
+.filter-control{background:#F5F4FB;border:1px solid var(--border);border-radius:var(--r-sm);padding:7px 10px;font-size:13px;color:var(--text);display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:border-color 0.15s;}
+.filter-control:hover{border-color:var(--mid);}
+.filter-control svg{width:14px;height:14px;stroke:var(--muted);fill:none;stroke-width:2;flex-shrink:0;}
+.filter-placeholder{color:var(--muted);}
+.chev-sm{width:14px;height:14px;stroke:var(--mid);fill:none;stroke-width:2;transition:transform 0.2s;}
+.chev-sm.open{transform:rotate(180deg);}
+
+/* FUNNEL */
+.funnel-wrap{display:flex;flex-direction:column;gap:0;}
+
+.funnel-step{position:relative;}
+.funnel-step-inner{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem 1.5rem;display:grid;grid-template-columns:auto 1fr auto;gap:1.25rem;align-items:center;transition:box-shadow 0.15s;}
+.funnel-step-inner:hover{box-shadow:0 2px 12px rgba(56,5,108,0.08);}
+
+.funnel-connector{display:flex;justify-content:center;align-items:center;height:32px;position:relative;}
+.funnel-connector::before{content:'';position:absolute;left:50%;top:0;bottom:0;width:2px;background:var(--border);transform:translateX(-50%);}
+.funnel-connector-dot{width:8px;height:8px;background:var(--mid);border-radius:50%;z-index:1;position:relative;}
+.funnel-arrow{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid var(--mid);}
+
+.step-num{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;flex-shrink:0;}
+.step-num.s1{background:#EDE9FF;color:#5B21B6;}
+.step-num.s2{background:#DBEAFE;color:#1D4ED8;}
+.step-num.s3{background:#FEF3C7;color:#92400E;}
+.step-num.s4{background:#D1FAE5;color:#065F46;}
+
+.step-info{}
+.step-name{font-size:15px;font-weight:600;color:var(--dark);margin-bottom:3px;}
+.step-desc{font-size:12px;color:var(--muted);line-height:1.5;}
+.step-metrics{display:flex;gap:1.5rem;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;}
+.metric-box{text-align:right;}
+.metric-val{font-size:22px;font-weight:600;line-height:1;}
+.metric-lbl{font-size:10px;color:var(--muted);margin-top:2px;}
+.metric-conv{font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;margin-top:4px;display:inline-block;}
+.conv-good{background:#D1FAE5;color:#065F46;}
+.conv-warn{background:#FEF3C7;color:#92400E;}
+.conv-bad{background:#FEE2E2;color:#991B1B;}
+
+.metric-val.c1{color:#5B21B6;}
+.metric-val.c2{color:#1D4ED8;}
+.metric-val.c3{color:#92400E;}
+.metric-val.c4{color:#065F46;}
+
+/* CHARTS PLACEHOLDER */
+.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.5rem;}
+.chart-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;}
+.chart-title{font-size:13px;font-weight:600;color:var(--dark);margin-bottom:0.875rem;}
+.chart-placeholder{background:#F5F4FB;border:2px dashed var(--border);border-radius:var(--r-sm);height:160px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;}
+.chart-placeholder svg{width:28px;height:28px;stroke:var(--mid);fill:none;stroke-width:1.5;opacity:0.6;}
+.chart-placeholder-txt{font-size:12px;color:var(--muted);}
+
+/* BREAKDOWN TABLE */
+.breakdown-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-top:1rem;}
+.breakdown-head{background:#F7F6FF;padding:0.75rem 1.25rem;border-bottom:1px solid var(--border);}
+.breakdown-title{font-size:13px;font-weight:600;color:var(--dark);}
+.breakdown-table{width:100%;border-collapse:collapse;}
+.breakdown-table th{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;padding:0.625rem 1.25rem;text-align:left;border-bottom:1px solid var(--border);background:#FAFAFE;}
+.breakdown-table th:not(:first-child){text-align:right;}
+.breakdown-table td{font-size:13px;padding:0.75rem 1.25rem;border-bottom:1px solid var(--border);color:var(--text);}
+.breakdown-table td:not(:first-child){text-align:right;}
+.breakdown-table tr:last-child td{border-bottom:none;}
+.breakdown-table tr:hover td{background:#FAFAFE;}
+.td-muted{color:var(--muted);font-size:12px;}
+.td-pill{display:inline-flex;font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;}
+
+/* COLLAPSE */
+.filters-body{display:block;}
+.filters-body.collapsed{display:none;}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-logo">
+    <div class="nav-dot"><svg viewBox="0 0 16 16"><polyline points="2,12 6,7 10,9 14,4"/></svg></div>
+    <div><div class="nav-brand">Ренессанс Страхование</div><div class="nav-sub">Фабрика — Воронка продаж</div></div>
+  </div>
+  <button class="nav-back" onclick="window.location.href='index.html'">← Главная</button>
+</nav>
+
+<div class="main">
+
+  <div class="hero">
+    <div>
+      <div class="hero-h">Воронка продаж — Фабрика</div>
+      <div class="hero-s">Конверсия по шагам: Получение предложений → Расчёт → Проверки → Оплата</div>
+    </div>
+    <div class="hero-badge">Концепт</div>
+  </div>
+
+  <div class="concept-banner">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    Это концептуальный макет дашборда. Данные и графики будут подключены после согласования источников.
+  </div>
+
+  <!-- FILTERS -->
+  <div class="sec-label">Общие фильтры</div>
+
+  <div class="filters-card">
+    <div class="filters-head" onclick="toggleFilters()">
+      <div class="filters-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+        Фильтры
+        <span class="p1-badge">1 приоритет</span>
+      </div>
+      <svg class="chev-sm" id="filters-chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="filters-body" id="filters-body">
+      <div class="filters-grid">
+
+        <div class="filter-item">
+          <div class="filter-label">Тип</div>
+          <div class="filter-control">
+            <span class="filter-placeholder">НБ / Пролонгация</span>
+            <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+
+        <div class="filter-item">
+          <div class="filter-label">Канал продаж</div>
+          <div class="filter-control">
+            <span class="filter-placeholder">Все каналы</span>
+            <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+
+        <div class="filter-item">
+          <div class="filter-label">Филиал</div>
+          <div class="filter-control">
+            <span class="filter-placeholder">Все филиалы</span>
+            <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+
+        <div class="filter-item">
+          <div class="filter-label">Группа КП</div>
+          <div class="filter-control">
+            <span class="filter-placeholder">Все группы</span>
+            <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+
+        <div class="filter-item">
+          <div class="filter-label">Период</div>
+          <div class="filter-control">
+            <span class="filter-placeholder">Текущий месяц</span>
+            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+        </div>
+
+        <div class="filter-item">
+          <div class="filter-label">Тип страхователя</div>
+          <div class="filter-control">
+            <span class="filter-placeholder">ФЛ / ЮЛ</span>
+            <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+
+        <div class="filter-item">
+          <div class="filter-label">Тип ТС</div>
+          <div class="filter-control">
+            <span class="filter-placeholder">Легковое / Нелегковое</span>
+            <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+
+        <div class="filter-item">
+          <div class="filter-label">Источник</div>
+          <div class="filter-control">
+            <span class="filter-placeholder">КС / API</span>
+            <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+
+        <div class="filter-item">
+          <div class="filter-label">Тип оплаты</div>
+          <div class="filter-control">
+            <span class="filter-placeholder">Онлайн / Оффлайн</span>
+            <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+
+        <div class="filter-item">
+          <div class="filter-label">ЦИ</div>
+          <div class="filter-control">
+            <span class="filter-placeholder">Все ЦИ</span>
+            <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- FUNNEL -->
+  <div class="sec-label">Воронка по шагам</div>
+
+  <div class="funnel-wrap">
+
+    <!-- Step 1 -->
+    <div class="funnel-step">
+      <div class="funnel-step-inner">
+        <div class="step-num s1">1</div>
+        <div class="step-info">
+          <div class="step-name">Получение предложений</div>
+          <div class="step-desc">Запросы к страховщикам · Количество уникальных сессий с хотя бы одним ответом</div>
+        </div>
+        <div class="step-metrics">
+          <div class="metric-box">
+            <div class="metric-val c1">—</div>
+            <div class="metric-lbl">запросов</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val c1">—</div>
+            <div class="metric-lbl">с предложениями</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-conv conv-good">Старт воронки</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="funnel-connector"><div class="funnel-connector-dot"></div><div class="funnel-arrow"></div></div>
+
+    <!-- Step 2 -->
+    <div class="funnel-step">
+      <div class="funnel-step-inner">
+        <div class="step-num s2">2</div>
+        <div class="step-info">
+          <div class="step-name">Расчёт</div>
+          <div class="step-desc">Выбор предложения и переход к оформлению · Уникальные расчёты с выбранным котированием</div>
+        </div>
+        <div class="step-metrics">
+          <div class="metric-box">
+            <div class="metric-val c2">—</div>
+            <div class="metric-lbl">расчётов</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-conv conv-warn">конв. —%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="funnel-connector"><div class="funnel-connector-dot"></div><div class="funnel-arrow"></div></div>
+
+    <!-- Step 3 -->
+    <div class="funnel-step">
+      <div class="funnel-step-inner">
+        <div class="step-num s3">3</div>
+        <div class="step-info">
+          <div class="step-name">Проверки</div>
+          <div class="step-desc">Прохождение андеррайтинговых проверок · АвтоКод, КВС, история страхования, стоп-листы</div>
+        </div>
+        <div class="step-metrics">
+          <div class="metric-box">
+            <div class="metric-val c3">—</div>
+            <div class="metric-lbl">прошли проверки</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val c3">—</div>
+            <div class="metric-lbl">отказы</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-conv conv-warn">конв. —%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="funnel-connector"><div class="funnel-connector-dot"></div><div class="funnel-arrow"></div></div>
+
+    <!-- Step 4 -->
+    <div class="funnel-step">
+      <div class="funnel-step-inner">
+        <div class="step-num s4">4</div>
+        <div class="step-info">
+          <div class="step-name">Оплата</div>
+          <div class="step-desc">Успешная оплата и выпуск полиса · Финальный шаг воронки</div>
+        </div>
+        <div class="step-metrics">
+          <div class="metric-box">
+            <div class="metric-val c4">—</div>
+            <div class="metric-lbl">оплат</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val c4">—</div>
+            <div class="metric-lbl">сумма, ₽</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-conv conv-good">конв. —%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CHARTS -->
+  <div class="sec-label">Детализация</div>
+
+  <div class="charts-row">
+    <div class="chart-card">
+      <div class="chart-title">Конверсия по шагам, динамика</div>
+      <div class="chart-placeholder">
+        <svg viewBox="0 0 24 24"><polyline points="3 17 9 11 13 15 21 7"/></svg>
+        <div class="chart-placeholder-txt">График конверсии по периодам</div>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Отвалы по шагам</div>
+      <div class="chart-placeholder">
+        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="4" height="18"/><rect x="10" y="8" width="4" height="13"/><rect x="18" y="13" width="4" height="8"/></svg>
+        <div class="chart-placeholder-txt">Количество отвалов на каждом шаге</div>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Воронка по каналу продаж</div>
+      <div class="chart-placeholder">
+        <svg viewBox="0 0 24 24"><path d="M22 3H2l8 9.46V19l4 2V12.46z"/></svg>
+        <div class="chart-placeholder-txt">Разбивка конверсии по каналам</div>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Причины отказов на этапе Проверок</div>
+      <div class="chart-placeholder">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+        <div class="chart-placeholder-txt">Топ причин недопрохождения проверок</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BREAKDOWN TABLE -->
+  <div class="breakdown-card">
+    <div class="breakdown-head">
+      <div class="breakdown-title">Разбивка по типу (НБ / Пролонгация)</div>
+    </div>
+    <table class="breakdown-table">
+      <thead>
+        <tr>
+          <th>Тип</th>
+          <th>Предложения</th>
+          <th>Расчёт</th>
+          <th>Проверки</th>
+          <th>Оплата</th>
+          <th>Итоговая конв.</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>НБ</strong></td>
+          <td class="td-muted">—</td>
+          <td class="td-muted">—</td>
+          <td class="td-muted">—</td>
+          <td class="td-muted">—</td>
+          <td><span class="td-pill conv-good">—%</span></td>
+        </tr>
+        <tr>
+          <td><strong>Пролонгация</strong></td>
+          <td class="td-muted">—</td>
+          <td class="td-muted">—</td>
+          <td class="td-muted">—</td>
+          <td class="td-muted">—</td>
+          <td><span class="td-pill conv-warn">—%</span></td>
+        </tr>
+        <tr>
+          <td><strong>Итого</strong></td>
+          <td class="td-muted">—</td>
+          <td class="td-muted">—</td>
+          <td class="td-muted">—</td>
+          <td class="td-muted">—</td>
+          <td><span class="td-pill" style="background:#EDE9FF;color:#5B21B6;">—%</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+function toggleFilters() {
+  const body = document.getElementById('filters-body');
+  const chev = document.getElementById('filters-chev');
+  body.classList.toggle('collapsed');
+  chev.classList.toggle('open');
+}
+</script>
+</body>
+</html>
