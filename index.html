@@ -392,6 +392,13 @@ function showPage(id) {
   if (id === 'ym') setTimeout(renderCharts, 50);
 }
 
+function switchProdTab(id) {
+  document.querySelectorAll('.prod-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.prod-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`.prod-tab[onclick="switchProdTab('${id}')"]`).classList.add('active');
+  document.getElementById('panel-' + id).classList.add('active');
+}
+
 function toggleAcc(id) {
   const b = document.getElementById('body-' + id);
   const c = document.getElementById('chev-' + id);
