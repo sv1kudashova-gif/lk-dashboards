@@ -3,22 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Воронка продаж Каско</title>
+<title>Воронка продаж Каско — Фабрика</title>
 <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
   --dark:#38056C;--mid:#9A92FF;--green:#79FF3A;--light:#CCC8FF;
   --white:#FFFFFF;--bg:#F5F4FB;--text:#1A1A2E;--muted:#6B6B8A;
   --border:#CCC8FF;--r:12px;--r-sm:8px;
-  --c1:#5B21B6;--c2:#1D4ED8;--c3:#92400E;--c4:#065F46;--c5:#9D174D;
-  --bg1:#EDE9FF;--bg2:#DBEAFE;--bg3:#FEF3C7;--bg4:#D1FAE5;--bg5:#FCE7F3;
+  --s1:#5B21B6;--s2:#1D4ED8;--s3:#92400E;--s4:#065F46;--s5:#9D174D;
+  --s1bg:#EDE9FF;--s2bg:#DBEAFE;--s3bg:#FEF3C7;--s4bg:#D1FAE5;--s5bg:#FCE7F3;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Golos Text',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 
+/* NAV */
 .nav{background:var(--dark);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;position:sticky;top:0;z-index:100;}
 .nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:5px;background:var(--green);}
-.nav-logo{display:flex;align-items:center;gap:10px;}
+.nav-left{display:flex;align-items:center;gap:10px;}
 .nav-dot{width:28px;height:28px;background:var(--green);border-radius:6px;display:flex;align-items:center;justify-content:center;}
 .nav-dot svg{width:15px;height:15px;stroke:var(--dark);fill:none;stroke-width:2.5;}
 .nav-brand{color:var(--white);font-size:15px;font-weight:600;}
@@ -26,98 +27,102 @@ body{font-family:'Golos Text',system-ui,sans-serif;background:var(--bg);color:va
 .nav-back{color:var(--white);font-size:13px;padding:6px 14px;border-radius:6px;cursor:pointer;border:none;background:rgba(154,146,255,0.2);font-family:inherit;}
 .nav-back:hover{background:rgba(154,146,255,0.35);}
 
-.main{max-width:1100px;margin:0 auto;padding:2rem 1.5rem 4rem;}
+.main{max-width:1120px;margin:0 auto;padding:2rem 1.5rem 4rem;}
 
 /* HERO */
 .hero{background:var(--dark);border-radius:var(--r);padding:1.5rem 2rem;margin-bottom:1.5rem;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:1rem;}
-.hero::before{content:'';position:absolute;right:-50px;top:-50px;width:200px;height:200px;background:var(--mid);opacity:0.07;border-radius:50%;}
+.hero::before{content:'';position:absolute;right:-40px;top:-40px;width:180px;height:180px;background:var(--mid);opacity:0.07;border-radius:50%;}
 .hero::after{content:'';position:absolute;right:0;top:0;bottom:0;width:5px;background:var(--green);}
 .hero-h{color:var(--white);font-size:20px;font-weight:600;margin-bottom:4px;}
 .hero-s{color:var(--light);font-size:12px;}
-.hero-kpi{display:flex;gap:2rem;flex-shrink:0;}
-.hero-kpi-item{text-align:right;}
-.hero-kpi-val{font-size:24px;font-weight:600;color:var(--green);line-height:1;}
-.hero-kpi-lbl{font-size:10px;color:var(--mid);margin-top:3px;}
+.hero-kpis{display:flex;gap:2.5rem;flex-shrink:0;}
+.kpi-val{font-size:24px;font-weight:600;color:var(--green);line-height:1;}
+.kpi-lbl{font-size:10px;color:var(--mid);margin-top:3px;}
 
 /* SEC LABEL */
-.sec-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--dark);margin:2rem 0 0.875rem;display:flex;align-items:center;gap:8px;}
+.sec-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--dark);margin:2rem 0 1rem;display:flex;align-items:center;gap:8px;}
 .sec-label::before{content:'';width:3px;height:14px;background:var(--green);border-radius:2px;flex-shrink:0;}
 
+/* CONCEPT */
+.concept-banner{background:#FFF8E1;border:1px solid #FFD54F;border-radius:var(--r);padding:0.75rem 1.25rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:10px;font-size:12px;color:#7B5A00;}
+.concept-banner svg{flex-shrink:0;width:16px;height:16px;stroke:#F59E0B;fill:none;stroke-width:2;}
+
 /* TABS ФЛ/ЮЛ */
-.seg-tabs{display:flex;gap:6px;margin-bottom:1.5rem;background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:6px;width:fit-content;}
-.seg-tab{font-size:13px;font-weight:500;padding:7px 24px;border-radius:var(--r-sm);border:none;background:transparent;color:var(--muted);cursor:pointer;font-family:inherit;transition:all 0.15s;}
+.seg-wrap{display:flex;align-items:center;gap:6px;margin-bottom:1.5rem;}
+.seg-tabs{display:flex;gap:4px;background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:5px;}
+.seg-tab{font-size:13px;font-weight:500;padding:7px 22px;border-radius:var(--r-sm);border:none;background:transparent;color:var(--muted);cursor:pointer;font-family:inherit;transition:all 0.15s;}
 .seg-tab.active{background:var(--dark);color:var(--white);}
 .seg-tab:hover:not(.active){background:var(--bg);color:var(--dark);}
-
 .seg-panel{display:none;}
 .seg-panel.active{display:block;}
 
-/* FUNNEL VISUAL */
-.funnel-visual{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1rem;}
-.funnel-visual-title{font-size:13px;font-weight:600;color:var(--dark);margin-bottom:1.25rem;display:flex;align-items:center;justify-content:space-between;}
-.conv-total{font-size:12px;font-weight:600;padding:4px 12px;border-radius:20px;background:#D1FAE5;color:#065F46;}
+/* ── ВОРОНКА ВИЗУАЛ ── */
+.funnel-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.5rem;}
+.funnel-card-title{font-size:13px;font-weight:600;color:var(--dark);margin-bottom:1.25rem;display:flex;align-items:center;justify-content:space-between;}
+.conv-badge{font-size:12px;font-weight:600;padding:4px 14px;border-radius:20px;background:#D1FAE5;color:#065F46;}
+.conv-badge.nodata{background:#F5F4FB;color:var(--muted);}
 
-.funnel-bars{display:flex;flex-direction:column;gap:6px;}
-.fbar-row{display:flex;align-items:center;gap:12px;}
-.fbar-label{width:220px;flex-shrink:0;font-size:12px;color:var(--text);}
-.fbar-label-num{font-size:10px;font-weight:600;color:var(--muted);display:block;margin-top:1px;}
-.fbar-track{flex:1;height:32px;background:#F5F4FB;border-radius:6px;overflow:hidden;position:relative;}
-.fbar-fill{height:100%;border-radius:6px;display:flex;align-items:center;padding:0 10px;transition:width 0.6s ease;position:relative;}
-.fbar-fill span{font-size:12px;font-weight:600;color:white;white-space:nowrap;}
-.fbar-pct{width:52px;flex-shrink:0;text-align:right;font-size:12px;font-weight:600;color:var(--muted);}
-.fbar-drop{width:80px;flex-shrink:0;text-align:right;}
-.fbar-drop span{font-size:11px;padding:2px 7px;border-radius:12px;background:#FEE2E2;color:#991B1B;white-space:nowrap;}
-.fbar-drop span.nodrop{background:#D1FAE5;color:#065F46;}
+.fv-row{display:grid;grid-template-columns:200px 1fr 56px 96px;align-items:center;gap:12px;margin-bottom:4px;}
+.fv-label{font-size:12px;color:var(--text);line-height:1.3;}
+.fv-sub{font-size:10px;color:var(--muted);display:block;}
+.fv-track{height:36px;background:#F5F4FB;border-radius:6px;overflow:hidden;}
+.fv-fill{height:100%;border-radius:6px;display:flex;align-items:center;padding:0 12px;min-width:60px;}
+.fv-fill span{font-size:12px;font-weight:600;color:#fff;white-space:nowrap;}
+.fv-pct{font-size:12px;font-weight:600;color:var(--muted);text-align:right;}
+.fv-drop{text-align:right;}
+.drop-pill{display:inline-flex;font-size:11px;font-weight:600;padding:3px 8px;border-radius:12px;white-space:nowrap;}
+.dp-red{background:#FEE2E2;color:#991B1B;}
+.dp-green{background:#D1FAE5;color:#065F46;}
+.dp-gray{background:#F5F4FB;color:var(--muted);}
 
-.funnel-arrow-row{display:flex;align-items:center;gap:12px;height:14px;margin:-2px 0;}
-.funnel-arrow-spacer{width:220px;flex-shrink:0;}
-.funnel-arrow-line{flex:1;display:flex;align-items:center;padding:0 16px;}
-.funnel-arrow-line::before{content:'';display:block;width:2px;height:14px;background:var(--border);margin:0 auto;}
+.fv-connector{display:grid;grid-template-columns:200px 1fr 56px 96px;height:16px;margin-bottom:4px;}
+.fv-connector-line{display:flex;justify-content:center;}
+.fv-connector-line::before{content:'';width:2px;height:100%;background:var(--border);display:block;}
 
-/* STEP CARDS */
-.steps-grid{display:flex;flex-direction:column;gap:10px;margin-bottom:1.5rem;}
-
-.step-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
-.step-card-head{padding:0.75rem 1.25rem;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);}
-.step-badge{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0;}
-.step-name{font-size:14px;font-weight:600;color:var(--dark);}
+/* ── ШАГИ ДЕТАЛЬНО ── */
+.step-block{background:var(--white);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:10px;}
+.step-head{display:flex;align-items:center;gap:12px;padding:0.875rem 1.25rem;border-bottom:1px solid var(--border);}
+.step-num{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;}
+.step-title{font-size:14px;font-weight:600;color:var(--dark);}
 .step-sub{font-size:11px;color:var(--muted);margin-top:1px;}
 
-.step-metrics{display:grid;grid-template-columns:repeat(6,1fr);gap:0;}
-.metric{padding:0.875rem 1rem;border-right:1px solid var(--border);text-align:center;}
-.metric:last-child{border-right:none;}
-.metric-val{font-size:18px;font-weight:600;line-height:1;margin-bottom:3px;}
-.metric-lbl{font-size:10px;color:var(--muted);line-height:1.35;}
-.metric.good .metric-val{color:#065F46;}
-.metric.warn .metric-val{color:#92400E;}
-.metric.bad .metric-val{color:#991B1B;}
-.metric.neutral .metric-val{color:var(--dark);}
-.metric.accent .metric-val{color:var(--c1);}
+/* таблица метрик */
+.metrics-table{width:100%;border-collapse:collapse;}
+.metrics-table th{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;padding:0.625rem 1rem;text-align:center;border-right:1px solid var(--border);border-bottom:1px solid var(--border);background:#FAFAFE;white-space:nowrap;}
+.metrics-table th:last-child{border-right:none;}
+.metrics-table td{font-size:15px;font-weight:600;padding:0.875rem 1rem;text-align:center;border-right:1px solid var(--border);}
+.metrics-table td:last-child{border-right:none;}
+.metrics-table .td-sub{font-size:10px;font-weight:400;color:var(--muted);display:block;margin-top:3px;}
+.metrics-table .td-pill{display:inline-flex;font-size:10px;font-weight:600;padding:2px 8px;border-radius:12px;margin-top:4px;}
 
-.pill{display:inline-flex;font-size:10px;font-weight:600;padding:2px 7px;border-radius:12px;margin-top:4px;}
-.pill-green{background:#D1FAE5;color:#065F46;}
+.col-na   {color:var(--dark);}
+.col-ok   {color:#065F46;}
+.col-pct  {color:#1D4ED8;}
+.col-bad  {color:#991B1B;}
+.col-drop {color:#92400E;}
+.col-miss {color:#6B6B8A;}
+
+.pill-green {background:#D1FAE5;color:#065F46;}
 .pill-yellow{background:#FEF3C7;color:#92400E;}
-.pill-red{background:#FEE2E2;color:#991B1B;}
-.pill-purple{background:#EDE9FF;color:#5B21B6;}
+.pill-red   {background:#FEE2E2;color:#991B1B;}
+.pill-blue  {background:#DBEAFE;color:#1D4ED8;}
+.pill-gray  {background:#F5F4FB;color:#6B6B8A;}
 
-/* SUMMARY ROW */
-.summary-card{background:var(--dark);border-radius:var(--r);padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:1rem;}
-.summary-title{color:var(--light);font-size:13px;font-weight:500;}
-.summary-kpis{display:flex;gap:2.5rem;}
-.summary-kpi-val{font-size:22px;font-weight:600;color:var(--green);line-height:1;}
-.summary-kpi-lbl{font-size:10px;color:var(--mid);margin-top:3px;}
-
-/* Concept banner */
-.concept-banner{background:#FFF8E1;border:1px solid #FFD54F;border-radius:var(--r);padding:0.75rem 1.25rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:10px;font-size:12px;color:#7B5A00;}
-.concept-banner svg{flex-shrink:0;width:16px;height:16px;stroke:#F59E0B;fill:none;stroke-width:2;}
+/* ИТОГ */
+.total-card{background:var(--dark);border-radius:var(--r);padding:1.25rem 1.75rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:1.5rem;}
+.total-left{color:var(--light);font-size:13px;}
+.total-left strong{color:var(--white);display:block;font-size:15px;margin-bottom:3px;}
+.total-kpis{display:flex;gap:3rem;}
+.total-kpi .val{font-size:24px;font-weight:600;color:var(--green);line-height:1;}
+.total-kpi .lbl{font-size:10px;color:var(--mid);margin-top:4px;}
 </style>
 </head>
 <body>
 
 <nav class="nav">
-  <div class="nav-logo">
+  <div class="nav-left">
     <div class="nav-dot"><svg viewBox="0 0 16 16"><polyline points="2,12 6,7 10,9 14,4"/></svg></div>
-    <div><div class="nav-brand">Ренессанс Страхование</div><div class="nav-sub">Каско — Воронка продаж по шагам</div></div>
+    <div><div class="nav-brand">Ренессанс Страхование</div><div class="nav-sub">Фабрика · Воронка продаж Каско</div></div>
   </div>
   <button class="nav-back" onclick="window.location.href='index.html'">← Главная</button>
 </nav>
@@ -127,349 +132,261 @@ body{font-family:'Golos Text',system-ui,sans-serif;background:var(--bg);color:va
   <div class="hero">
     <div>
       <div class="hero-h">Воронка продаж — Каско</div>
-      <div class="hero-s">Кальк 1 → Кальк 2 → Импорт → Проверки → Оформление · ФЛ и ЮЛ отдельно</div>
+      <div class="hero-s">Кальк 1 → Кальк 2 → Импорт → Проверки → Оформление · Доли всегда от Шага 1</div>
     </div>
-    <div class="hero-kpi">
-      <div class="hero-kpi-item" id="hero-step1-fl">
-        <div class="hero-kpi-val" id="hero-s1">—</div>
-        <div class="hero-kpi-lbl">на шаге 1 (ФЛ)</div>
-      </div>
-      <div class="hero-kpi-item">
-        <div class="hero-kpi-val" id="hero-conv">—</div>
-        <div class="hero-kpi-lbl">итог. конверсия</div>
-      </div>
+    <div class="hero-kpis">
+      <div><div class="kpi-val" id="h-step1">—</div><div class="kpi-lbl">на шаге 1</div></div>
+      <div><div class="kpi-val" id="h-issued">—</div><div class="kpi-lbl">оформлено полисов</div></div>
+      <div><div class="kpi-val" id="h-conv">—%</div><div class="kpi-lbl">итог. конверсия</div></div>
     </div>
   </div>
 
   <div class="concept-banner">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-    Концептуальный макет. Данные будут подключены из источника (Статистика Каско · Уникальные). Структура воронки согласована.
+    Концептуальный макет · Данные подключаются из «Статистика Каско (Уникальные)» · Замените <code>null</code> на реальные значения в блоке DATA
   </div>
 
   <!-- TABS -->
-  <div class="seg-tabs">
-    <button class="seg-tab active" onclick="switchSeg('fl')">Физические лица (ФЛ)</button>
-    <button class="seg-tab" onclick="switchSeg('ul')">Юридические лица (ЮЛ)</button>
+  <div class="seg-wrap">
+    <div class="seg-tabs">
+      <button class="seg-tab active" onclick="switchSeg('fl')">ФЛ — Физические лица</button>
+      <button class="seg-tab"        onclick="switchSeg('ul')">ЮЛ — Юридические лица</button>
+    </div>
   </div>
 
-  <!-- ===== ФЛ ===== -->
-  <div class="seg-panel active" id="seg-fl">
+  <!-- FL -->
+  <div class="seg-panel active" id="seg-fl"></div>
+  <!-- UL -->
+  <div class="seg-panel"        id="seg-ul"></div>
 
-    <div class="sec-label">Визуал воронки — ФЛ</div>
-
-    <div class="funnel-visual">
-      <div class="funnel-visual-title">
-        Относительный размер шагов (от шага 1)
-        <span class="conv-total" id="fl-conv-total">Итог. конверсия: —%</span>
-      </div>
-      <div class="funnel-bars" id="fl-funnel-bars">
-        <!-- JS render -->
-      </div>
-    </div>
-
-    <div class="sec-label">Детализация по шагам — ФЛ</div>
-    <div class="steps-grid" id="fl-steps-grid">
-      <!-- JS render -->
-    </div>
-
-    <div class="summary-card" id="fl-summary">
-      <div>
-        <div class="summary-title">Итоговая конверсия ФЛ</div>
-        <div style="color:var(--light);font-size:11px;margin-top:3px;">Оформленные полисы / Кол-во на Шаге 1</div>
-      </div>
-      <div class="summary-kpis" id="fl-summary-kpis"><!-- JS --></div>
-    </div>
-
-  </div>
-
-  <!-- ===== ЮЛ ===== -->
-  <div class="seg-panel" id="seg-ul">
-
-    <div class="sec-label">Визуал воронки — ЮЛ</div>
-
-    <div class="funnel-visual">
-      <div class="funnel-visual-title">
-        Относительный размер шагов (от шага 1)
-        <span class="conv-total" id="ul-conv-total">Итог. конверсия: —%</span>
-      </div>
-      <div class="funnel-bars" id="ul-funnel-bars"><!-- JS --></div>
-    </div>
-
-    <div class="sec-label">Детализация по шагам — ЮЛ</div>
-    <div class="steps-grid" id="ul-steps-grid"><!-- JS --></div>
-
-    <div class="summary-card" id="ul-summary">
-      <div>
-        <div class="summary-title">Итоговая конверсия ЮЛ</div>
-        <div style="color:var(--light);font-size:11px;margin-top:3px;">Оформленные полисы / Кол-во на Шаге 1</div>
-      </div>
-      <div class="summary-kpis" id="ul-summary-kpis"><!-- JS --></div>
-    </div>
-
-  </div>
-
-</div>
+</div><!-- /main -->
 
 <script>
-// ─── DATA ────────────────────────────────────────────────────────────────────
-// Замените значения на реальные после подключения источника.
-// null = нет данных (будет показан прочерк)
+// ═══════════════════════════════════════════════════════════════════
+//  DATA — подставьте реальные значения (null = нет данных)
+// ═══════════════════════════════════════════════════════════════════
 const DATA = {
-  fl: {
-    steps: [
-      {
-        num: 1,
-        name: 'Получение предложений',
-        sub: 'Кальк 1',
-        color: '#5B21B6', bg: '#EDE9FF',
-        на_шаге: null,
-        успешных: null,
-        доля_успешных_от_1: null,    // % от шага 1
-        неуспешных: null,
-        доля_неуспешных: null,
-        не_перешли: null,
-      },
-      {
-        num: 2,
-        name: 'Предварительный расчёт',
-        sub: 'Кальк 2',
-        color: '#1D4ED8', bg: '#DBEAFE',
-        на_шаге: null,
-        успешных: null,
-        доля_успешных_от_1: null,
-        неуспешных: null,
-        доля_неуспешных: null,
-        не_перешли: null,
-      },
-      {
-        num: 3,
-        name: 'Окончательный расчёт',
-        sub: 'Импорт',
-        color: '#92400E', bg: '#FEF3C7',
-        на_шаге: null,
-        успешных: null,
-        доля_успешных_от_1: null,
-        неуспешных: null,
-        доля_неуспешных: null,
-        не_перешли: null,
-      },
-      {
-        num: 4,
-        name: 'Проверки',
-        sub: 'ОТА / УРМ / ПСО / ОА',
-        color: '#065F46', bg: '#D1FAE5',
-        на_шаге: null,
-        успешных: null,
-        доля_успешных_от_1: null,
-        неуспешных: null,
-        доля_неуспешных: null,
-        не_перешли: null,
-      },
-      {
-        num: 5,
-        name: 'Оформление',
-        sub: 'Выпуск полиса',
-        color: '#9D174D', bg: '#FCE7F3',
-        на_шаге: null,
-        успешных: null,         // = оформленные полисы
-        доля_успешных_от_1: null,
-        неуспешных: null,
-        доля_неуспешных: null,
-        не_перешли: null,
-      },
-    ]
-  },
-  ul: {
-    steps: [
-      {
-        num: 1, name: 'Получение предложений', sub: 'Кальк 1',
-        color: '#5B21B6', bg: '#EDE9FF',
-        на_шаге: null, успешных: null, доля_успешных_от_1: null,
-        неуспешных: null, доля_неуспешных: null, не_перешли: null,
-      },
-      {
-        num: 2, name: 'Предварительный расчёт', sub: 'Кальк 2',
-        color: '#1D4ED8', bg: '#DBEAFE',
-        на_шаге: null, успешных: null, доля_успешных_от_1: null,
-        неуспешных: null, доля_неуспешных: null, не_перешли: null,
-      },
-      {
-        num: 3, name: 'Окончательный расчёт', sub: 'Импорт',
-        color: '#92400E', bg: '#FEF3C7',
-        на_шаге: null, успешных: null, доля_успешных_от_1: null,
-        неуспешных: null, доля_неуспешных: null, не_перешли: null,
-      },
-      {
-        num: 4, name: 'Проверки', sub: 'ОТА / УРМ / ПСО / ОА',
-        color: '#065F46', bg: '#D1FAE5',
-        на_шаге: null, успешных: null, доля_успешных_от_1: null,
-        неуспешных: null, доля_неуспешных: null, не_перешли: null,
-      },
-      {
-        num: 5, name: 'Оформление', sub: 'Выпуск полиса',
-        color: '#9D174D', bg: '#FCE7F3',
-        на_шаге: null, успешных: null, доля_успешных_от_1: null,
-        неуспешных: null, доля_неуспешных: null, не_перешли: null,
-      },
-    ]
-  }
+  fl: [
+    // Шаг 1 — Получение предложений (Кальк 1)
+    {
+      num: 1, name: 'Получение предложений', sub: 'Кальк 1',
+      color:'var(--s1)', bg:'var(--s1bg)',
+      na_shage:    null,   // кол-во, кто перешёл на шаг
+      uspeshnih:   null,   // кол-во успешных переходов (→ след. шаг)
+      neuspeshnih: null,   // кол-во неуспешных переходов
+      dol_neus:    null,   // % неуспешных от кол-ва на шаге
+      ne_pereshli: null,   // кол-во не перешедших на след. шаг
+      // доля успешных от шага 1 — для шага 1 это 100%
+    },
+    // Шаг 2 — Предварительный расчёт (Кальк 2)
+    {
+      num: 2, name: 'Предварительный расчёт', sub: 'Кальк 2',
+      color:'var(--s2)', bg:'var(--s2bg)',
+      na_shage:    null,
+      uspeshnih:   null,
+      neuspeshnih: null,
+      dol_neus:    null,
+      ne_pereshli: null,
+    },
+    // Шаг 3 — Окончательный расчёт (Импорт)
+    {
+      num: 3, name: 'Окончательный расчёт', sub: 'Импорт',
+      color:'var(--s3)', bg:'var(--s3bg)',
+      na_shage:    null,
+      uspeshnih:   null,
+      neuspeshnih: null,
+      dol_neus:    null,
+      ne_pereshli: null,
+    },
+    // Шаг 4 — Проверки
+    {
+      num: 4, name: 'Проверки', sub: 'ОТА / УРМ / ПСО / ОА',
+      color:'var(--s4)', bg:'var(--s4bg)',
+      na_shage:    null,
+      uspeshnih:   null,
+      neuspeshnih: null,
+      dol_neus:    null,
+      ne_pereshli: null,
+    },
+    // Шаг 5 — Оформление (финал)
+    {
+      num: 5, name: 'Оформление', sub: 'Выпуск полиса',
+      color:'var(--s5)', bg:'var(--s5bg)',
+      na_shage:    null,
+      uspeshnih:   null,   // = кол-во оформленных полисов
+      neuspeshnih: null,
+      dol_neus:    null,
+      ne_pereshli: null,   // на последнем шаге — не применимо
+    },
+  ],
+  ul: [
+    {num:1,name:'Получение предложений',sub:'Кальк 1',color:'var(--s1)',bg:'var(--s1bg)',na_shage:null,uspeshnih:null,neuspeshnih:null,dol_neus:null,ne_pereshli:null},
+    {num:2,name:'Предварительный расчёт',sub:'Кальк 2',color:'var(--s2)',bg:'var(--s2bg)',na_shage:null,uspeshnih:null,neuspeshnih:null,dol_neus:null,ne_pereshli:null},
+    {num:3,name:'Окончательный расчёт',sub:'Импорт',color:'var(--s3)',bg:'var(--s3bg)',na_shage:null,uspeshnih:null,neuspeshnih:null,dol_neus:null,ne_pereshli:null},
+    {num:4,name:'Проверки',sub:'ОТА / УРМ / ПСО / ОА',color:'var(--s4)',bg:'var(--s4bg)',na_shage:null,uspeshnih:null,neuspeshnih:null,dol_neus:null,ne_pereshli:null},
+    {num:5,name:'Оформление',sub:'Выпуск полиса',color:'var(--s5)',bg:'var(--s5bg)',na_shage:null,uspeshnih:null,neuspeshnih:null,dol_neus:null,ne_pereshli:null},
+  ]
 };
 
-// ─── HELPERS ─────────────────────────────────────────────────────────────────
-const fmt = v => v == null ? '—' : Number(v).toLocaleString('ru');
-const fmtPct = v => v == null ? '—' : v + '%';
+// ───────────────────────────────────────────────────────────────────
+const f  = v => v == null ? '—' : Number(v).toLocaleString('ru');
+const fp = v => v == null ? '—%' : v + '%';
 
-function dropPill(v) {
-  if (v == null) return '<span class="pill pill-purple">—</span>';
-  if (v === 0)  return '<span class="pill pill-green">0</span>';
-  return `<span class="pill pill-red">-${fmt(v)}</span>`;
+function pctOf1(val, s1){ return (val!=null && s1) ? +((val/s1)*100).toFixed(1) : null; }
+
+function pillPct(v, type) {
+  // type 'ok' → higher is better; 'bad' → lower is better
+  if (v == null) return `<span class="td-pill pill-gray">${fp(v)}</span>`;
+  const p = parseFloat(v);
+  let cls;
+  if (type === 'ok')  cls = p>=90?'pill-green':p>=70?'pill-yellow':'pill-red';
+  else                cls = p<=5 ?'pill-green':p<=15 ?'pill-yellow':'pill-red';
+  return `<span class="td-pill ${cls}">${fp(v)}</span>`;
 }
-function pctPill(v, type) {
-  if (v == null) return '<span class="pill pill-purple">—%</span>';
-  const cls = type === 'good'
-    ? (v >= 90 ? 'pill-green' : v >= 70 ? 'pill-yellow' : 'pill-red')
-    : (v <= 5  ? 'pill-green' : v <= 15 ? 'pill-yellow' : 'pill-red');
-  return `<span class="pill ${cls}">${v}%</span>`;
-}
 
-// ─── RENDER FUNNEL BARS ───────────────────────────────────────────────────────
-function renderBars(seg) {
-  const d = DATA[seg];
-  const s1 = d.steps[0].на_шаге;
-  const sLast = d.steps[d.steps.length - 1].успешных;
-  const conv = (s1 && sLast) ? ((sLast / s1) * 100).toFixed(1) : null;
+// ── строим HTML секции для одного сегмента ──────────────────────────
+function buildSegment(seg) {
+  const steps = DATA[seg];
+  const s1 = steps[0].na_shage;
+  const sLast = steps[steps.length-1].uspeshnih;
+  const convFinal = (s1&&sLast) ? +((sLast/s1)*100).toFixed(1) : null;
 
-  document.getElementById(`${seg}-conv-total`).textContent =
-    conv ? `Итог. конверсия: ${conv}%` : 'Итог. конверсия: нет данных';
+  // обновляем hero только для ФЛ
+  if (seg==='fl') {
+    document.getElementById('h-step1').textContent   = f(s1);
+    document.getElementById('h-issued').textContent  = f(sLast);
+    document.getElementById('h-conv').textContent    = fp(convFinal);
+  }
 
   let html = '';
-  d.steps.forEach((step, i) => {
-    const pct = (s1 && step.на_шаге) ? Math.round((step.на_шаге / s1) * 100) : null;
-    const width = pct ?? 100;
-    const drop = (i < d.steps.length - 1 && step.на_шаге && d.steps[i+1].на_шаге)
-      ? step.на_шаге - d.steps[i+1].на_шаге : null;
+
+  // ── ВОРОНКА ВИЗУАЛ ──────────────────────────────────────────────
+  const convBadge = convFinal
+    ? `<span class="conv-badge">Итог. конверсия: ${fp(convFinal)}</span>`
+    : `<span class="conv-badge nodata">Нет данных</span>`;
+
+  html += `<div class="funnel-card">
+    <div class="funnel-card-title">Воронка по шагам — относительный размер от Шага 1 ${convBadge}</div>
+    <div>`;
+
+  steps.forEach((step, i) => {
+    const pct = pctOf1(step.na_shage, s1) ?? (i===0 ? 100 : null);
+    const w   = pct ?? 60; // fallback ширина для пустых
+    const drop = (!s1 || step.na_shage==null || steps[i+1]?.na_shage==null)
+      ? null : step.na_shage - steps[i+1].na_shage;
+    const isLast = i === steps.length-1;
 
     html += `
-      <div class="fbar-row">
-        <div class="fbar-label">
+      <div class="fv-row">
+        <div class="fv-label">
           <span>Шаг ${step.num}. ${step.name}</span>
-          <span class="fbar-label-num">${step.sub}</span>
+          <span class="fv-sub">${step.sub}</span>
         </div>
-        <div class="fbar-track">
-          <div class="fbar-fill" style="width:${width}%;background:${step.color};">
-            <span>${fmt(step.на_шаге)}</span>
+        <div class="fv-track">
+          <div class="fv-fill" style="width:${w}%;background:${step.color};">
+            <span>${f(step.na_shage)}</span>
           </div>
         </div>
-        <div class="fbar-pct">${fmtPct(pct)}</div>
-        <div class="fbar-drop">${i < d.steps.length - 1 ? dropPill(drop) : '<span class="pill pill-green">финал</span>'}</div>
+        <div class="fv-pct">${fp(pct)}</div>
+        <div class="fv-drop">
+          ${isLast
+            ? `<span class="drop-pill dp-green">финал</span>`
+            : drop!=null
+              ? `<span class="drop-pill dp-red">−${f(drop)}</span>`
+              : `<span class="drop-pill dp-gray">—</span>`}
+        </div>
       </div>`;
 
-    if (i < d.steps.length - 1) {
-      html += `<div class="funnel-arrow-row"><div class="funnel-arrow-spacer"></div><div class="funnel-arrow-line"></div><div style="width:132px;"></div></div>`;
+    if (!isLast) {
+      html += `<div class="fv-connector"><div></div><div class="fv-connector-line"></div><div></div><div></div></div>`;
     }
   });
 
-  document.getElementById(`${seg}-funnel-bars`).innerHTML = html;
-}
+  html += `</div></div>`; // /funnel-card
 
-// ─── RENDER STEP CARDS ────────────────────────────────────────────────────────
-function renderSteps(seg) {
-  const d = DATA[seg];
-  const s1 = d.steps[0].на_шаге;
-  let html = '';
+  // ── ШАГИ ДЕТАЛЬНО ───────────────────────────────────────────────
+  html += `<div class="sec-label">Детализация по шагам</div>`;
 
-  d.steps.forEach((step, i) => {
-    const isLast = i === d.steps.length - 1;
-    const доля_от_1 = (s1 && step.на_шаге)
-      ? ((step.на_шаге / s1) * 100).toFixed(1) : step.доля_успешных_от_1;
-    const не_перешли = step.не_перешли ??
-      (step.успешных != null && d.steps[i+1]?.на_шаге != null
-        ? step.успешных - d.steps[i+1].на_шаге : null);
+  steps.forEach((step, i) => {
+    const isLast = i === steps.length - 1;
+    const dol_ot1 = i===0 ? (s1?100:null) : pctOf1(step.na_shage, s1);
+    const ne_pereshli = step.ne_pereshli ??
+      (step.uspeshnih!=null && steps[i+1]?.na_shage!=null
+        ? step.uspeshnih - steps[i+1].na_shage : null);
 
     html += `
-    <div class="step-card">
-      <div class="step-card-head" style="background:${step.bg}20;border-left:4px solid ${step.color};">
-        <div class="step-badge" style="background:${step.bg};color:${step.color};">${step.num}</div>
+    <div class="step-block">
+      <div class="step-head" style="background:color-mix(in srgb,${step.bg} 40%,white);border-left:4px solid ${step.color};">
+        <div class="step-num" style="background:${step.bg};color:${step.color};">${step.num}</div>
         <div>
-          <div class="step-name">Шаг ${step.num}. ${step.name}</div>
+          <div class="step-title">Шаг ${step.num}. ${step.name}</div>
           <div class="step-sub">${step.sub}</div>
         </div>
       </div>
-      <div class="step-metrics">
-        <div class="metric accent">
-          <div class="metric-val" style="color:${step.color};">${fmt(step.на_шаге)}</div>
-          <div class="metric-lbl">на шаге</div>
-        </div>
-        <div class="metric good">
-          <div class="metric-val">${fmt(step.успешных)}</div>
-          <div class="metric-lbl">успешных переходов</div>
-          ${pctPill(step.доля_успешных_от_1 ?? доля_от_1, 'good')}
-        </div>
-        <div class="metric neutral">
-          <div class="metric-val" style="color:var(--muted);font-size:14px;">${fmtPct(доля_от_1)}</div>
-          <div class="metric-lbl">доля от шага 1</div>
-        </div>
-        <div class="metric bad">
-          <div class="metric-val">${fmt(step.неуспешных)}</div>
-          <div class="metric-lbl">неуспешных</div>
-          ${pctPill(step.доля_неуспешных, 'bad')}
-        </div>
-        <div class="metric warn">
-          <div class="metric-val">${fmt(step.доля_неуспешных)}</div>
-          <div class="metric-lbl">% неуспешных</div>
-        </div>
-        <div class="metric neutral">
-          <div class="metric-val" style="color:#6B6B8A;">${isLast ? '—' : fmt(не_перешли)}</div>
-          <div class="metric-lbl">не перешли на след. шаг${isLast ? ' (финал)' : ''}</div>
-        </div>
-      </div>
+      <table class="metrics-table">
+        <thead><tr>
+          <th>Кол-во на шаге</th>
+          <th>Успешных переходов</th>
+          <th>Доля от Шага 1</th>
+          <th>Неуспешных переходов</th>
+          <th>% неуспешных</th>
+          <th>Не перешли на след. шаг</th>
+        </tr></thead>
+        <tbody><tr>
+          <td class="col-na">
+            ${f(step.na_shage)}
+            ${i===0 ? `<span class="td-pill pill-blue td-sub">старт воронки</span>` : ''}
+          </td>
+          <td class="col-ok">
+            ${f(step.uspeshnih)}
+            ${pillPct(step.uspeshnih!=null&&step.na_shage ? +((step.uspeshnih/step.na_shage)*100).toFixed(1) : null, 'ok')}
+          </td>
+          <td class="col-pct">
+            ${fp(dol_ot1)}
+            <span class="td-sub">от ${f(s1)}</span>
+          </td>
+          <td class="col-bad">${f(step.neuspeshnih)}</td>
+          <td class="col-drop">
+            ${pillPct(step.dol_neus, 'bad')}
+            <span class="td-sub">${f(step.neuspeshnih)} из ${f(step.na_shage)}</span>
+          </td>
+          <td class="col-miss">
+            ${isLast ? '<span style="color:var(--muted);font-size:13px;">—</span>' : f(ne_pereshli)}
+            ${!isLast && ne_pereshli!=null && step.uspeshnih!=null
+              ? `<span class="td-sub">${+((ne_pereshli/step.uspeshnih)*100).toFixed(1)}% от успешных</span>` : ''}
+          </td>
+        </tr></tbody>
+      </table>
     </div>`;
   });
 
-  document.getElementById(`${seg}-steps-grid`).innerHTML = html;
+  // ── ИТОГОВАЯ КОНВЕРСИЯ ───────────────────────────────────────────
+  html += `
+  <div class="total-card">
+    <div class="total-left">
+      <strong>Итоговая конверсия — ${seg==='fl'?'ФЛ':'ЮЛ'}</strong>
+      Оформленные полисы / Кол-во на Шаге 1
+    </div>
+    <div class="total-kpis">
+      <div class="total-kpi"><div class="val">${f(s1)}</div><div class="lbl">на шаге 1</div></div>
+      <div class="total-kpi"><div class="val">${f(sLast)}</div><div class="lbl">оформлено полисов</div></div>
+      <div class="total-kpi"><div class="val">${fp(convFinal)}</div><div class="lbl">итог. конверсия</div></div>
+    </div>
+  </div>`;
+
+  document.getElementById('seg-' + seg).innerHTML = html;
 }
 
-// ─── RENDER SUMMARY ───────────────────────────────────────────────────────────
-function renderSummary(seg) {
-  const d = DATA[seg];
-  const s1 = d.steps[0].на_шаге;
-  const sLast = d.steps[d.steps.length - 1].успешных;
-  const conv = (s1 && sLast) ? ((sLast / s1) * 100).toFixed(1) : null;
-
-  if (seg === 'fl') {
-    document.getElementById('hero-s1').textContent = fmt(s1);
-    document.getElementById('hero-conv').textContent = conv ? conv + '%' : '—%';
-  }
-
-  document.getElementById(`${seg}-summary-kpis`).innerHTML = `
-    <div class="hero-kpi-item">
-      <div class="summary-kpi-val">${fmt(s1)}</div>
-      <div class="summary-kpi-lbl">на шаге 1</div>
-    </div>
-    <div class="hero-kpi-item">
-      <div class="summary-kpi-val">${fmt(sLast)}</div>
-      <div class="summary-kpi-lbl">оформлено полисов</div>
-    </div>
-    <div class="hero-kpi-item">
-      <div class="summary-kpi-val">${conv ? conv + '%' : '—%'}</div>
-      <div class="summary-kpi-lbl">итог. конверсия</div>
-    </div>`;
-}
-
-// ─── TABS ─────────────────────────────────────────────────────────────────────
+// ── TABS ─────────────────────────────────────────────────────────────
 function switchSeg(id) {
-  document.querySelectorAll('.seg-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.seg-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.seg-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.seg-panel').forEach(p=>p.classList.remove('active'));
   document.querySelector(`.seg-tab[onclick="switchSeg('${id}')"]`).classList.add('active');
-  document.getElementById('seg-' + id).classList.add('active');
+  document.getElementById('seg-'+id).classList.add('active');
 }
 
-// ─── INIT ─────────────────────────────────────────────────────────────────────
-['fl','ul'].forEach(seg => {
-  renderBars(seg);
-  renderSteps(seg);
-  renderSummary(seg);
-});
+// ── INIT ─────────────────────────────────────────────────────────────
+['fl','ul'].forEach(buildSegment);
 </script>
 </body>
 </html>
