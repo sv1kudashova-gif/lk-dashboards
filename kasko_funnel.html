@@ -188,7 +188,7 @@ body{font-family:'Golos Text',system-ui,sans-serif;background:var(--bg);color:va
 
   <div class="concept-banner">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-    Концептуальный макет · Данные подключаются из «Статистика Каско (Уникальные)» · Замените <code>null</code> на реальные значения в блоке DATA
+    Демо-данные · Март 2026 · Цифры смоделированы на основе пропорций ОСАГО для проверки визуала · Замените на реальные значения в блоке DATA
   </div>
 
   <!-- FILTERS -->
@@ -229,65 +229,101 @@ body{font-family:'Golos Text',system-ui,sans-serif;background:var(--bg);color:va
 //  DATA — подставьте реальные значения (null = нет данных)
 // ═══════════════════════════════════════════════════════════════════
 const DATA = {
+  // ── ФЛ (Март 2026, демо-данные) ──────────────────────────────────
   fl: [
-    // Шаг 1 — Получение предложений (Кальк 1)
     {
       num: 1, name: 'Получение предложений', sub: 'Кальк 1',
       color:'var(--s1)', bg:'var(--s1bg)',
-      na_shage:    null,   // кол-во, кто перешёл на шаг
-      uspeshnih:   null,   // кол-во успешных переходов (→ след. шаг)
-      neuspeshnih: null,   // кол-во неуспешных переходов
-      dol_neus:    null,   // % неуспешных от кол-ва на шаге
-      ne_pereshli: null,   // кол-во не перешедших на след. шаг
-      // доля успешных от шага 1 — для шага 1 это 100%
+      na_shage:    6234,
+      uspeshnih:   5891,   // перешли на шаг 2
+      neuspeshnih:  343,
+      dol_neus:     5.5,
+      ne_pereshli: 1170,   // успешных кальк1 минус перешедших на кальк2
     },
-    // Шаг 2 — Предварительный расчёт (Кальк 2)
     {
       num: 2, name: 'Предварительный расчёт', sub: 'Кальк 2',
       color:'var(--s2)', bg:'var(--s2bg)',
-      na_shage:    null,
-      uspeshnih:   null,
-      neuspeshnih: null,
-      dol_neus:    null,
-      ne_pereshli: null,
+      na_shage:    4721,
+      uspeshnih:   4580,
+      neuspeshnih:  248,
+      dol_neus:     5.3,
+      ne_pereshli:  478,
     },
-    // Шаг 3 — Окончательный расчёт (Импорт)
     {
       num: 3, name: 'Окончательный расчёт', sub: 'Импорт',
       color:'var(--s3)', bg:'var(--s3bg)',
-      na_shage:    null,
-      uspeshnih:   null,
-      neuspeshnih: null,
-      dol_neus:    null,
-      ne_pereshli: null,
+      na_shage:    4102,
+      uspeshnih:   4019,
+      neuspeshnih:  164,
+      dol_neus:     4.0,
+      ne_pereshli:  172,
     },
-    // Шаг 4 — Проверки
     {
       num: 4, name: 'Проверки', sub: 'ОТА / УРМ / ПСО / ОА',
       color:'var(--s4)', bg:'var(--s4bg)',
-      na_shage:    null,
-      uspeshnih:   null,
-      neuspeshnih: null,
-      dol_neus:    null,
-      ne_pereshli: null,
+      na_shage:    3847,
+      uspeshnih:   3612,
+      neuspeshnih:  287,
+      dol_neus:     7.5,
+      ne_pereshli:  123,
     },
-    // Шаг 5 — Оформление (финал)
     {
       num: 5, name: 'Оформление', sub: 'Выпуск полиса',
       color:'var(--s5)', bg:'var(--s5bg)',
-      na_shage:    null,
-      uspeshnih:   null,   // = кол-во оформленных полисов
-      neuspeshnih: null,
-      dol_neus:    null,
-      ne_pereshli: null,   // на последнем шаге — не применимо
+      na_shage:    3489,
+      uspeshnih:   3312,   // оформленные полисы
+      neuspeshnih:  177,
+      dol_neus:     5.1,
+      ne_pereshli:  null,
     },
   ],
+  // ── ЮЛ (Март 2026, демо-данные) ──────────────────────────────────
   ul: [
-    {num:1,name:'Получение предложений',sub:'Кальк 1',color:'var(--s1)',bg:'var(--s1bg)',na_shage:null,uspeshnih:null,neuspeshnih:null,dol_neus:null,ne_pereshli:null},
-    {num:2,name:'Предварительный расчёт',sub:'Кальк 2',color:'var(--s2)',bg:'var(--s2bg)',na_shage:null,uspeshnih:null,neuspeshnih:null,dol_neus:null,ne_pereshli:null},
-    {num:3,name:'Окончательный расчёт',sub:'Импорт',color:'var(--s3)',bg:'var(--s3bg)',na_shage:null,uspeshnih:null,neuspeshnih:null,dol_neus:null,ne_pereshli:null},
-    {num:4,name:'Проверки',sub:'ОТА / УРМ / ПСО / ОА',color:'var(--s4)',bg:'var(--s4bg)',na_shage:null,uspeshnih:null,neuspeshnih:null,dol_neus:null,ne_pereshli:null},
-    {num:5,name:'Оформление',sub:'Выпуск полиса',color:'var(--s5)',bg:'var(--s5bg)',na_shage:null,uspeshnih:null,neuspeshnih:null,dol_neus:null,ne_pereshli:null},
+    {
+      num: 1, name: 'Получение предложений', sub: 'Кальк 1',
+      color:'var(--s1)', bg:'var(--s1bg)',
+      na_shage:     847,
+      uspeshnih:    798,
+      neuspeshnih:   62,
+      dol_neus:      7.3,
+      ne_pereshli:  175,
+    },
+    {
+      num: 2, name: 'Предварительный расчёт', sub: 'Кальк 2',
+      color:'var(--s2)', bg:'var(--s2bg)',
+      na_shage:     623,
+      uspeshnih:    608,
+      neuspeshnih:   31,
+      dol_neus:      5.0,
+      ne_pereshli:   19,
+    },
+    {
+      num: 3, name: 'Окончательный расчёт', sub: 'Импорт',
+      color:'var(--s3)', bg:'var(--s3bg)',
+      na_shage:     589,
+      uspeshnih:    574,
+      neuspeshnih:   24,
+      dol_neus:      4.1,
+      ne_pereshli:   33,
+    },
+    {
+      num: 4, name: 'Проверки', sub: 'ОТА / УРМ / ПСО / ОА',
+      color:'var(--s4)', bg:'var(--s4bg)',
+      na_shage:     541,
+      uspeshnih:    511,
+      neuspeshnih:   41,
+      dol_neus:      7.6,
+      ne_pereshli:   13,
+    },
+    {
+      num: 5, name: 'Оформление', sub: 'Выпуск полиса',
+      color:'var(--s5)', bg:'var(--s5bg)',
+      na_shage:     498,
+      uspeshnih:    471,
+      neuspeshnih:   27,
+      dol_neus:      5.4,
+      ne_pereshli:  null,
+    },
   ]
 };
 
