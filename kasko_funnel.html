@@ -115,6 +115,51 @@ body{font-family:'Golos Text',system-ui,sans-serif;background:var(--bg);color:va
 .total-kpis{display:flex;gap:3rem;}
 .total-kpi .val{font-size:24px;font-weight:600;color:var(--green);line-height:1;}
 .total-kpi .lbl{font-size:10px;color:var(--mid);margin-top:4px;}
+
+/* ── ФИЛЬТРЫ ── */
+.filters-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);margin-bottom:1.5rem;overflow:visible;}
+.filters-head{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1.25rem;cursor:pointer;user-select:none;border-bottom:1px solid var(--border);background:#F7F6FF;border-radius:var(--r) var(--r) 0 0;}
+.filters-head.collapsed{border-bottom:none;border-radius:var(--r);}
+.filters-head:hover{background:#EEEEFF;}
+.fh-left{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--dark);}
+.fh-left svg{width:16px;height:16px;stroke:var(--dark);fill:none;stroke-width:2;}
+.fh-right{display:flex;align-items:center;gap:10px;}
+.filters-reset{font-size:12px;color:var(--mid);background:none;border:none;cursor:pointer;font-family:inherit;padding:3px 8px;border-radius:6px;}
+.filters-reset:hover{background:#EEF0FF;color:var(--dark);}
+.fh-chev{width:16px;height:16px;stroke:var(--mid);fill:none;stroke-width:2;transition:transform .2s;}
+.fh-chev.open{transform:rotate(180deg);}
+.filters-body{padding:1rem 1.25rem 1.25rem;display:grid;grid-template-columns:repeat(4,1fr);gap:.875rem;}
+.filters-body.hidden{display:none;}
+
+/* один фильтр */
+.flt{position:relative;}
+.flt-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:5px;display:block;}
+.flt-trigger{display:flex;align-items:center;justify-content:space-between;gap:6px;background:#F5F4FB;border:1px solid var(--border);border-radius:var(--r-sm);padding:7px 10px;cursor:pointer;min-height:36px;transition:border-color .15s;user-select:none;}
+.flt-trigger:hover{border-color:var(--mid);}
+.flt-trigger.active{border-color:var(--mid);background:#F0EEFF;}
+.flt-val{font-size:12px;color:var(--text);flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+.flt-val.placeholder{color:var(--muted);}
+.flt-badge{background:var(--dark);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;flex-shrink:0;}
+.flt-arrow{width:13px;height:13px;stroke:var(--muted);fill:none;stroke-width:2;flex-shrink:0;transition:transform .15s;}
+.flt-arrow.open{transform:rotate(180deg);}
+
+/* dropdown */
+.flt-dropdown{position:absolute;top:calc(100% + 4px);left:0;min-width:220px;background:var(--white);border:1px solid var(--border);border-radius:var(--r-sm);box-shadow:0 8px 24px rgba(56,5,108,.12);z-index:200;overflow:hidden;}
+.flt-search{padding:8px 10px;border-bottom:1px solid var(--border);}
+.flt-search input{width:100%;border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-size:12px;font-family:inherit;outline:none;color:var(--text);}
+.flt-search input:focus{border-color:var(--mid);}
+.flt-opts{max-height:200px;overflow-y:auto;}
+.flt-opt{display:flex;align-items:center;gap:8px;padding:7px 12px;cursor:pointer;font-size:13px;color:var(--text);transition:background .1s;}
+.flt-opt:hover{background:#F5F4FB;}
+.flt-opt.checked{background:#F0EEFF;}
+.flt-cb{width:15px;height:15px;border:1.5px solid var(--border);border-radius:3px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.flt-opt.checked .flt-cb{background:var(--dark);border-color:var(--dark);}
+.flt-opt.checked .flt-cb::after{content:'✓';color:#fff;font-size:9px;font-weight:700;line-height:1;}
+.flt-opt-txt{flex:1;}
+.flt-footer{padding:8px 12px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.flt-footer-count{font-size:11px;color:var(--muted);}
+.flt-clear{font-size:11px;color:var(--mid);background:none;border:none;cursor:pointer;font-family:inherit;}
+.flt-clear:hover{color:var(--dark);}
 </style>
 </head>
 <body>
@@ -144,6 +189,24 @@ body{font-family:'Golos Text',system-ui,sans-serif;background:var(--bg);color:va
   <div class="concept-banner">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
     Концептуальный макет · Данные подключаются из «Статистика Каско (Уникальные)» · Замените <code>null</code> на реальные значения в блоке DATA
+  </div>
+
+  <!-- FILTERS -->
+  <div class="filters-card" id="filters-card">
+    <div class="filters-head" id="filters-head" onclick="toggleFilters()">
+      <div class="fh-left">
+        <svg viewBox="0 0 24 24"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+        Фильтры
+        <span id="active-filters-count" style="display:none;background:#EDE9FF;color:var(--s1);font-size:11px;font-weight:600;padding:2px 8px;border-radius:12px;"></span>
+      </div>
+      <div class="fh-right">
+        <button class="filters-reset" onclick="resetAllFilters(event)">Сбросить все</button>
+        <svg class="fh-chev open" id="fh-chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+    <div class="filters-body" id="filters-body">
+      <!-- фильтры генерируются JS -->
+    </div>
   </div>
 
   <!-- TABS -->
@@ -385,7 +448,201 @@ function switchSeg(id) {
   document.getElementById('seg-'+id).classList.add('active');
 }
 
+// ═══════════════════════════════════════════════════════════════════
+//  ФИЛЬТРЫ
+// ═══════════════════════════════════════════════════════════════════
+const FILTERS_CFG = [
+  {
+    id: 'tip', label: 'Тип',
+    opts: ['НБ', 'Пролонгация']
+  },
+  {
+    id: 'kanal', label: 'Канал продаж',
+    search: true,
+    opts: ['SRL01010','SRL01020','SRL02010','SRL02020','SRL03010',
+           'SRL03020','SRL04010','SRL05010','SRL06010','SRL07010',
+           'SRL08010','SRL09010','SRL10010']
+  },
+  {
+    id: 'filial', label: 'Филиал',
+    search: true,
+    opts: ['Москва','Санкт-Петербург','Екатеринбург','Новосибирск',
+           'Казань','Краснодар','Ростов-на-Дону','Нижний Новгород',
+           'Самара','Уфа','Челябинск','Красноярск','Пермь','Воронеж']
+  },
+  {
+    id: 'gruppa', label: 'Группа КП',
+    opts: ['Агенты', 'Брокеры', 'Дилеры', 'Лизинг']
+  },
+  {
+    id: 'mesyac', label: 'Месяц',
+    opts: ['Январь 2026','Февраль 2026','Март 2026','Апрель 2026',
+           'Май 2026','Июнь 2026','Июль 2026','Август 2026',
+           'Сентябрь 2026','Октябрь 2026','Ноябрь 2026','Декабрь 2026']
+  },
+  {
+    id: 'strahovatel', label: 'Тип страхователя',
+    opts: ['ФЛ', 'ЮЛ', 'ИП']
+  },
+  {
+    id: 'istochnik', label: 'Источник',
+    opts: ['CS', 'API', 'ФАСТ', 'ЕЛТ']
+  },
+  {
+    id: 'oplata', label: 'Тип оплаты',
+    opts: ['Онлайн', 'Оффлайн']
+  },
+];
+
+// state: id -> Set of selected values
+const filterState = {};
+FILTERS_CFG.forEach(f => { filterState[f.id] = new Set(); });
+
+let openDropdown = null;
+
+function buildFilters() {
+  const body = document.getElementById('filters-body');
+  body.innerHTML = '';
+  FILTERS_CFG.forEach(cfg => {
+    const div = document.createElement('div');
+    div.className = 'flt';
+    div.id = 'flt-' + cfg.id;
+    div.innerHTML = `
+      <span class="flt-label">${cfg.label}</span>
+      <div class="flt-trigger" id="trigger-${cfg.id}" onclick="toggleDropdown('${cfg.id}', event)">
+        <span class="flt-val placeholder" id="val-${cfg.id}">Все</span>
+        <span class="flt-badge" id="badge-${cfg.id}" style="display:none"></span>
+        <svg class="flt-arrow" id="arrow-${cfg.id}" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="flt-dropdown" id="dd-${cfg.id}" style="display:none">
+        ${cfg.search ? `<div class="flt-search"><input type="text" placeholder="Поиск..." oninput="filterSearch('${cfg.id}', this.value)" id="search-${cfg.id}"></div>` : ''}
+        <div class="flt-opts" id="opts-${cfg.id}">
+          ${cfg.opts.map(o => `
+            <div class="flt-opt" id="opt-${cfg.id}-${CSS.escape(o)}" onclick="toggleOpt('${cfg.id}','${o}')">
+              <div class="flt-cb"></div>
+              <span class="flt-opt-txt">${o}</span>
+            </div>`).join('')}
+        </div>
+        <div class="flt-footer">
+          <span class="flt-footer-count" id="fc-${cfg.id}">0 выбрано</span>
+          <button class="flt-clear" onclick="clearFilter('${cfg.id}', event)">Очистить</button>
+        </div>
+      </div>`;
+    body.appendChild(div);
+  });
+
+  // закрывать при клике вне
+  document.addEventListener('click', e => {
+    if (openDropdown && !document.getElementById('flt-' + openDropdown).contains(e.target)) {
+      closeDropdown(openDropdown);
+    }
+  });
+}
+
+function toggleDropdown(id, e) {
+  e.stopPropagation();
+  if (openDropdown && openDropdown !== id) closeDropdown(openDropdown);
+  const dd = document.getElementById('dd-' + id);
+  const arrow = document.getElementById('arrow-' + id);
+  const isOpen = dd.style.display !== 'none';
+  if (isOpen) { closeDropdown(id); }
+  else {
+    dd.style.display = 'block';
+    arrow.classList.add('open');
+    openDropdown = id;
+    const inp = document.getElementById('search-' + id);
+    if (inp) setTimeout(() => inp.focus(), 50);
+  }
+}
+
+function closeDropdown(id) {
+  const dd = document.getElementById('dd-' + id);
+  if (dd) dd.style.display = 'none';
+  const arrow = document.getElementById('arrow-' + id);
+  if (arrow) arrow.classList.remove('open');
+  if (openDropdown === id) openDropdown = null;
+}
+
+function toggleOpt(id, val) {
+  const st = filterState[id];
+  const el = document.getElementById('opt-' + id + '-' + CSS.escape(val));
+  if (st.has(val)) { st.delete(val); el.classList.remove('checked'); }
+  else             { st.add(val);    el.classList.add('checked'); }
+  updateTrigger(id);
+  updateActiveCount();
+}
+
+function updateTrigger(id) {
+  const st = filterState[id];
+  const valEl  = document.getElementById('val-' + id);
+  const badge  = document.getElementById('badge-' + id);
+  const trigger= document.getElementById('trigger-' + id);
+  const fc     = document.getElementById('fc-' + id);
+  if (st.size === 0) {
+    valEl.textContent = 'Все';
+    valEl.classList.add('placeholder');
+    badge.style.display = 'none';
+    trigger.classList.remove('active');
+  } else {
+    const arr = [...st];
+    valEl.textContent = arr.slice(0,2).join(', ') + (arr.length > 2 ? '…' : '');
+    valEl.classList.remove('placeholder');
+    badge.textContent = st.size;
+    badge.style.display = 'inline';
+    trigger.classList.add('active');
+  }
+  if (fc) fc.textContent = st.size + ' выбрано';
+}
+
+function clearFilter(id, e) {
+  e.stopPropagation();
+  filterState[id].clear();
+  document.querySelectorAll(`#opts-${id} .flt-opt`).forEach(el => el.classList.remove('checked'));
+  updateTrigger(id);
+  updateActiveCount();
+}
+
+function resetAllFilters(e) {
+  e.stopPropagation();
+  FILTERS_CFG.forEach(f => {
+    filterState[f.id].clear();
+    document.querySelectorAll(`#opts-${f.id} .flt-opt`).forEach(el => el.classList.remove('checked'));
+    updateTrigger(f.id);
+  });
+  updateActiveCount();
+}
+
+function filterSearch(id, q) {
+  const opts = document.querySelectorAll(`#opts-${id} .flt-opt`);
+  const lq = q.toLowerCase();
+  opts.forEach(el => {
+    const txt = el.querySelector('.flt-opt-txt').textContent.toLowerCase();
+    el.style.display = txt.includes(lq) ? '' : 'none';
+  });
+}
+
+function updateActiveCount() {
+  const total = FILTERS_CFG.reduce((s, f) => s + filterState[f.id].size, 0);
+  const el = document.getElementById('active-filters-count');
+  if (total > 0) {
+    el.textContent = total + ' активных';
+    el.style.display = 'inline';
+  } else {
+    el.style.display = 'none';
+  }
+}
+
+function toggleFilters() {
+  const body  = document.getElementById('filters-body');
+  const head  = document.getElementById('filters-head');
+  const chev  = document.getElementById('fh-chev');
+  const isHidden = body.classList.toggle('hidden');
+  head.classList.toggle('collapsed', isHidden);
+  chev.classList.toggle('open', !isHidden);
+}
+
 // ── INIT ─────────────────────────────────────────────────────────────
+buildFilters();
 ['fl','ul'].forEach(buildSegment);
 </script>
 </body>
