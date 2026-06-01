@@ -178,86 +178,45 @@ footer { text-align: center; color: var(--muted); font-size: 11px; padding: 2rem
   </div>
 
   <div class="sec-label">Метрики по продажам</div>
+
+  <!-- Воронка продаж — единая страница -->
+  <div class="cards" style="margin-bottom:12px;">
+    <a href="funnel.html" class="card featured" style="display:flex;align-items:center;gap:14px;padding:1rem 1.25rem;">
+      <div class="card-ico g"><svg viewBox="0 0 24 24"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg></div>
+      <div style="flex:1;">
+        <div class="card-h">Воронка продаж</div>
+        <div class="card-s">Каско · ОСАГО · НеАвто · Кальк 1 → Оформление</div>
+      </div>
+      <span class="badge b-live">● Готов</span>
+      <svg class="ext" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+    </a>
+  </div>
+
   <div class="acc">
     <div class="acc-hd" onclick="toggleAcc('sales')">
       <div class="acc-hd-l">
         <div class="acc-ico"><svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
-        <div><div class="acc-title">Метрики по продажам</div><div class="acc-cnt">НеАвто · Каско · ОСАГО · Фабрика</div></div>
+        <div><div class="acc-title">Прочие отчёты по продажам</div><div class="acc-cnt">Кросс-продажи · Котировки · Продления</div></div>
       </div>
       <svg class="chev" id="chev-sales" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
     <div class="acc-body" id="body-sales">
-      <!-- Product tabs -->
-      <div class="prod-tabs">
-        <button class="prod-tab active" onclick="switchProdTab('nonauto')">НеАвто</button>
-        <button class="prod-tab" onclick="switchProdTab('kasko')">Каско</button>
-        <button class="prod-tab" onclick="switchProdTab('osago')">ОСАГО</button>
-        <button class="prod-tab" onclick="switchProdTab('fabrika')">Фабрика</button>
-      </div>
-
-      <!-- НеАвто -->
-      <div class="prod-panel active" id="panel-nonauto">
-        <a href="nonauto.html" class="acc-link" style="background:#F7F6FF;">
-          <div class="dot" style="background:var(--mid);"></div>
-          <span class="link-txt" style="font-weight:600;">Roadmap аналитики НеАвто →</span>
-          <span class="badge b-wip" style="margin:0;">ТЗ + чеклист</span>
-          <svg class="ext" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        </a>
-        <div class="acc-group-label">Продажи</div>
-        <a href="https://datalens.ru/i4s2ncbgsl463-otchet-po-prodazham-v-novom-lk-prodavca" target="_blank" class="acc-link">
-          <div class="dot live"></div><span class="link-txt">Отчёт по продажам в ЛК Партнёра</span>
-          <span class="badge b-live" style="margin:0;">● Готов</span>
-          <svg class="ext" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        </a>
-        <a href="https://datalens.ru/sv3lwmgbgskad-otchet-po-krossam-k-osago-fl-v-novom-lk-prodavca" target="_blank" class="acc-link">
-          <div class="dot live"></div><span class="link-txt">Отчёт по кросс-продажам</span>
-          <span class="badge b-live" style="margin:0;">● Готов</span>
-          <svg class="ext" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        </a>
-        <div class="acc-link dis"><div class="dot"></div><span class="link-txt">Воронка продаж по шагам</span><span class="badge b-soon" style="margin:0;">Скоро</span></div>
-        <div class="acc-link dis"><div class="dot"></div><span class="link-txt">Отчёт по котировкам</span><span class="badge b-soon" style="margin:0;">Скоро</span></div>
-      </div>
-
-      <!-- Каско -->
-      <div class="prod-panel" id="panel-kasko">
-        <div class="acc-group-label">Продажи</div>
-        <div class="acc-link dis"><div class="dot"></div><span class="link-txt">Отчёт по продажам Каско</span><span class="badge b-soon" style="margin:0;">Скоро</span></div>
-        <a href="kasko_funnel.html" class="acc-link" style="background:#F7F6FF;">
-          <div class="dot" style="background:var(--green);"></div>
-          <span class="link-txt">Воронка продаж по шагам (ФЛ / ЮЛ)</span>
-          <span class="badge b-done" style="margin:0;margin-left:auto;">Новое</span>
-        </a>
-        <div class="acc-link dis"><div class="dot"></div><span class="link-txt">Конверсия по этапам</span><span class="badge b-soon" style="margin:0;">Скоро</span></div>
-        <div class="acc-group-label">Качество</div>
-        <a href="fulldigital.html" class="acc-link">
-          <div class="dot live"></div><span class="link-txt">Full-digital процесс Каско</span>
-          <span class="badge b-wip" style="margin:0;">○ Концепт</span>
-          <svg class="ext" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        </a>
-      </div>
-
-      <!-- ОСАГО -->
-      <div class="prod-panel" id="panel-osago">
-        <div class="acc-group-label">Продажи</div>
-        <div class="acc-link dis"><div class="dot"></div><span class="link-txt">Отчёт по продажам ОСАГО</span><span class="badge b-soon" style="margin:0;">Скоро</span></div>
-        <div class="acc-link dis"><div class="dot"></div><span class="link-txt">Воронка котировка → выпуск → оплата</span><span class="badge b-soon" style="margin:0;">Скоро</span></div>
-        <div class="acc-link dis"><div class="dot"></div><span class="link-txt">Коэффициент пролонгации</span><span class="badge b-soon" style="margin:0;">Скоро</span></div>
-      </div>
-
-      <!-- Фабрика -->
-      <div class="prod-panel" id="panel-fabrika">
-        <div class="acc-group-label">Продажи</div>
-        <div class="acc-link dis"><div class="dot"></div><span class="link-txt">Отчёт по продажам в фабрике</span><span class="badge b-soon" style="margin:0;">Скоро</span></div>
-        <a href="kasko_funnel.html" class="acc-link" style="background:#F7F6FF;">
-          <div class="dot" style="background:var(--green);"></div>
-          <span class="link-txt">Воронка продаж Каско (ФЛ / ЮЛ)</span>
-          <span class="badge b-done" style="margin:0;margin-left:auto;">Новое</span>
-        </a>
-      </div>
+      <a href="https://datalens.ru/i4s2ncbgsl463-otchet-po-prodazham-v-novom-lk-prodavca" target="_blank" class="acc-link">
+        <div class="dot live"></div><span class="link-txt">Отчёт по продажам в ЛК Партнёра</span>
+        <span class="badge b-live" style="margin:0;">● Готов</span>
+        <svg class="ext" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </a>
+      <a href="https://datalens.ru/sv3lwmgbgskad-otchet-po-krossam-k-osago-fl-v-novom-lk-prodavca" target="_blank" class="acc-link">
+        <div class="dot live"></div><span class="link-txt">Отчёт по кросс-продажам</span>
+        <span class="badge b-live" style="margin:0;">● Готов</span>
+        <svg class="ext" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </a>
+      <div class="acc-link dis"><div class="dot"></div><span class="link-txt">Отчёт по котировкам</span><span class="badge b-soon" style="margin:0;">Скоро</span></div>
+      <div class="acc-link dis"><div class="dot"></div><span class="link-txt">Уровень пролонгации + апсейлы</span><span class="badge b-soon" style="margin:0;">Скоро</span></div>
     </div>
   </div>
 
-  <div class="sec-label">Метрики качества</div>
+    <div class="sec-label">Метрики качества</div>
   <div class="acc">
     <div class="acc-hd" onclick="toggleAcc('quality')">
       <div class="acc-hd-l">
@@ -275,7 +234,7 @@ footer { text-align: center; color: var(--muted); font-size: 11px; padding: 2rem
       </a>
       <div class="acc-group-label">Сервис и продукт</div>
       <div class="acc-link dis"><div class="dot"></div><span class="link-txt">Статистика по ошибкам</span><span class="badge b-soon" style="margin:0;">Скоро</span></div>
-      <a href="https://sz-dashboard-eta.vercel.app/" target="_blank" class="acc-link"><div class="dot" style="background:var(--green);"></div><span class="link-txt">Статистика по Службе заботы</span></a>
+      <div class="acc-link dis"><div class="dot"></div><span class="link-txt">Статистика по Службе заботы</span><span class="badge b-soon" style="margin:0;">Скоро</span></div>
       <a href="https://datalens.ru/28vb6s5idqkyp-renprofil-osnovnoy" target="_blank" class="acc-link">
         <div class="dot live"></div><span class="link-txt">Метрики автозаполнения (ЕК)</span>
         <span class="badge b-live" style="margin:0;">● Готов</span>
@@ -394,13 +353,6 @@ function showPage(id) {
   document.querySelectorAll('.nav-tab')[id === 'home' ? 0 : 1].classList.add('active');
   window.scrollTo({top: 0, behavior: 'smooth'});
   if (id === 'ym') setTimeout(renderCharts, 50);
-}
-
-function switchProdTab(id) {
-  document.querySelectorAll('.prod-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.prod-panel').forEach(p => p.classList.remove('active'));
-  document.querySelector(`.prod-tab[onclick="switchProdTab('${id}')"]`).classList.add('active');
-  document.getElementById('panel-' + id).classList.add('active');
 }
 
 function toggleAcc(id) {
