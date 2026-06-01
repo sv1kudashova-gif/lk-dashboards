@@ -847,8 +847,12 @@ function toggleAnalysis(id) {
 }
 
 // Init
-document.getElementById('nav-date').textContent = new Date().toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'});
-// initFilters and render called after data load
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('nav-date').textContent = new Date().toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'});
+  const fy = document.getElementById('fy');
+  if (fy) fy.textContent = new Date().getFullYear();
+  loadFromSheets();
+});
 </script>
 </body>
 </html>
