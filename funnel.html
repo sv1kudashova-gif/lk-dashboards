@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Воронка продаж — ЛК Партнёра</title>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --dark:#38056C;--mid:#9A92FF;--green:#79FF3A;--light:#CCC8FF;
+  --white:#FFFFFF;--bg:#F5F4FB;--text:#1A1A2E;--muted:#6B6B8A;
+  --border:#CCC8FF;--r:12px;--r-sm:8px;
+  --s1:#5B21B6;--s2:#1D4ED8;--s3:#92400E;--s4:#065F46;--s5:#9D174D;
+  --s1bg:#EDE9FF;--s2bg:#DBEAFE;--s3bg:#FEF3C7;--s4bg:#D1FAE5;--s5bg:#FCE7F3;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Golos Text',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+.nav{background:var(--dark);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;position:sticky;top:0;z-index:100;}
+.nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:5px;background:var(--green);}
+.nav-left{display:flex;align-items:center;gap:10px;}
+.nav-dot{width:28px;height:28px;background:var(--green);border-radius:6px;display:flex;align-items:center;justify-content:center;}
+.nav-dot svg{width:15px;height:15px;stroke:var(--dark);fill:none;stroke-width:2.5;}
+.nav-brand{color:var(--white);font-size:15px;font-weight:600;}
+.nav-sub{color:var(--light);font-size:11px;}
+.nav-back{color:var(--white);font-size:13px;padding:6px 14px;border-radius:6px;cursor:pointer;border:none;background:rgba(154,146,255,0.2);font-family:inherit;}
+.nav-back:hover{background:rgba(154,146,255,0.35);}
+
+.main{max-width:1120px;margin:0 auto;padding:2rem 1.5rem 4rem;}
+
+/* HERO */
+.hero{background:var(--dark);border-radius:var(--r);padding:1.5rem 2rem;margin-bottom:1.5rem;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:1rem;}
+.hero::before{content:'';position:absolute;right:-40px;top:-40px;width:180px;height:180px;background:var(--mid);opacity:0.07;border-radius:50%;}
+.hero::after{content:'';position:absolute;right:0;top:0;bottom:0;width:5px;background:var(--green);}
+.hero-h{color:var(--white);font-size:20px;font-weight:600;margin-bottom:4px;}
+.hero-s{color:var(--light);font-size:12px;}
+.hero-kpis{display:flex;gap:2.5rem;flex-shrink:0;}
+.kpi-val{font-size:24px;font-weight:600;color:var(--green);line-height:1;}
+.kpi-lbl{font-size:10px;color:var(--mid);margin-top:3px;}
+
+/* PRODUCT TABS */
+.prod-tabs-wrap{display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;flex-wrap:wrap;}
+.prod-tabs{display:flex;gap:4px;background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:5px;}
+.prod-tab{font-size:13px;font-weight:600;padding:8px 24px;border-radius:var(--r-sm);border:none;background:transparent;color:var(--muted);cursor:pointer;font-family:inherit;transition:all 0.15s;}
+.prod-tab.active{background:var(--dark);color:var(--white);}
+.prod-tab:hover:not(.active){background:var(--bg);color:var(--dark);}
+.prod-panel{display:none;}
+.prod-panel.active{display:block;}
+
+/* SEC LABEL */
+.sec-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--dark);margin:2rem 0 1rem;display:flex;align-items:center;gap:8px;}
+.sec-label::before{content:'';width:3px;height:14px;background:var(--green);border-radius:2px;flex-shrink:0;}
+
+/* CONCEPT BANNER */
+.concept-banner{background:#FFF8E1;border:1px solid #FFD54F;border-radius:var(--r);padding:0.75rem 1.25rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:10px;font-size:12px;color:#7B5A00;}
+.concept-banner svg{flex-shrink:0;width:16px;height:16px;stroke:#F59E0B;fill:none;stroke-width:2;}
+
+/* ── ФИЛЬТРЫ ── */
+.filters-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);margin-bottom:1rem;overflow:visible;}
+.filters-head{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1.25rem;cursor:pointer;user-select:none;border-bottom:1px solid var(--border);background:#F7F6FF;border-radius:var(--r) var(--r) 0 0;}
+.filters-head.collapsed{border-bottom:none;border-radius:var(--r);}
+.filters-head:hover{background:#EEEEFF;}
+.fh-left{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--dark);}
+.fh-left svg{width:16px;height:16px;stroke:var(--dark);fill:none;stroke-width:2;}
+.fh-right{display:flex;align-items:center;gap:10px;}
+.filters-reset{font-size:12px;color:var(--mid);background:none;border:none;cursor:pointer;font-family:inherit;padding:3px 8px;border-radius:6px;}
+.filters-reset:hover{background:#EEF0FF;color:var(--dark);}
+.fh-chev{width:16px;height:16px;stroke:var(--mid);fill:none;stroke-width:2;transition:transform .2s;}
+.fh-chev.open{transform:rotate(180deg);}
+.filters-body{padding:1rem 1.25rem 1.25rem;display:grid;grid-template-columns:repeat(4,1fr);gap:.875rem;}
+.filters-body.hidden{display:none;}
+
+/* дополнительные фильтры */
+.extra-filters-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);margin-bottom:1.5rem;overflow:visible;}
+.extra-filters-head{display:flex;align-items:center;justify-content:space-between;padding:.625rem 1.25rem;cursor:pointer;user-select:none;border-bottom:1px solid var(--border);background:#FAFAFE;border-radius:var(--r) var(--r) 0 0;}
+.extra-filters-head.collapsed{border-bottom:none;border-radius:var(--r);}
+.extra-filters-head:hover{background:#F5F4FB;}
+.efh-left{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:var(--muted);}
+.efh-left svg{width:14px;height:14px;stroke:var(--muted);fill:none;stroke-width:2;}
+.extra-filters-body{padding:.875rem 1.25rem 1rem;display:grid;grid-template-columns:repeat(4,1fr);gap:.875rem;}
+.extra-filters-body.hidden{display:none;}
+
+/* один фильтр */
+.flt{position:relative;}
+.flt-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:5px;display:block;}
+.flt-trigger{display:flex;align-items:center;justify-content:space-between;gap:6px;background:#F5F4FB;border:1px solid var(--border);border-radius:var(--r-sm);padding:7px 10px;cursor:pointer;min-height:36px;transition:border-color .15s;user-select:none;}
+.flt-trigger:hover{border-color:var(--mid);}
+.flt-trigger.active{border-color:var(--mid);background:#F0EEFF;}
+.flt-val{font-size:12px;color:var(--text);flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+.flt-val.placeholder{color:var(--muted);}
+.flt-badge{background:var(--dark);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;flex-shrink:0;}
+.flt-arrow{width:13px;height:13px;stroke:var(--muted);fill:none;stroke-width:2;flex-shrink:0;transition:transform .15s;}
+.flt-arrow.open{transform:rotate(180deg);}
+.flt-dropdown{position:absolute;top:calc(100% + 4px);left:0;min-width:220px;background:var(--white);border:1px solid var(--border);border-radius:var(--r-sm);box-shadow:0 8px 24px rgba(56,5,108,.12);z-index:200;overflow:hidden;}
+.flt-search{padding:8px 10px;border-bottom:1px solid var(--border);}
+.flt-search input{width:100%;border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-size:12px;font-family:inherit;outline:none;color:var(--text);}
+.flt-search input:focus{border-color:var(--mid);}
+.flt-opts{max-height:200px;overflow-y:auto;}
+.flt-opt{display:flex;align-items:center;gap:8px;padding:7px 12px;cursor:pointer;font-size:13px;color:var(--text);transition:background .1s;}
+.flt-opt:hover{background:#F5F4FB;}
+.flt-opt.checked{background:#F0EEFF;}
+.flt-cb{width:15px;height:15px;border:1.5px solid var(--border);border-radius:3px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.flt-opt.checked .flt-cb{background:var(--dark);border-color:var(--dark);}
+.flt-opt.checked .flt-cb::after{content:'✓';color:#fff;font-size:9px;font-weight:700;line-height:1;}
+.flt-opt-txt{flex:1;}
+.flt-footer{padding:8px 12px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.flt-footer-count{font-size:11px;color:var(--muted);}
+.flt-clear{font-size:11px;color:var(--mid);background:none;border:none;cursor:pointer;font-family:inherit;}
+.flt-clear:hover{color:var(--dark);}
+
+/* ФЛ/ЮЛ TABS */
+.seg-wrap{display:flex;align-items:center;gap:6px;margin-bottom:1.5rem;}
+.seg-tabs{display:flex;gap:4px;background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:5px;}
+.seg-tab{font-size:13px;font-weight:500;padding:7px 22px;border-radius:var(--r-sm);border:none;background:transparent;color:var(--muted);cursor:pointer;font-family:inherit;transition:all 0.15s;}
+.seg-tab.active{background:var(--dark);color:var(--white);}
+.seg-tab:hover:not(.active){background:var(--bg);color:var(--dark);}
+.seg-panel{display:none;}
+.seg-panel.active{display:block;}
+
+/* ВОРОНКА */
+.funnel-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.5rem;}
+.funnel-card-title{font-size:13px;font-weight:600;color:var(--dark);margin-bottom:1.25rem;display:flex;align-items:center;justify-content:space-between;}
+.conv-badge{font-size:12px;font-weight:600;padding:4px 14px;border-radius:20px;background:#D1FAE5;color:#065F46;}
+.conv-badge.nodata{background:#F5F4FB;color:var(--muted);}
+.fv-row{display:grid;grid-template-columns:200px 1fr 56px 96px;align-items:center;gap:12px;margin-bottom:4px;}
+.fv-label{font-size:12px;color:var(--text);line-height:1.3;}
+.fv-sub{font-size:10px;color:var(--muted);display:block;}
+.fv-track{height:36px;background:#F5F4FB;border-radius:6px;overflow:hidden;}
+.fv-fill{height:100%;border-radius:6px;display:flex;align-items:center;padding:0 12px;min-width:60px;}
+.fv-fill span{font-size:12px;font-weight:600;color:#fff;white-space:nowrap;}
+.fv-pct{font-size:12px;font-weight:600;color:var(--muted);text-align:right;}
+.fv-drop{text-align:right;}
+.drop-pill{display:inline-flex;font-size:11px;font-weight:600;padding:3px 8px;border-radius:12px;white-space:nowrap;}
+.dp-red{background:#FEE2E2;color:#991B1B;}
+.dp-green{background:#D1FAE5;color:#065F46;}
+.dp-gray{background:#F5F4FB;color:var(--muted);}
+.fv-connector{display:grid;grid-template-columns:200px 1fr 56px 96px;height:16px;margin-bottom:4px;}
+.fv-connector-line{display:flex;justify-content:center;}
+.fv-connector-line::before{content:'';width:2px;height:100%;background:var(--border);display:block;}
+
+/* МЕТРИКИ ВОРОНКИ (для Каско и НеАвто) */
+.funnel-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.5rem;}
+.fm-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r-sm);padding:.875rem 1rem;}
+.fm-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:4px;}
+.fm-val{font-size:20px;font-weight:600;color:var(--dark);}
+.fm-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+
+/* ШАГИ */
+.step-block{background:var(--white);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:10px;}
+.step-head{display:flex;align-items:center;gap:12px;padding:0.875rem 1.25rem;border-bottom:1px solid var(--border);}
+.step-num{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;}
+.step-title{font-size:14px;font-weight:600;color:var(--dark);}
+.step-sub{font-size:11px;color:var(--muted);margin-top:1px;}
+.metrics-table{width:100%;border-collapse:collapse;}
+.metrics-table th{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;padding:0.625rem 1rem;text-align:center;border-right:1px solid var(--border);border-bottom:1px solid var(--border);background:#FAFAFE;white-space:nowrap;}
+.metrics-table th:last-child{border-right:none;}
+.metrics-table td{font-size:15px;font-weight:600;padding:0.875rem 1rem;text-align:center;border-right:1px solid var(--border);}
+.metrics-table td:last-child{border-right:none;}
+.metrics-table .td-sub{font-size:10px;font-weight:400;color:var(--muted);display:block;margin-top:3px;}
+.metrics-table .td-pill{display:inline-flex;font-size:10px;font-weight:600;padding:2px 8px;border-radius:12px;margin-top:4px;}
+.col-na{color:var(--dark);}
+.col-ok{color:#065F46;}
+.col-pct{color:#1D4ED8;}
+.col-bad{color:#991B1B;}
+.col-drop{color:#92400E;}
+.col-miss{color:#6B6B8A;}
+.pill-green{background:#D1FAE5;color:#065F46;}
+.pill-yellow{background:#FEF3C7;color:#92400E;}
+.pill-red{background:#FEE2E2;color:#991B1B;}
+.pill-blue{background:#DBEAFE;color:#1D4ED8;}
+.pill-gray{background:#F5F4FB;color:#6B6B8A;}
+
+/* ИТОГ */
+.total-card{background:var(--dark);border-radius:var(--r);padding:1.25rem 1.75rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:1.5rem;}
+.total-left{color:var(--light);font-size:13px;}
+.total-left strong{color:var(--white);display:block;font-size:15px;margin-bottom:3px;}
+.total-kpis{display:flex;gap:3rem;}
+.total-kpi .val{font-size:24px;font-weight:600;color:var(--green);line-height:1;}
+.total-kpi .lbl{font-size:10px;color:var(--mid);margin-top:4px;}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-left">
+    <div class="nav-dot"><svg viewBox="0 0 16 16"><polyline points="2,12 6,7 10,9 14,4"/></svg></div>
+    <div><div class="nav-brand">Ренессанс Страхование</div><div class="nav-sub" id="nav-sub">Воронка продаж</div></div>
+  </div>
+  <button class="nav-back" onclick="window.location.href='index.html'">← Главная</button>
+</nav>
+
+<div class="main">
+
+  <div class="hero">
+    <div>
+      <div class="hero-h" id="hero-h">Воронка продаж</div>
+      <div class="hero-s">Кальк 1 → Кальк 2 → Импорт → Проверки → Оформление · Доли всегда от Шага 1</div>
+    </div>
+    <div class="hero-kpis">
+      <div><div class="kpi-val" id="h-step1">—</div><div class="kpi-lbl">на шаге 1</div></div>
+      <div><div class="kpi-val" id="h-issued">—</div><div class="kpi-lbl">оформлено полисов</div></div>
+      <div><div class="kpi-val" id="h-conv">—%</div><div class="kpi-lbl">итог. конверсия</div></div>
+    </div>
+  </div>
+
+  <!-- ПРОДУКТ ТАБЫ -->
+  <div class="prod-tabs-wrap">
+    <div class="prod-tabs">
+      <button class="prod-tab active" onclick="switchProd('kasko')">Каско</button>
+      <button class="prod-tab"        onclick="switchProd('osago')">ОСАГО</button>
+      <button class="prod-tab"        onclick="switchProd('nonauto')">НеАвто</button>
+    </div>
+  </div>
+
+  <div class="concept-banner">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    Демо-данные · Март 2026 · Цифры смоделированы для проверки визуала · Замените на реальные значения в блоке DATA
+  </div>
+
+  <!-- ОБЩИЕ ФИЛЬТРЫ -->
+  <div class="filters-card" id="filters-card">
+    <div class="filters-head" id="filters-head" onclick="toggleFilters('main')">
+      <div class="fh-left">
+        <svg viewBox="0 0 24 24"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+        Общие фильтры
+        <span id="active-filters-count" style="display:none;background:#EDE9FF;color:var(--s1);font-size:11px;font-weight:600;padding:2px 8px;border-radius:12px;"></span>
+      </div>
+      <div class="fh-right">
+        <button class="filters-reset" onclick="resetAllFilters(event,'main')">Сбросить</button>
+        <svg class="fh-chev open" id="fh-chev-main" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+    <div class="filters-body" id="filters-body-main"></div>
+  </div>
+
+  <!-- ДОПОЛНИТЕЛЬНЫЕ ФИЛЬТРЫ -->
+  <div class="extra-filters-card" id="extra-filters-card">
+    <div class="extra-filters-head" id="extra-filters-head" onclick="toggleFilters('extra')">
+      <div class="efh-left">
+        <svg viewBox="0 0 24 24"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+        Дополнительные фильтры
+        <span id="extra-filters-count" style="display:none;background:#EDE9FF;color:var(--s1);font-size:11px;font-weight:600;padding:2px 8px;border-radius:12px;"></span>
+      </div>
+      <div class="fh-right">
+        <button class="filters-reset" onclick="resetAllFilters(event,'extra')" style="font-size:11px;">Сбросить</button>
+        <svg class="fh-chev open" id="fh-chev-extra" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+    <div class="filters-body" id="filters-body-extra"></div>
+  </div>
+
+  <!-- ПАНЕЛИ ПРОДУКТОВ -->
+  <div class="prod-panel active" id="panel-kasko">
+    <div class="seg-wrap">
+      <div class="seg-tabs">
+        <button class="seg-tab active" onclick="switchSeg('kasko','fl')">ФЛ — Физические лица</button>
+        <button class="seg-tab"        onclick="switchSeg('kasko','ul')">ЮЛ — Юридические лица</button>
+      </div>
+    </div>
+    <div id="kasko-metrics"></div>
+    <div class="seg-panel active" id="seg-kasko-fl"></div>
+    <div class="seg-panel"        id="seg-kasko-ul"></div>
+  </div>
+
+  <div class="prod-panel" id="panel-osago">
+    <div class="seg-wrap">
+      <div class="seg-tabs">
+        <button class="seg-tab active" onclick="switchSeg('osago','fl')">ФЛ — Физические лица</button>
+        <button class="seg-tab"        onclick="switchSeg('osago','ul')">ЮЛ — Юридические лица</button>
+      </div>
+    </div>
+    <div class="seg-panel active" id="seg-osago-fl"></div>
+    <div class="seg-panel"        id="seg-osago-ul"></div>
+  </div>
+
+  <div class="prod-panel" id="panel-nonauto">
+    <div id="nonauto-metrics"></div>
+    <div class="sec-label">Детализация воронки НеАвто</div>
+    <div id="seg-nonauto-main"></div>
+  </div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════════════════════════════
+const DATA = {
+  kasko: {
+    fl: [
+      { num:1, name:'Получение предложений', sub:'Кальк 1',       color:'var(--s1)',bg:'var(--s1bg)', na_shage:6234, uspeshnih:5891, neuspeshnih:343,  dol_neus:5.5, ne_pereshli:1170 },
+      { num:2, name:'Предварительный расчёт',sub:'Кальк 2',       color:'var(--s2)',bg:'var(--s2bg)', na_shage:4721, uspeshnih:4580, neuspeshnih:248,  dol_neus:5.3, ne_pereshli:478  },
+      { num:3, name:'Окончательный расчёт',  sub:'Импорт',        color:'var(--s3)',bg:'var(--s3bg)', na_shage:4102, uspeshnih:4019, neuspeshnih:164,  dol_neus:4.0, ne_pereshli:172  },
+      { num:4, name:'Проверки',              sub:'ОТА/УРМ/ПСО/ОА',color:'var(--s4)',bg:'var(--s4bg)', na_shage:3847, uspeshnih:3612, neuspeshnih:287,  dol_neus:7.5, ne_pereshli:123  },
+      { num:5, name:'Оформление',            sub:'Выпуск полиса', color:'var(--s5)',bg:'var(--s5bg)', na_shage:3489, uspeshnih:3312, neuspeshnih:177,  dol_neus:5.1, ne_pereshli:null },
+    ],
+    ul: [
+      { num:1, name:'Получение предложений', sub:'Кальк 1',       color:'var(--s1)',bg:'var(--s1bg)', na_shage:847,  uspeshnih:798,  neuspeshnih:62,   dol_neus:7.3, ne_pereshli:175  },
+      { num:2, name:'Предварительный расчёт',sub:'Кальк 2',       color:'var(--s2)',bg:'var(--s2bg)', na_shage:623,  uspeshnih:608,  neuspeshnih:31,   dol_neus:5.0, ne_pereshli:19   },
+      { num:3, name:'Окончательный расчёт',  sub:'Импорт',        color:'var(--s3)',bg:'var(--s3bg)', na_shage:589,  uspeshnih:574,  neuspeshnih:24,   dol_neus:4.1, ne_pereshli:33   },
+      { num:4, name:'Проверки',              sub:'ОТА/УРМ/ПСО/ОА',color:'var(--s4)',bg:'var(--s4bg)', na_shage:541,  uspeshnih:511,  neuspeshnih:41,   dol_neus:7.6, ne_pereshli:13   },
+      { num:5, name:'Оформление',            sub:'Выпуск полиса', color:'var(--s5)',bg:'var(--s5bg)', na_shage:498,  uspeshnih:471,  neuspeshnih:27,   dol_neus:5.4, ne_pereshli:null },
+    ],
+    metrics: { avg_premium: '42 800 ₽', avg_under: '1.12', avg_skidka: '4.3%', avg_kp: '1.05' }
+  },
+  osago: {
+    fl: [
+      { num:1, name:'Получение предложений', sub:'Кальк 1',       color:'var(--s1)',bg:'var(--s1bg)', na_shage:14820,uspeshnih:14210,neuspeshnih:610, dol_neus:4.1, ne_pereshli:2140 },
+      { num:2, name:'Предварительный расчёт',sub:'Кальк 2',       color:'var(--s2)',bg:'var(--s2bg)', na_shage:12070,uspeshnih:11840,neuspeshnih:420, dol_neus:3.5, ne_pereshli:980  },
+      { num:3, name:'Окончательный расчёт',  sub:'Импорт',        color:'var(--s3)',bg:'var(--s3bg)', na_shage:10860,uspeshnih:10690,neuspeshnih:312, dol_neus:2.9, ne_pereshli:320  },
+      { num:4, name:'Проверки',              sub:'РСА / КБМ',     color:'var(--s4)',bg:'var(--s4bg)', na_shage:10370,uspeshnih:9980, neuspeshnih:512, dol_neus:4.9, ne_pereshli:210  },
+      { num:5, name:'Оформление',            sub:'Выпуск полиса', color:'var(--s5)',bg:'var(--s5bg)', na_shage:9770, uspeshnih:9420, neuspeshnih:350, dol_neus:3.6, ne_pereshli:null },
+    ],
+    ul: [
+      { num:1, name:'Получение предложений', sub:'Кальк 1',       color:'var(--s1)',bg:'var(--s1bg)', na_shage:1840, uspeshnih:1780, neuspeshnih:98,  dol_neus:5.3, ne_pereshli:320  },
+      { num:2, name:'Предварительный расчёт',sub:'Кальк 2',       color:'var(--s2)',bg:'var(--s2bg)', na_shage:1460, uspeshnih:1420, neuspeshnih:67,  dol_neus:4.6, ne_pereshli:110  },
+      { num:3, name:'Окончательный расчёт',  sub:'Импорт',        color:'var(--s3)',bg:'var(--s3bg)', na_shage:1310, uspeshnih:1290, neuspeshnih:42,  dol_neus:3.2, ne_pereshli:48   },
+      { num:4, name:'Проверки',              sub:'РСА / КБМ',     color:'var(--s4)',bg:'var(--s4bg)', na_shage:1242, uspeshnih:1201, neuspeshnih:78,  dol_neus:6.3, ne_pereshli:32   },
+      { num:5, name:'Оформление',            sub:'Выпуск полиса', color:'var(--s5)',bg:'var(--s5bg)', na_shage:1169, uspeshnih:1108, neuspeshnih:61,  dol_neus:5.2, ne_pereshli:null },
+    ],
+    metrics: null
+  },
+  nonauto: {
+    main: [
+      { num:1, name:'Получение предложений', sub:'Кальк 1',       color:'var(--s1)',bg:'var(--s1bg)', na_shage:3840, uspeshnih:3620, neuspeshnih:220, dol_neus:5.7, ne_pereshli:640  },
+      { num:2, name:'Предварительный расчёт',sub:'Кальк 2',       color:'var(--s2)',bg:'var(--s2bg)', na_shage:2980, uspeshnih:2870, neuspeshnih:148, dol_neus:5.0, ne_pereshli:310  },
+      { num:3, name:'Окончательный расчёт',  sub:'Импорт',        color:'var(--s3)',bg:'var(--s3bg)', na_shage:2560, uspeshnih:2490, neuspeshnih:102, dol_neus:4.0, ne_pereshli:128  },
+      { num:4, name:'Проверки',              sub:'ОА / ОТА',      color:'var(--s4)',bg:'var(--s4bg)', na_shage:2362, uspeshnih:2214, neuspeshnih:184, dol_neus:7.8, ne_pereshli:76   },
+      { num:5, name:'Оформление',            sub:'Выпуск полиса', color:'var(--s5)',bg:'var(--s5bg)', na_shage:2138, uspeshnih:2041, neuspeshnih:97,  dol_neus:4.5, ne_pereshli:null },
+    ],
+    metrics: { avg_premium: '18 400 ₽', avg_under: '0.98', avg_skidka: '2.8%', avg_kp: '1.02' }
+  }
+};
+
+// ── ОБЩИЕ ФИЛЬТРЫ (одинаковые для всех продуктов) ──────────────
+const COMMON_FILTERS = [
+  { id:'tip',      label:'Тип',           opts:['НБ','Пролонгация'] },
+  { id:'kanal',    label:'Канал продаж',  search:true, opts:['SRL01010','SRL01020','SRL02010','SRL02020','SRL03010','SRL03020','SRL04010','SRL05010','SRL06010'] },
+  { id:'filial',   label:'Филиал',        search:true, opts:['Москва','Санкт-Петербург','Екатеринбург','Новосибирск','Казань','Краснодар','Ростов-на-Дону','Нижний Новгород','Самара','Уфа','Челябинск'] },
+  { id:'gruppa',   label:'Группа КП',     opts:['Агенты','Брокеры','Дилеры','Лизинг'] },
+  { id:'period',   label:'Период',        opts:['Январь 2026','Февраль 2026','Март 2026','Апрель 2026','Май 2026','Июнь 2026'] },
+  { id:'istochnik',label:'Источник',      opts:['CS','API','ФАСТ','ЕЛТ'] },
+  { id:'oplata',   label:'Тип оплаты',    opts:['Онлайн','Оффлайн'] },
+];
+
+// продукт = поле для "Продукт" только у Каско и НеАвто
+const COMMON_FILTERS_KASKO = [...COMMON_FILTERS,
+  { id:'produkt', label:'Продукт', opts:['Каско ФЛ','Каско ЮЛ'] }
+];
+const COMMON_FILTERS_NONAUTO = [...COMMON_FILTERS,
+  { id:'produkt', label:'Продукт', opts:['Дом Классика','Дом-Экспресс','Квартира Классика','Квартира-Экспресс','НС-конструктор'] }
+];
+
+// ── ДОПОЛНИТЕЛЬНЫЕ ФИЛЬТРЫ по продукту ─────────────────────────
+const EXTRA_FILTERS = {
+  kasko: [
+    { id:'gruppa_ss',  label:'Группа СС',          opts:['до 1 млн','1–2 млн','2–3 млн','3–5 млн','5–10 млн','свыше 10 млн'] },
+    { id:'tip_ts',     label:'Тип ТС',              opts:['Легковое','Не легковое'] },
+    { id:'tsel',       label:'Цель использования',  opts:['Личная','Такси','Аренда','Коммерческая'] },
+  ],
+  osago: [
+    { id:'segment',    label:'Сегмент',             opts:['Зелёный','Жёлтый','Красный','Пул','Экстрапул'] },
+    { id:'tip_ts',     label:'Тип ТС',              opts:['Легковое','Не легковое'] },
+    { id:'tsel',       label:'Цель использования',  opts:['Личная','Такси','Аренда','Коммерческая'] },
+  ],
+  nonauto: [
+    { id:'gruppa_ss',  label:'Группа СС',           opts:['до 5 млн','5–15 млн','15–30 млн','свыше 30 млн'] },
+    { id:'gruppa_pr',  label:'Группа премий',        opts:['до 5 тыс','5–15 тыс','15–50 тыс','свыше 50 тыс'] },
+    { id:'pokrytie',   label:'Покрытие',             opts:['Отделка','Конструктив','ГО','Движимое имущество','Комплексное'] },
+    { id:'obekt',      label:'Объект',               opts:['Дом','Квартира','Баня','Гараж','Другое'] },
+    { id:'rasprodazha',label:'Метка «Распродажа»',   opts:['Да','Нет'] },
+    { id:'dop_riski',  label:'Доп. риски',           opts:['Ипотека','Паводок','Землетрясение','Терроризм','Без доп. рисков'] },
+    { id:'k_andera',   label:'Коэффициент Андера',   opts:['Была','Не было'] },
+    { id:'skidka_kv',  label:'Скидка из КВ',         opts:['Была','Не было'] },
+    { id:'k_prodavca', label:'Коэффициент продавца', opts:['Была','Не было'] },
+  ],
+};
+
+// ── STATE ───────────────────────────────────────────────────────
+let currentProd = 'kasko';
+const filterState = {};
+let openDropdown = null;
+
+const f  = v => v == null ? '—' : Number(v).toLocaleString('ru');
+const fp = v => v == null ? '—%' : v + '%';
+function pctOf1(val,s1){ return (val!=null&&s1)?+((val/s1)*100).toFixed(1):null; }
+function pillPct(v,type){
+  if(v==null) return `<span class="td-pill pill-gray">${fp(v)}</span>`;
+  const p=parseFloat(v);
+  let cls;
+  if(type==='ok') cls=p>=90?'pill-green':p>=70?'pill-yellow':'pill-red';
+  else            cls=p<=5?'pill-green':p<=15?'pill-yellow':'pill-red';
+  return `<span class="td-pill ${cls}">${fp(v)}</span>`;
+}
+
+// ── ПЕРЕКЛЮЧЕНИЕ ПРОДУКТА ───────────────────────────────────────
+function switchProd(prod) {
+  currentProd = prod;
+  document.querySelectorAll('.prod-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.prod-panel').forEach(p=>p.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('panel-' + prod).classList.add('active');
+
+  const names = { kasko:'Каско', osago:'ОСАГО', nonauto:'НеАвто' };
+  document.getElementById('hero-h').textContent = 'Воронка продаж — ' + names[prod];
+  document.getElementById('nav-sub').textContent = 'Воронка продаж · ' + names[prod];
+
+  // пересобираем доп. фильтры
+  buildExtraFilters(prod);
+
+  // обновляем герой для текущего продукта
+  if(prod==='kasko') updateHero(DATA.kasko.fl);
+  else if(prod==='osago') updateHero(DATA.osago.fl);
+  else updateHero(DATA.nonauto.main);
+}
+
+function updateHero(steps) {
+  const s1=steps[0].na_shage, sLast=steps[steps.length-1].uspeshnih;
+  document.getElementById('h-step1').textContent  = f(s1);
+  document.getElementById('h-issued').textContent = f(sLast);
+  document.getElementById('h-conv').textContent   = fp(s1&&sLast?+((sLast/s1)*100).toFixed(1):null);
+}
+
+// ── ПЕРЕКЛЮЧЕНИЕ ФЛ/ЮЛ ─────────────────────────────────────────
+function switchSeg(prod, seg) {
+  const container = document.getElementById('panel-' + prod);
+  container.querySelectorAll('.seg-tab').forEach(t=>t.classList.remove('active'));
+  container.querySelectorAll('.seg-panel').forEach(p=>p.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('seg-' + prod + '-' + seg).classList.add('active');
+  if(prod!=='nonauto') updateHero(DATA[prod][seg]);
+}
+
+// ── СТРОИМ ВОРОНКУ ──────────────────────────────────────────────
+function buildFunnel(steps, containerId, showMetrics, metricsId) {
+  const s1=steps[0].na_shage, sLast=steps[steps.length-1].uspeshnih;
+  const convFinal=s1&&sLast?+((sLast/s1)*100).toFixed(1):null;
+  const convBadge=convFinal
+    ?`<span class="conv-badge">Итог. конверсия: ${fp(convFinal)}</span>`
+    :`<span class="conv-badge nodata">Нет данных</span>`;
+
+  let html=`<div class="funnel-card"><div class="funnel-card-title">Воронка по шагам — относительный размер от Шага 1 ${convBadge}</div><div>`;
+  steps.forEach((step,i)=>{
+    const pct=pctOf1(step.na_shage,s1)??(i===0?100:null);
+    const w=pct??60;
+    const drop=(!s1||step.na_shage==null||steps[i+1]?.na_shage==null)?null:step.na_shage-steps[i+1].na_shage;
+    const isLast=i===steps.length-1;
+    html+=`<div class="fv-row">
+      <div class="fv-label"><span>Шаг ${step.num}. ${step.name}</span><span class="fv-sub">${step.sub}</span></div>
+      <div class="fv-track"><div class="fv-fill" style="width:${w}%;background:${step.color};"><span>${f(step.na_shage)}</span></div></div>
+      <div class="fv-pct">${fp(pct)}</div>
+      <div class="fv-drop">${isLast?`<span class="drop-pill dp-green">финал</span>`:drop!=null?`<span class="drop-pill dp-red">−${f(drop)}</span>`:`<span class="drop-pill dp-gray">—</span>`}</div>
+    </div>`;
+    if(!isLast) html+=`<div class="fv-connector"><div></div><div class="fv-connector-line"></div><div></div><div></div></div>`;
+  });
+  html+=`</div></div>`;
+
+  html+=`<div class="sec-label">Детализация по шагам</div>`;
+  steps.forEach((step,i)=>{
+    const isLast=i===steps.length-1;
+    const dol_ot1=i===0?(s1?100:null):pctOf1(step.na_shage,s1);
+    const ne_pereshli=step.ne_pereshli??(step.uspeshnih!=null&&steps[i+1]?.na_shage!=null?step.uspeshnih-steps[i+1].na_shage:null);
+    html+=`<div class="step-block">
+      <div class="step-head" style="background:color-mix(in srgb,${step.bg} 40%,white);border-left:4px solid ${step.color};">
+        <div class="step-num" style="background:${step.bg};color:${step.color};">${step.num}</div>
+        <div><div class="step-title">Шаг ${step.num}. ${step.name}</div><div class="step-sub">${step.sub}</div></div>
+      </div>
+      <table class="metrics-table">
+        <thead><tr>
+          <th>Кол-во на шаге</th><th>Успешных переходов</th><th>Доля от Шага 1</th>
+          <th>Неуспешных</th><th>% неуспешных</th><th>Не перешли на след.</th>
+        </tr></thead>
+        <tbody><tr>
+          <td class="col-na">${f(step.na_shage)}${i===0?`<span class="td-pill pill-blue td-sub">старт воронки</span>`:''}</td>
+          <td class="col-ok">${f(step.uspeshnih)}${pillPct(step.uspeshnih!=null&&step.na_shage?+((step.uspeshnih/step.na_shage)*100).toFixed(1):null,'ok')}</td>
+          <td class="col-pct">${fp(dol_ot1)}<span class="td-sub">от ${f(s1)}</span></td>
+          <td class="col-bad">${f(step.neuspeshnih)}</td>
+          <td class="col-drop">${pillPct(step.dol_neus,'bad')}<span class="td-sub">${f(step.neuspeshnih)} из ${f(step.na_shage)}</span></td>
+          <td class="col-miss">${isLast?'<span style="color:var(--muted);font-size:13px;">—</span>':f(ne_pereshli)}${!isLast&&ne_pereshli!=null&&step.uspeshnih!=null?`<span class="td-sub">${+((ne_pereshli/step.uspeshnih)*100).toFixed(1)}% от успешных</span>`:''}</td>
+        </tr></tbody>
+      </table>
+    </div>`;
+  });
+
+  html+=`<div class="total-card">
+    <div class="total-left"><strong>Итоговая конверсия</strong>Оформленные полисы / Кол-во на Шаге 1</div>
+    <div class="total-kpis">
+      <div class="total-kpi"><div class="val">${f(s1)}</div><div class="lbl">на шаге 1</div></div>
+      <div class="total-kpi"><div class="val">${f(sLast)}</div><div class="lbl">оформлено полисов</div></div>
+      <div class="total-kpi"><div class="val">${fp(convFinal)}</div><div class="lbl">итог. конверсия</div></div>
+    </div>
+  </div>`;
+
+  document.getElementById(containerId).innerHTML = html;
+
+  // доп метрики для Каско и НеАвто
+  if(showMetrics && metricsId) {
+    const m = DATA[currentProd==='kasko'?'kasko':'nonauto'].metrics;
+    const mHtml=`<div class="funnel-metrics">
+      <div class="fm-card"><div class="fm-lbl">Средняя страховая премия</div><div class="fm-val">${m.avg_premium}</div><div class="fm-sub">демо-данные</div></div>
+      <div class="fm-card"><div class="fm-lbl">Средний коэф. Андера</div><div class="fm-val">${m.avg_under}</div><div class="fm-sub">демо-данные</div></div>
+      <div class="fm-card"><div class="fm-lbl">Средняя скидка из КВ</div><div class="fm-val">${m.avg_skidka}</div><div class="fm-sub">демо-данные</div></div>
+      <div class="fm-card"><div class="fm-lbl">Средний коэф. продавца</div><div class="fm-val">${m.avg_kp}</div><div class="fm-sub">демо-данные</div></div>
+    </div>`;
+    document.getElementById(metricsId).innerHTML = mHtml;
+  }
+}
+
+// ── ФИЛЬТРЫ ─────────────────────────────────────────────────────
+function getCommonFilters(prod) {
+  if(prod==='kasko')   return COMMON_FILTERS_KASKO;
+  if(prod==='nonauto') return COMMON_FILTERS_NONAUTO;
+  return COMMON_FILTERS;
+}
+
+function buildFiltersInto(bodyId, cfgs) {
+  const body = document.getElementById(bodyId);
+  body.innerHTML = '';
+  cfgs.forEach(cfg => {
+    if(!filterState[cfg.id]) filterState[cfg.id] = new Set();
+    const div = document.createElement('div');
+    div.className = 'flt';
+    div.id = 'flt-' + cfg.id;
+    div.innerHTML = `
+      <span class="flt-label">${cfg.label}</span>
+      <div class="flt-trigger" id="trigger-${cfg.id}" onclick="toggleDropdown('${cfg.id}',event)">
+        <span class="flt-val placeholder" id="val-${cfg.id}">Все</span>
+        <span class="flt-badge" id="badge-${cfg.id}" style="display:none"></span>
+        <svg class="flt-arrow" id="arrow-${cfg.id}" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="flt-dropdown" id="dd-${cfg.id}" style="display:none">
+        ${cfg.search?`<div class="flt-search"><input type="text" placeholder="Поиск..." oninput="filterSearch('${cfg.id}',this.value)"></div>`:''}
+        <div class="flt-opts" id="opts-${cfg.id}">
+          ${cfg.opts.map(o=>`<div class="flt-opt" onclick="toggleOpt('${cfg.id}','${o}')">
+            <div class="flt-cb"></div><span class="flt-opt-txt">${o}</span>
+          </div>`).join('')}
+        </div>
+        <div class="flt-footer">
+          <span class="flt-footer-count" id="fc-${cfg.id}">0 выбрано</span>
+          <button class="flt-clear" onclick="clearFilter('${cfg.id}',event)">Очистить</button>
+        </div>
+      </div>`;
+    body.appendChild(div);
+  });
+}
+
+function buildMainFilters() {
+  buildFiltersInto('filters-body-main', getCommonFilters(currentProd));
+}
+
+function buildExtraFilters(prod) {
+  const cfgs = EXTRA_FILTERS[prod] || [];
+  // clear old extra filter state
+  Object.keys(filterState).forEach(k => {
+    if(!getCommonFilters(prod).find(f=>f.id===k) && !COMMON_FILTERS.find(f=>f.id===k)) {
+      delete filterState[k];
+    }
+  });
+  buildFiltersInto('filters-body-extra', cfgs);
+  // show/hide extra filters card
+  document.getElementById('extra-filters-card').style.display = cfgs.length ? '' : 'none';
+}
+
+function toggleDropdown(id, e) {
+  e.stopPropagation();
+  if(openDropdown && openDropdown!==id) closeDropdown(openDropdown);
+  const dd=document.getElementById('dd-'+id);
+  const arrow=document.getElementById('arrow-'+id);
+  const isOpen=dd.style.display!=='none';
+  if(isOpen){closeDropdown(id);}
+  else{dd.style.display='block';arrow.classList.add('open');openDropdown=id;}
+}
+function closeDropdown(id){
+  const dd=document.getElementById('dd-'+id);
+  if(dd)dd.style.display='none';
+  const arrow=document.getElementById('arrow-'+id);
+  if(arrow)arrow.classList.remove('open');
+  if(openDropdown===id)openDropdown=null;
+}
+function toggleOpt(id,val){
+  const st=filterState[id]||(filterState[id]=new Set());
+  const el=[...document.querySelectorAll(`#opts-${id} .flt-opt`)].find(e=>e.querySelector('.flt-opt-txt').textContent===val);
+  if(st.has(val)){st.delete(val);el&&el.classList.remove('checked');}
+  else{st.add(val);el&&el.classList.add('checked');}
+  updateTrigger(id);
+  updateActiveCount();
+}
+function updateTrigger(id){
+  const st=filterState[id]||new Set();
+  const valEl=document.getElementById('val-'+id);
+  const badge=document.getElementById('badge-'+id);
+  const trigger=document.getElementById('trigger-'+id);
+  const fc=document.getElementById('fc-'+id);
+  if(!valEl)return;
+  if(st.size===0){valEl.textContent='Все';valEl.classList.add('placeholder');if(badge)badge.style.display='none';trigger&&trigger.classList.remove('active');}
+  else{const arr=[...st];valEl.textContent=arr.slice(0,2).join(', ')+(arr.length>2?'…':'');valEl.classList.remove('placeholder');if(badge){badge.textContent=st.size;badge.style.display='inline';}trigger&&trigger.classList.add('active');}
+  if(fc)fc.textContent=st.size+' выбрано';
+}
+function clearFilter(id,e){
+  e.stopPropagation();
+  if(filterState[id])filterState[id].clear();
+  document.querySelectorAll(`#opts-${id} .flt-opt`).forEach(el=>el.classList.remove('checked'));
+  updateTrigger(id);updateActiveCount();
+}
+function resetAllFilters(e,group){
+  e.stopPropagation();
+  const cfgs=group==='main'?getCommonFilters(currentProd):EXTRA_FILTERS[currentProd]||[];
+  cfgs.forEach(f=>{
+    if(filterState[f.id])filterState[f.id].clear();
+    document.querySelectorAll(`#opts-${f.id} .flt-opt`).forEach(el=>el.classList.remove('checked'));
+    updateTrigger(f.id);
+  });
+  updateActiveCount();
+}
+function filterSearch(id,q){
+  document.querySelectorAll(`#opts-${id} .flt-opt`).forEach(el=>{
+    const txt=el.querySelector('.flt-opt-txt').textContent.toLowerCase();
+    el.style.display=txt.includes(q.toLowerCase())?'':'none';
+  });
+}
+function updateActiveCount(){
+  const all=Object.values(filterState).reduce((s,st)=>s+st.size,0);
+  const el=document.getElementById('active-filters-count');
+  if(el){if(all>0){el.textContent=all+' активных';el.style.display='inline';}else el.style.display='none';}
+}
+function toggleFilters(group){
+  const bodyId=group==='main'?'filters-body-main':'filters-body-extra';
+  const headId=group==='main'?'filters-head':'extra-filters-head';
+  const chevId='fh-chev-'+group;
+  const body=document.getElementById(bodyId);
+  const head=document.getElementById(headId);
+  const chev=document.getElementById(chevId);
+  const isHidden=body.classList.toggle('hidden');
+  head.classList.toggle('collapsed',isHidden);
+  chev.classList.toggle('open',!isHidden);
+}
+
+document.addEventListener('click', e=>{
+  if(openDropdown && !document.getElementById('flt-'+openDropdown)?.contains(e.target))
+    closeDropdown(openDropdown);
+});
+
+// ── INIT ─────────────────────────────────────────────────────────
+buildMainFilters();
+buildExtraFilters('kasko');
+
+buildFunnel(DATA.kasko.fl, 'seg-kasko-fl', true, 'kasko-metrics');
+buildFunnel(DATA.kasko.ul, 'seg-kasko-ul', false, null);
+buildFunnel(DATA.osago.fl, 'seg-osago-fl', false, null);
+buildFunnel(DATA.osago.ul, 'seg-osago-ul', false, null);
+buildFunnel(DATA.nonauto.main, 'seg-nonauto-main', true, 'nonauto-metrics');
+
+updateHero(DATA.kasko.fl);
+</script>
+</body>
+</html>
