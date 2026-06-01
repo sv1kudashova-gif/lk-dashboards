@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Постпродажи — ВИ и Аннулирования</title>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --dark:#38056C;--mid:#9A92FF;--green:#79FF3A;--light:#CCC8FF;
+  --white:#fff;--bg:#F5F4FB;--text:#1A1A2E;--muted:#6B6B8A;
+  --border:#CCC8FF;--r:12px;--r-sm:8px;
+  --good:#065F46;--warn:#92400E;--bad:#991B1B;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Golos Text',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+/* NAV */
+.nav{background:var(--dark);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;position:sticky;top:0;z-index:100;}
+.nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:5px;background:var(--green);}
+.nav-left{display:flex;align-items:center;gap:10px;}
+.nav-dot{width:28px;height:28px;background:var(--green);border-radius:6px;display:flex;align-items:center;justify-content:center;}
+.nav-dot svg{width:15px;height:15px;stroke:var(--dark);fill:none;stroke-width:2.5;}
+.nav-brand{color:var(--white);font-size:15px;font-weight:600;}
+.nav-sub{color:var(--light);font-size:11px;}
+.nav-back{color:var(--white);font-size:13px;padding:6px 14px;border-radius:6px;cursor:pointer;border:none;background:rgba(154,146,255,0.2);font-family:inherit;}
+.nav-back:hover{background:rgba(154,146,255,0.35);}
+
+.main{max-width:1100px;margin:0 auto;padding:2rem 1.5rem 4rem;}
+
+/* HERO */
+.hero{background:var(--dark);border-radius:var(--r);padding:1.5rem 2rem;margin-bottom:1.5rem;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:1rem;}
+.hero::before{content:'';position:absolute;right:-40px;top:-40px;width:180px;height:180px;background:var(--mid);opacity:0.07;border-radius:50%;}
+.hero::after{content:'';position:absolute;right:0;top:0;bottom:0;width:5px;background:var(--green);}
+.hero-h{color:var(--white);font-size:20px;font-weight:600;margin-bottom:4px;}
+.hero-s{color:var(--light);font-size:12px;}
+.hero-badge{background:rgba(121,255,58,0.15);border:1px solid rgba(121,255,58,0.3);color:var(--green);font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px;white-space:nowrap;}
+
+/* SEC LABEL */
+.sec-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--dark);margin:2rem 0 1rem;display:flex;align-items:center;gap:8px;}
+.sec-label::before{content:'';width:3px;height:14px;background:var(--green);border-radius:2px;flex-shrink:0;}
+
+/* CONCEPT BANNER */
+.concept-banner{background:#FFF8E1;border:1px solid #FFD54F;border-radius:var(--r);padding:.75rem 1.25rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:10px;font-size:12px;color:#7B5A00;}
+.concept-banner svg{flex-shrink:0;width:16px;height:16px;stroke:#F59E0B;fill:none;stroke-width:2;}
+
+/* PRODUCT TABS */
+.prod-tabs-wrap{margin-bottom:1.5rem;}
+.prod-tabs{display:inline-flex;gap:4px;background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:5px;}
+.prod-tab{font-size:13px;font-weight:600;padding:8px 28px;border-radius:var(--r-sm);border:none;background:transparent;color:var(--muted);cursor:pointer;font-family:inherit;transition:all .15s;}
+.prod-tab.active{background:var(--dark);color:var(--white);}
+.prod-tab:hover:not(.active){background:var(--bg);color:var(--dark);}
+.prod-panel{display:none;}
+.prod-panel.active{display:block;}
+
+/* SECTION TABS (ВИ / Аннулирование) */
+.sec-tabs{display:flex;gap:0;background:var(--white);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:1.5rem;width:fit-content;}
+.sec-tab{font-size:13px;font-weight:500;padding:10px 28px;border:none;background:transparent;color:var(--muted);cursor:pointer;font-family:inherit;transition:all .15s;border-right:1px solid var(--border);}
+.sec-tab:last-child{border-right:none;}
+.sec-tab.active{background:var(--dark);color:var(--white);font-weight:600;}
+.sec-tab:hover:not(.active){background:var(--bg);color:var(--dark);}
+.sec-panel{display:none;}
+.sec-panel.active{display:block;}
+
+/* KPI ROW */
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:1.5rem;}
+.kpi-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1rem 1.25rem;}
+.kpi-val{font-size:26px;font-weight:600;color:var(--dark);line-height:1;margin-bottom:4px;}
+.kpi-lbl{font-size:11px;color:var(--muted);line-height:1.4;}
+.kpi-sub{font-size:11px;font-weight:600;margin-top:6px;}
+.kpi-sub.good{color:#065F46;}
+.kpi-sub.warn{color:#92400E;}
+.kpi-sub.bad{color:#991B1B;}
+
+/* DASH CARD */
+.dash-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:12px;}
+.dash-head{background:#F7F6FF;border-bottom:1px solid var(--border);padding:.875rem 1.25rem;display:flex;align-items:center;gap:10px;}
+.dash-head svg{width:16px;height:16px;stroke:var(--dark);fill:none;stroke-width:2;flex-shrink:0;}
+.dash-title{font-size:13px;font-weight:600;color:var(--dark);}
+.dash-sub{font-size:11px;color:var(--muted);margin-top:1px;}
+.dash-priority{font-size:10px;font-weight:600;padding:2px 8px;border-radius:12px;margin-left:auto;flex-shrink:0;}
+.p1{background:#FEE2E2;color:#9B2C2C;}
+.p2{background:#FEF3C7;color:#92400E;}
+.dash-body{padding:1.25rem;}
+
+/* FUNNEL MINI */
+.mini-funnel{display:flex;flex-direction:column;gap:4px;}
+.mf-row{display:grid;grid-template-columns:180px 1fr 60px;align-items:center;gap:10px;}
+.mf-label{font-size:12px;color:var(--text);}
+.mf-track{height:28px;background:#F5F4FB;border-radius:5px;overflow:hidden;}
+.mf-fill{height:100%;border-radius:5px;display:flex;align-items:center;padding:0 10px;}
+.mf-fill span{font-size:11px;font-weight:600;color:#fff;white-space:nowrap;}
+.mf-pct{font-size:11px;font-weight:600;color:var(--muted);text-align:right;}
+.mf-conn{display:grid;grid-template-columns:180px 1fr 60px;height:12px;}
+.mf-conn-line{display:flex;justify-content:center;}
+.mf-conn-line::before{content:'';width:2px;height:100%;background:var(--border);display:block;}
+
+/* BAR CHART */
+.bar-chart{display:flex;flex-direction:column;gap:8px;}
+.bc-row{display:flex;align-items:center;gap:12px;}
+.bc-label{font-size:12px;color:var(--text);width:220px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.bc-track{flex:1;height:24px;background:#F5F4FB;border-radius:4px;overflow:hidden;}
+.bc-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding:0 8px;min-width:32px;}
+.bc-fill span{font-size:11px;font-weight:600;color:#fff;}
+.bc-val{font-size:11px;font-weight:600;color:var(--muted);width:56px;text-align:right;flex-shrink:0;}
+
+/* DONUT PLACEHOLDER */
+.donut-row{display:grid;grid-template-columns:160px 1fr;gap:1.5rem;align-items:center;}
+.donut-circle{width:120px;height:120px;border-radius:50%;background:conic-gradient(#5B21B6 0% 48%,#1D4ED8 48% 73%,#065F46 73% 100%);display:flex;align-items:center;justify-content:center;position:relative;}
+.donut-hole{width:72px;height:72px;background:var(--white);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;}
+.donut-hole span{font-size:16px;font-weight:600;color:var(--dark);line-height:1;}
+.donut-hole small{font-size:9px;color:var(--muted);}
+.donut-legend{display:flex;flex-direction:column;gap:8px;}
+.dl-item{display:flex;align-items:center;gap:8px;font-size:12px;}
+.dl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.dl-name{flex:1;color:var(--text);}
+.dl-val{font-size:11px;font-weight:600;color:var(--muted);}
+
+/* AGENT TABLE */
+.agent-table{width:100%;border-collapse:collapse;font-size:12px;}
+.agent-table th{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;padding:.5rem .875rem;text-align:left;border-bottom:1px solid var(--border);background:#FAFAFE;}
+.agent-table th:not(:first-child){text-align:right;}
+.agent-table td{padding:.625rem .875rem;border-bottom:1px solid var(--border);color:var(--text);}
+.agent-table td:not(:first-child){text-align:right;}
+.agent-table tr:last-child td{border-bottom:none;}
+.agent-table tr:hover td{background:#FAFAFE;}
+.pill{display:inline-flex;font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px;}
+.pg{background:#D1FAE5;color:#065F46;}
+.py{background:#FEF3C7;color:#92400E;}
+.pr{background:#FEE2E2;color:#991B1B;}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-left">
+    <div class="nav-dot"><svg viewBox="0 0 16 16"><polyline points="2,12 6,7 10,9 14,4"/></svg></div>
+    <div><div class="nav-brand">Ренессанс Страхование</div><div class="nav-sub">Постпродажи — ВИ и Аннулирования</div></div>
+  </div>
+  <button class="nav-back" onclick="window.location.href='index.html'">← Главная</button>
+</nav>
+
+<div class="main">
+
+  <div class="hero">
+    <div>
+      <div class="hero-h">Отчёт по постпродажам</div>
+      <div class="hero-s">Внесение изменений · Аннулирования · Каско и ОСАГО</div>
+    </div>
+    <div class="hero-badge">Концепт</div>
+  </div>
+
+  <div class="concept-banner">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    Концептуальный макет · Демо-данные для согласования структуры · Реальные данные подключаются после утверждения
+  </div>
+
+  <!-- PRODUCT TABS -->
+  <div class="prod-tabs-wrap">
+    <div class="prod-tabs">
+      <button class="prod-tab active" onclick="switchProd('kasko')">Каско</button>
+      <button class="prod-tab"        onclick="switchProd('osago')">ОСАГО</button>
+    </div>
+  </div>
+
+  <!-- ══════════════ КАСКО ══════════════ -->
+  <div class="prod-panel active" id="panel-kasko">
+
+    <!-- SECTION TABS -->
+    <div class="sec-tabs">
+      <button class="sec-tab active" onclick="switchSec('kasko','vi')">Внесение изменений</button>
+      <button class="sec-tab"        onclick="switchSec('kasko','ann')">Аннулирование</button>
+    </div>
+
+    <!-- ─── ВИ КАСКО ─── -->
+    <div class="sec-panel active" id="sec-kasko-vi">
+
+      <div class="sec-label">Ключевые показатели — ВИ Каско</div>
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <div class="kpi-val">3 214</div>
+          <div class="kpi-lbl">Запросов на ВИ</div>
+          <div class="kpi-sub warn">за период</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-val">2 847</div>
+          <div class="kpi-lbl">Успешно оформлено</div>
+          <div class="kpi-sub good">88.6%</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-val">1 203</div>
+          <div class="kpi-lbl">ВИ без доплаты</div>
+          <div class="kpi-sub good">42.3%</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-val">1 187</div>
+          <div class="kpi-lbl">ВИ с доплатой</div>
+          <div class="kpi-sub warn">41.7%</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-val">457</div>
+          <div class="kpi-lbl">ВИ с возвратом</div>
+          <div class="kpi-sub">16.0%</div>
+        </div>
+      </div>
+
+      <!-- 1. Воронка ВИ -->
+      <div class="dash-card">
+        <div class="dash-head">
+          <svg viewBox="0 0 24 24"><path d="M22 3H2l8 9.46V19l4 2V12.46z"/></svg>
+          <div>
+            <div class="dash-title">Воронка ВИ по шагам</div>
+            <div class="dash-sub">Кальк → Импорт → Оплата / Возврат / Без изменения</div>
+          </div>
+          <span class="dash-priority p1">1 приоритет</span>
+        </div>
+        <div class="dash-body">
+          <div class="mini-funnel">
+            <div class="mf-row">
+              <div class="mf-label">Запрос на ВИ</div>
+              <div class="mf-track"><div class="mf-fill" style="width:100%;background:#5B21B6;"><span>3 214</span></div></div>
+              <div class="mf-pct">100%</div>
+            </div>
+            <div class="mf-conn"><div></div><div class="mf-conn-line"></div><div></div></div>
+            <div class="mf-row">
+              <div class="mf-label">Кальк (расчёт ВИ)</div>
+              <div class="mf-track"><div class="mf-fill" style="width:93%;background:#1D4ED8;"><span>2 989</span></div></div>
+              <div class="mf-pct">93.0%</div>
+            </div>
+            <div class="mf-conn"><div></div><div class="mf-conn-line"></div><div></div></div>
+            <div class="mf-row">
+              <div class="mf-label">Импорт</div>
+              <div class="mf-track"><div class="mf-fill" style="width:89%;background:#92400E;"><span>2 861</span></div></div>
+              <div class="mf-pct">89.0%</div>
+            </div>
+            <div class="mf-conn"><div></div><div class="mf-conn-line"></div><div></div></div>
+            <div style="display:grid;grid-template-columns:180px 1fr 60px;gap:10px;margin-top:4px;">
+              <div class="mf-label" style="align-self:center;">Результат</div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                <div style="flex:1;min-width:100px;">
+                  <div style="font-size:10px;color:var(--muted);margin-bottom:4px;text-align:center;">С доплатой</div>
+                  <div class="mf-track"><div class="mf-fill" style="width:42%;background:#065F46;"><span>1 187</span></div></div>
+                </div>
+                <div style="flex:1;min-width:100px;">
+                  <div style="font-size:10px;color:var(--muted);margin-bottom:4px;text-align:center;">С возвратом</div>
+                  <div class="mf-track"><div class="mf-fill" style="width:16%;background:#9D174D;"><span>457</span></div></div>
+                </div>
+                <div style="flex:1;min-width:100px;">
+                  <div style="font-size:10px;color:var(--muted);margin-bottom:4px;text-align:center;">Без изменения</div>
+                  <div class="mf-track"><div class="mf-fill" style="width:43%;background:#6B6B8A;"><span>1 203</span></div></div>
+                </div>
+              </div>
+              <div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Доля ВИ без/с доплатой/с возвратом -->
+      <div class="dash-card">
+        <div class="dash-head">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+          <div>
+            <div class="dash-title">Распределение ВИ: без доплаты / с доплатой / с возвратом</div>
+            <div class="dash-sub">Доля каждого типа от общего кол-ва успешных ВИ</div>
+          </div>
+          <span class="dash-priority p1">1 приоритет</span>
+        </div>
+        <div class="dash-body">
+          <div class="donut-row">
+            <div style="display:flex;justify-content:center;">
+              <div class="donut-circle">
+                <div class="donut-hole"><span>2 847</span><small>успешных</small></div>
+              </div>
+            </div>
+            <div class="donut-legend">
+              <div class="dl-item">
+                <div class="dl-dot" style="background:#5B21B6;"></div>
+                <span class="dl-name">Без доплаты</span>
+                <span class="dl-val">1 203 · <strong>42.3%</strong></span>
+              </div>
+              <div class="dl-item">
+                <div class="dl-dot" style="background:#1D4ED8;"></div>
+                <span class="dl-name">С доплатой</span>
+                <span class="dl-val">1 187 · <strong>41.7%</strong></span>
+              </div>
+              <div class="dl-item">
+                <div class="dl-dot" style="background:#065F46;"></div>
+                <span class="dl-name">С возвратом</span>
+                <span class="dl-val">457 · <strong>16.0%</strong></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Причины ВИ -->
+      <div class="dash-card">
+        <div class="dash-head">
+          <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          <div>
+            <div class="dash-title">Причины ВИ (по изменяемым параметрам)</div>
+            <div class="dash-sub">Топ изменяемых объектов и характеристик</div>
+          </div>
+          <span class="dash-priority p1">1 приоритет</span>
+        </div>
+        <div class="dash-body">
+          <div class="bar-chart">
+            <div class="bc-row"><span class="bc-label">Изменение периода страхования</span><div class="bc-track"><div class="bc-fill" style="width:78%;background:#5B21B6;"><span>873</span></div></div><span class="bc-val">30.7%</span></div>
+            <div class="bc-row"><span class="bc-label">Замена ТС / смена гос.номера</span><div class="bc-track"><div class="bc-fill" style="width:60%;background:#5B21B6;"><span>671</span></div></div><span class="bc-val">23.6%</span></div>
+            <div class="bc-row"><span class="bc-label">Изменение страховой суммы</span><div class="bc-track"><div class="bc-fill" style="width:42%;background:#5B21B6;"><span>468</span></div></div><span class="bc-val">16.4%</span></div>
+            <div class="bc-row"><span class="bc-label">Смена страхователя / собственника</span><div class="bc-track"><div class="bc-fill" style="width:28%;background:#5B21B6;"><span>312</span></div></div><span class="bc-val">11.0%</span></div>
+            <div class="bc-row"><span class="bc-label">Изменение списка водителей</span><div class="bc-track"><div class="bc-fill" style="width:22%;background:#5B21B6;"><span>247</span></div></div><span class="bc-val">8.7%</span></div>
+            <div class="bc-row"><span class="bc-label">Прочее</span><div class="bc-track"><div class="bc-fill" style="width:27%;background:#9A92FF;"><span>276</span></div></div><span class="bc-val">9.7%</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Срок ВИ -->
+      <div class="dash-card">
+        <div class="dash-head">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <div>
+            <div class="dash-title">Срок ВИ — через какой период после оформления</div>
+            <div class="dash-sub">Доля ВИ в первый месяц · Разбивка по агентам</div>
+          </div>
+          <span class="dash-priority p1">1 приоритет</span>
+        </div>
+        <div class="dash-body">
+          <div class="bar-chart" style="margin-bottom:1.25rem;">
+            <div class="bc-row"><span class="bc-label">До 1 месяца</span><div class="bc-track"><div class="bc-fill" style="width:61%;background:#065F46;"><span>1 736</span></div></div><span class="bc-val">61.0%</span></div>
+            <div class="bc-row"><span class="bc-label">1–3 месяца</span><div class="bc-track"><div class="bc-fill" style="width:22%;background:#1D4ED8;"><span>627</span></div></div><span class="bc-val">22.0%</span></div>
+            <div class="bc-row"><span class="bc-label">3–6 месяцев</span><div class="bc-track"><div class="bc-fill" style="width:10%;background:#92400E;"><span>284</span></div></div><span class="bc-val">10.0%</span></div>
+            <div class="bc-row"><span class="bc-label">Более 6 месяцев</span><div class="bc-track"><div class="bc-fill" style="width:7%;background:#991B1B;"><span>200</span></div></div><span class="bc-val">7.0%</span></div>
+          </div>
+          <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;">ВИ в первый месяц — разбивка по агентам (топ-5)</div>
+          <table class="agent-table">
+            <thead><tr><th>Агент / КП</th><th>ВИ в 1й мес.</th><th>Всего ВИ</th><th>Доля</th></tr></thead>
+            <tbody>
+              <tr><td>SRL01010</td><td>312</td><td>421</td><td><span class="pill pg">74.1%</span></td></tr>
+              <tr><td>SRL02010</td><td>287</td><td>398</td><td><span class="pill pg">72.1%</span></td></tr>
+              <tr><td>SRL03020</td><td>198</td><td>341</td><td><span class="pill py">58.1%</span></td></tr>
+              <tr><td>SRL04010</td><td>156</td><td>289</td><td><span class="pill py">54.0%</span></td></tr>
+              <tr><td>SRL05010</td><td>98</td><td>241</td><td><span class="pill pr">40.7%</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /sec-kasko-vi -->
+
+    <!-- ─── АННУЛИРОВАНИЕ КАСКО ─── -->
+    <div class="sec-panel" id="sec-kasko-ann">
+
+      <div class="sec-label">Ключевые показатели — Аннулирования Каско</div>
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <div class="kpi-val">641</div>
+          <div class="kpi-lbl">Запросов из списка полисов</div>
+          <div class="kpi-sub warn">за период</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-val">289</div>
+          <div class="kpi-lbl">Запросов из отчёта по продажам</div>
+          <div class="kpi-sub warn">за период</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-val">812</div>
+          <div class="kpi-lbl">Успешных аннулирований (итого)</div>
+          <div class="kpi-sub good">87.7% от всех запросов</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-val">2.9%</div>
+          <div class="kpi-lbl">Доля аннулирований от проданных полисов</div>
+          <div class="kpi-sub warn">от 28 041 полисов</div>
+        </div>
+      </div>
+
+      <!-- 1. Каналы аннулирования -->
+      <div class="dash-card">
+        <div class="dash-head">
+          <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+          <div>
+            <div class="dash-title">Запросы на аннулирование по источнику</div>
+            <div class="dash-sub">Из списка полисов vs из отчёта по продажам · Успешность по каждому</div>
+          </div>
+          <span class="dash-priority p1">1 приоритет</span>
+        </div>
+        <div class="dash-body">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+            <div style="background:#F5F4FB;border-radius:var(--r-sm);padding:1rem;">
+              <div style="font-size:12px;font-weight:600;color:var(--dark);margin-bottom:12px;">Из списка полисов</div>
+              <div class="bar-chart">
+                <div class="bc-row"><span class="bc-label" style="width:100px;">Запросов</span><div class="bc-track"><div class="bc-fill" style="width:100%;background:#5B21B6;"><span>641</span></div></div><span class="bc-val"></span></div>
+                <div class="bc-row"><span class="bc-label" style="width:100px;">Успешных</span><div class="bc-track"><div class="bc-fill" style="width:88%;background:#065F46;"><span>564</span></div></div><span class="bc-val">88.0%</span></div>
+                <div class="bc-row"><span class="bc-label" style="width:100px;">Отказов</span><div class="bc-track"><div class="bc-fill" style="width:12%;background:#991B1B;"><span>77</span></div></div><span class="bc-val">12.0%</span></div>
+              </div>
+            </div>
+            <div style="background:#F5F4FB;border-radius:var(--r-sm);padding:1rem;">
+              <div style="font-size:12px;font-weight:600;color:var(--dark);margin-bottom:12px;">Из отчёта по продажам</div>
+              <div class="bar-chart">
+                <div class="bc-row"><span class="bc-label" style="width:100px;">Запросов</span><div class="bc-track"><div class="bc-fill" style="width:100%;background:#5B21B6;"><span>289</span></div></div><span class="bc-val"></span></div>
+                <div class="bc-row"><span class="bc-label" style="width:100px;">Успешных</span><div class="bc-track"><div class="bc-fill" style="width:86%;background:#065F46;"><span>248</span></div></div><span class="bc-val">85.8%</span></div>
+                <div class="bc-row"><span class="bc-label" style="width:100px;">Отказов</span><div class="bc-track"><div class="bc-fill" style="width:14%;background:#991B1B;"><span>41</span></div></div><span class="bc-val">14.2%</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Доля аннулирований по агентам -->
+      <div class="dash-card">
+        <div class="dash-head">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <div>
+            <div class="dash-title">Доля аннулирований от проданных полисов — по агентам</div>
+            <div class="dash-sub">Топ-5 агентов по абсолютному кол-ву аннулирований</div>
+          </div>
+          <span class="dash-priority p2">2 приоритет</span>
+        </div>
+        <div class="dash-body">
+          <table class="agent-table">
+            <thead><tr><th>Агент / КП</th><th>Продано полисов</th><th>Аннулировано</th><th>Доля</th></tr></thead>
+            <tbody>
+              <tr><td>SRL01010</td><td>4 217</td><td>187</td><td><span class="pill py">4.4%</span></td></tr>
+              <tr><td>SRL02010</td><td>3 891</td><td>163</td><td><span class="pill py">4.2%</span></td></tr>
+              <tr><td>SRL03020</td><td>3 412</td><td>121</td><td><span class="pill pg">3.5%</span></td></tr>
+              <tr><td>SRL04010</td><td>2 987</td><td>89</td><td><span class="pill pg">3.0%</span></td></tr>
+              <tr><td>SRL05010</td><td>2 341</td><td>97</td><td><span class="pill pr">4.1%</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /sec-kasko-ann -->
+  </div><!-- /panel-kasko -->
+
+  <!-- ══════════════ ОСАГО ══════════════ -->
+  <div class="prod-panel" id="panel-osago">
+
+    <div class="sec-tabs">
+      <button class="sec-tab active" onclick="switchSec('osago','vi')">Внесение изменений</button>
+      <button class="sec-tab"        onclick="switchSec('osago','ann')">Аннулирование</button>
+    </div>
+
+    <!-- ─── ВИ ОСАГО ─── -->
+    <div class="sec-panel active" id="sec-osago-vi">
+
+      <div class="sec-label">Ключевые показатели — ВИ ОСАГО</div>
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <div class="kpi-val">8 741</div>
+          <div class="kpi-lbl">Запросов на ВИ</div>
+          <div class="kpi-sub warn">за период</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-val">7 923</div>
+          <div class="kpi-lbl">Успешно оформлено</div>
+          <div class="kpi-sub good">90.6%</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-val">3 841</div>
+          <div class="kpi-lbl">ВИ без доплаты</div>
+          <div class="kpi-sub good">48.5%</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-val">2 914</div>
+          <div class="kpi-lbl">ВИ с доплатой</div>
+          <div class="kpi-sub warn">36.8%</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-val">1 168</div>
+          <div class="kpi-lbl">ВИ с возвратом</div>
+          <div class="kpi-sub">14.7%</div>
+        </div>
+      </div>
+
+      <!-- Воронка ОСАГО ВИ -->
+      <div class="dash-card">
+        <div class="dash-head">
+          <svg viewBox="0 0 24 24"><path d="M22 3H2l8 9.46V19l4 2V12.46z"/></svg>
+          <div>
+            <div class="dash-title">Воронка ВИ по шагам — ОСАГО</div>
+            <div class="dash-sub">Кальк → Импорт → Оплата / Возврат / Без изменения</div>
+          </div>
+          <span class="dash-priority p1">1 приоритет</span>
+        </div>
+        <div class="dash-body">
+          <div class="mini-funnel">
+            <div class="mf-row"><div class="mf-label">Запрос на ВИ</div><div class="mf-track"><div class="mf-fill" style="width:100%;background:#5B21B6;"><span>8 741</span></div></div><div class="mf-pct">100%</div></div>
+            <div class="mf-conn"><div></div><div class="mf-conn-line"></div><div></div></div>
+            <div class="mf-row"><div class="mf-label">Кальк</div><div class="mf-track"><div class="mf-fill" style="width:95%;background:#1D4ED8;"><span>8 304</span></div></div><div class="mf-pct">95.0%</div></div>
+            <div class="mf-conn"><div></div><div class="mf-conn-line"></div><div></div></div>
+            <div class="mf-row"><div class="mf-label">Импорт</div><div class="mf-track"><div class="mf-fill" style="width:91%;background:#92400E;"><span>7 954</span></div></div><div class="mf-pct">91.0%</div></div>
+            <div class="mf-conn"><div></div><div class="mf-conn-line"></div><div></div></div>
+            <div style="display:grid;grid-template-columns:180px 1fr 60px;gap:10px;margin-top:4px;">
+              <div class="mf-label" style="align-self:center;">Результат</div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                <div style="flex:1;min-width:100px;"><div style="font-size:10px;color:var(--muted);margin-bottom:4px;text-align:center;">С доплатой</div><div class="mf-track"><div class="mf-fill" style="width:37%;background:#065F46;"><span>2 914</span></div></div></div>
+                <div style="flex:1;min-width:100px;"><div style="font-size:10px;color:var(--muted);margin-bottom:4px;text-align:center;">С возвратом</div><div class="mf-track"><div class="mf-fill" style="width:15%;background:#9D174D;"><span>1 168</span></div></div></div>
+                <div style="flex:1;min-width:100px;"><div style="font-size:10px;color:var(--muted);margin-bottom:4px;text-align:center;">Без изменения</div><div class="mf-track"><div class="mf-fill" style="width:49%;background:#6B6B8A;"><span>3 841</span></div></div></div>
+              </div>
+              <div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Причины ОСАГО -->
+      <div class="dash-card">
+        <div class="dash-head">
+          <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          <div><div class="dash-title">Причины ВИ ОСАГО</div><div class="dash-sub">Топ изменяемых параметров</div></div>
+          <span class="dash-priority p1">1 приоритет</span>
+        </div>
+        <div class="dash-body">
+          <div class="bar-chart">
+            <div class="bc-row"><span class="bc-label">Изменение периода страхования</span><div class="bc-track"><div class="bc-fill" style="width:71%;background:#5B21B6;"><span>2 841</span></div></div><span class="bc-val">35.9%</span></div>
+            <div class="bc-row"><span class="bc-label">Смена водителей (КВС)</span><div class="bc-track"><div class="bc-fill" style="width:54%;background:#5B21B6;"><span>2 162</span></div></div><span class="bc-val">27.3%</span></div>
+            <div class="bc-row"><span class="bc-label">Смена страхователя</span><div class="bc-track"><div class="bc-fill" style="width:31%;background:#5B21B6;"><span>1 238</span></div></div><span class="bc-val">15.6%</span></div>
+            <div class="bc-row"><span class="bc-label">Изменение данных ТС</span><div class="bc-track"><div class="bc-fill" style="width:17%;background:#5B21B6;"><span>681</span></div></div><span class="bc-val">8.6%</span></div>
+            <div class="bc-row"><span class="bc-label">Прочее</span><div class="bc-track"><div class="bc-fill" style="width:26%;background:#9A92FF;"><span>1 001</span></div></div><span class="bc-val">12.6%</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Срок ОСАГО -->
+      <div class="dash-card">
+        <div class="dash-head">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <div><div class="dash-title">Срок ВИ ОСАГО · Разбивка по агентам</div><div class="dash-sub">Доля ВИ в первый месяц</div></div>
+          <span class="dash-priority p1">1 приоритет</span>
+        </div>
+        <div class="dash-body">
+          <div class="bar-chart" style="margin-bottom:1.25rem;">
+            <div class="bc-row"><span class="bc-label">До 1 месяца</span><div class="bc-track"><div class="bc-fill" style="width:67%;background:#065F46;"><span>5 317</span></div></div><span class="bc-val">67.1%</span></div>
+            <div class="bc-row"><span class="bc-label">1–3 месяца</span><div class="bc-track"><div class="bc-fill" style="width:20%;background:#1D4ED8;"><span>1 587</span></div></div><span class="bc-val">20.0%</span></div>
+            <div class="bc-row"><span class="bc-label">3–6 месяцев</span><div class="bc-track"><div class="bc-fill" style="width:8%;background:#92400E;"><span>634</span></div></div><span class="bc-val">8.0%</span></div>
+            <div class="bc-row"><span class="bc-label">Более 6 месяцев</span><div class="bc-track"><div class="bc-fill" style="width:5%;background:#991B1B;"><span>397</span></div></div><span class="bc-val">5.0%</span></div>
+          </div>
+          <table class="agent-table">
+            <thead><tr><th>Агент / КП</th><th>ВИ в 1й мес.</th><th>Всего ВИ</th><th>Доля</th></tr></thead>
+            <tbody>
+              <tr><td>SRL01010</td><td>892</td><td>1 241</td><td><span class="pill pg">71.9%</span></td></tr>
+              <tr><td>SRL02010</td><td>741</td><td>1 087</td><td><span class="pill pg">68.2%</span></td></tr>
+              <tr><td>SRL03020</td><td>512</td><td>891</td><td><span class="pill py">57.5%</span></td></tr>
+              <tr><td>SRL04010</td><td>398</td><td>712</td><td><span class="pill py">55.9%</span></td></tr>
+              <tr><td>SRL05010</td><td>241</td><td>587</td><td><span class="pill pr">41.1%</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /sec-osago-vi -->
+
+    <!-- ─── АННУЛИРОВАНИЕ ОСАГО ─── -->
+    <div class="sec-panel" id="sec-osago-ann">
+
+      <div class="sec-label">Ключевые показатели — Аннулирования ОСАГО</div>
+      <div class="kpi-row">
+        <div class="kpi-card"><div class="kpi-val">1 847</div><div class="kpi-lbl">Запросов из списка полисов</div><div class="kpi-sub warn">за период</div></div>
+        <div class="kpi-card"><div class="kpi-val">912</div><div class="kpi-lbl">Запросов из отчёта по продажам</div><div class="kpi-sub warn">за период</div></div>
+        <div class="kpi-card"><div class="kpi-val">2 431</div><div class="kpi-lbl">Успешных аннулирований</div><div class="kpi-sub good">87.9%</div></div>
+        <div class="kpi-card"><div class="kpi-val">3.4%</div><div class="kpi-lbl">Доля от проданных полисов</div><div class="kpi-sub warn">от 71 500 полисов</div></div>
+      </div>
+
+      <div class="dash-card">
+        <div class="dash-head">
+          <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+          <div><div class="dash-title">Аннулирования ОСАГО по источнику</div><div class="dash-sub">Из списка полисов vs из отчёта по продажам</div></div>
+          <span class="dash-priority p1">1 приоритет</span>
+        </div>
+        <div class="dash-body">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+            <div style="background:#F5F4FB;border-radius:var(--r-sm);padding:1rem;">
+              <div style="font-size:12px;font-weight:600;color:var(--dark);margin-bottom:12px;">Из списка полисов</div>
+              <div class="bar-chart">
+                <div class="bc-row"><span class="bc-label" style="width:100px;">Запросов</span><div class="bc-track"><div class="bc-fill" style="width:100%;background:#5B21B6;"><span>1 847</span></div></div><span class="bc-val"></span></div>
+                <div class="bc-row"><span class="bc-label" style="width:100px;">Успешных</span><div class="bc-track"><div class="bc-fill" style="width:89%;background:#065F46;"><span>1 644</span></div></div><span class="bc-val">89.0%</span></div>
+                <div class="bc-row"><span class="bc-label" style="width:100px;">Отказов</span><div class="bc-track"><div class="bc-fill" style="width:11%;background:#991B1B;"><span>203</span></div></div><span class="bc-val">11.0%</span></div>
+              </div>
+            </div>
+            <div style="background:#F5F4FB;border-radius:var(--r-sm);padding:1rem;">
+              <div style="font-size:12px;font-weight:600;color:var(--dark);margin-bottom:12px;">Из отчёта по продажам</div>
+              <div class="bar-chart">
+                <div class="bc-row"><span class="bc-label" style="width:100px;">Запросов</span><div class="bc-track"><div class="bc-fill" style="width:100%;background:#5B21B6;"><span>912</span></div></div><span class="bc-val"></span></div>
+                <div class="bc-row"><span class="bc-label" style="width:100px;">Успешных</span><div class="bc-track"><div class="bc-fill" style="width:87%;background:#065F46;"><span>787</span></div></div><span class="bc-val">86.3%</span></div>
+                <div class="bc-row"><span class="bc-label" style="width:100px;">Отказов</span><div class="bc-track"><div class="bc-fill" style="width:13%;background:#991B1B;"><span>125</span></div></div><span class="bc-val">13.7%</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dash-card">
+        <div class="dash-head">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          <div><div class="dash-title">Доля аннулирований ОСАГО — по агентам</div><div class="dash-sub">Топ-5 агентов</div></div>
+          <span class="dash-priority p2">2 приоритет</span>
+        </div>
+        <div class="dash-body">
+          <table class="agent-table">
+            <thead><tr><th>Агент / КП</th><th>Продано полисов</th><th>Аннулировано</th><th>Доля</th></tr></thead>
+            <tbody>
+              <tr><td>SRL01010</td><td>12 417</td><td>498</td><td><span class="pill py">4.0%</span></td></tr>
+              <tr><td>SRL02010</td><td>10 891</td><td>421</td><td><span class="pill pg">3.9%</span></td></tr>
+              <tr><td>SRL03020</td><td>9 312</td><td>287</td><td><span class="pill pg">3.1%</span></td></tr>
+              <tr><td>SRL04010</td><td>8 987</td><td>341</td><td><span class="pill py">3.8%</span></td></tr>
+              <tr><td>SRL05010</td><td>7 341</td><td>312</td><td><span class="pill py">4.3%</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /sec-osago-ann -->
+  </div><!-- /panel-osago -->
+
+</div>
+
+<script>
+function switchProd(id) {
+  document.querySelectorAll('.prod-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.prod-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`.prod-tab[onclick="switchProd('${id}')"]`).classList.add('active');
+  document.getElementById('panel-' + id).classList.add('active');
+}
+
+function switchSec(prod, id) {
+  // переключаем внутри нужного prod-panel
+  const panel = document.getElementById('panel-' + prod);
+  panel.querySelectorAll('.sec-tab').forEach(t => t.classList.remove('active'));
+  panel.querySelectorAll('.sec-panel').forEach(p => p.classList.remove('active'));
+  panel.querySelector(`.sec-tab[onclick="switchSec('${prod}','${id}')"]`).classList.add('active');
+  document.getElementById('sec-' + prod + '-' + id).classList.add('active');
+}
+</script>
+</body>
+</html>
