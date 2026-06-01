@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roadmap аналитики Сервисов — ЛК Партнёра</title>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --dark:#38056C;--mid:#9A92FF;--green:#79FF3A;--light:#CCC8FF;
+  --white:#fff;--bg:#F5F4FB;--text:#1A1A2E;--muted:#6B6B8A;
+  --border:#CCC8FF;--r:12px;--r-sm:8px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Golos Text',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+/* NAV */
+.nav{background:var(--dark);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;position:sticky;top:0;z-index:100;}
+.nav::after{content:'';position:absolute;right:0;top:0;bottom:0;width:5px;background:var(--green);}
+.nav-left{display:flex;align-items:center;gap:10px;}
+.nav-dot{width:28px;height:28px;background:var(--green);border-radius:6px;display:flex;align-items:center;justify-content:center;}
+.nav-dot svg{width:15px;height:15px;stroke:var(--dark);fill:none;stroke-width:2.5;}
+.nav-brand{color:var(--white);font-size:15px;font-weight:600;}
+.nav-sub{color:var(--light);font-size:11px;}
+.nav-back{color:var(--white);font-size:13px;padding:6px 14px;border-radius:6px;cursor:pointer;border:none;background:rgba(154,146,255,0.2);font-family:inherit;}
+.nav-back:hover{background:rgba(154,146,255,0.35);}
+
+.main{max-width:1060px;margin:0 auto;padding:2rem 1.5rem 4rem;}
+
+/* HERO */
+.hero{background:var(--dark);border-radius:var(--r);padding:1.5rem 2rem;margin-bottom:1.75rem;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:1rem;}
+.hero::before{content:'';position:absolute;right:-40px;top:-40px;width:180px;height:180px;background:var(--mid);opacity:0.07;border-radius:50%;}
+.hero::after{content:'';position:absolute;right:0;top:0;bottom:0;width:5px;background:var(--green);}
+.hero-h{color:var(--white);font-size:20px;font-weight:600;margin-bottom:4px;}
+.hero-s{color:var(--light);font-size:12px;}
+.hero-stats{display:flex;gap:2rem;flex-shrink:0;}
+.hs-val{font-size:22px;font-weight:600;color:var(--green);line-height:1;}
+.hs-lbl{font-size:10px;color:var(--mid);margin-top:3px;}
+
+/* SEC LABEL */
+.sec-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--dark);margin:2rem 0 1rem;display:flex;align-items:center;gap:8px;}
+.sec-label::before{content:'';width:3px;height:14px;background:var(--green);border-radius:2px;flex-shrink:0;}
+
+/* PRIORITY BADGE */
+.badge-p1{background:#FEE2E2;color:#9B2C2C;font-size:10px;font-weight:700;padding:2px 8px;border-radius:12px;white-space:nowrap;}
+.badge-p2{background:#FEF3C7;color:#92400E;font-size:10px;font-weight:700;padding:2px 8px;border-radius:12px;white-space:nowrap;}
+.badge-p3{background:#E2E8F0;color:#4A5568;font-size:10px;font-weight:700;padding:2px 8px;border-radius:12px;white-space:nowrap;}
+.badge-done{background:#C6F6D5;color:#276749;font-size:10px;font-weight:700;padding:2px 8px;border-radius:12px;white-space:nowrap;}
+.badge-wip{background:#FEF3C7;color:#92400E;font-size:10px;font-weight:700;padding:2px 8px;border-radius:12px;white-space:nowrap;}
+.badge-soon{background:#F5F4FB;color:var(--muted);font-size:10px;font-weight:600;padding:2px 8px;border-radius:12px;white-space:nowrap;}
+.badge-ext{background:#DBEAFE;color:#1D4ED8;font-size:10px;font-weight:600;padding:2px 8px;border-radius:12px;white-space:nowrap;}
+
+/* FILTERS CARD */
+.filters-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);margin-bottom:1.75rem;overflow:hidden;}
+.filters-head{background:#F7F6FF;border-bottom:1px solid var(--border);padding:.75rem 1.25rem;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--dark);}
+.filters-head svg{width:15px;height:15px;stroke:var(--dark);fill:none;stroke-width:2;}
+.filters-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.875rem;padding:1.25rem;}
+.flt-item{}
+.flt-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:5px;display:block;}
+.flt-ctrl{display:flex;align-items:center;justify-content:space-between;background:#F5F4FB;border:1px solid var(--border);border-radius:var(--r-sm);padding:7px 10px;font-size:12px;color:var(--muted);cursor:pointer;transition:border-color .15s;}
+.flt-ctrl:hover{border-color:var(--mid);}
+.flt-ctrl svg{width:13px;height:13px;stroke:var(--muted);fill:none;stroke-width:2;}
+
+/* SERVICE CARD */
+.svc-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:12px;}
+.svc-head{display:flex;align-items:center;gap:12px;padding:.875rem 1.25rem;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;}
+.svc-head:hover{background:#FAFAFE;}
+.svc-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.svc-icon svg{width:18px;height:18px;fill:none;stroke-width:2;}
+.svc-name{font-size:14px;font-weight:600;color:var(--dark);}
+.svc-sub{font-size:11px;color:var(--muted);margin-top:1px;}
+.svc-badges{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto;align-items:center;}
+.svc-chev{width:16px;height:16px;stroke:var(--mid);fill:none;stroke-width:2;transition:transform .2s;flex-shrink:0;}
+.svc-chev.open{transform:rotate(180deg);}
+.svc-body{display:none;border-top:1px solid var(--border);}
+.svc-body.open{display:block;}
+
+/* GROUP inside card */
+.svc-group{padding:.875rem 1.25rem;border-bottom:1px solid var(--border);}
+.svc-group:last-child{border-bottom:none;}
+.svc-group-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:.625rem;display:flex;align-items:center;gap:6px;}
+
+/* METRIC ROW */
+.metric-row{display:flex;align-items:flex-start;gap:10px;padding:.5rem 0;border-bottom:1px solid #F0EEF8;}
+.metric-row:last-child{border-bottom:none;}
+.metric-cb{width:16px;height:16px;border:1.5px solid var(--border);border-radius:3px;flex-shrink:0;margin-top:2px;}
+.metric-text{flex:1;font-size:13px;color:var(--text);line-height:1.45;}
+.metric-note{font-size:11px;color:var(--muted);margin-top:2px;}
+.metric-badges{display:flex;gap:5px;flex-shrink:0;flex-wrap:wrap;margin-top:1px;}
+
+/* READY REPORTS */
+.ready-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;}
+.ready-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;display:flex;flex-direction:column;gap:8px;text-decoration:none;color:inherit;transition:box-shadow .15s,border-color .15s;}
+.ready-card:hover{box-shadow:0 2px 12px rgba(56,5,108,.1);border-color:var(--mid);}
+.ready-card-icon{width:36px;height:36px;border-radius:8px;background:#EDE9FF;display:flex;align-items:center;justify-content:center;}
+.ready-card-icon svg{width:18px;height:18px;stroke:var(--dark);fill:none;stroke-width:2;}
+.ready-card-name{font-size:14px;font-weight:600;color:var(--dark);}
+.ready-card-sub{font-size:11px;color:var(--muted);}
+.ready-card-link{font-size:11px;color:var(--mid);display:flex;align-items:center;gap:4px;margin-top:auto;}
+.ready-card-link svg{width:11px;height:11px;stroke:var(--mid);fill:none;stroke-width:2;}
+.ready-card.disabled{opacity:.6;pointer-events:none;cursor:default;}
+
+/* NOTE */
+.note-row{display:flex;align-items:flex-start;gap:8px;background:#FFF8E1;border:1px solid #FFD54F;border-radius:var(--r-sm);padding:.75rem 1rem;margin-bottom:.875rem;font-size:12px;color:#7B5A00;}
+.note-row svg{flex-shrink:0;width:15px;height:15px;stroke:#F59E0B;fill:none;stroke-width:2;margin-top:1px;}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-left">
+    <div class="nav-dot"><svg viewBox="0 0 16 16"><polyline points="2,12 6,7 10,9 14,4"/></svg></div>
+    <div><div class="nav-brand">Ренессанс Страхование</div><div class="nav-sub">Roadmap аналитики Сервисов — ЛК Партнёра</div></div>
+  </div>
+  <button class="nav-back" onclick="window.location.href='index.html'">← Главная</button>
+</nav>
+
+<div class="main">
+
+  <div class="hero">
+    <div>
+      <div class="hero-h">Roadmap аналитики Сервисов</div>
+      <div class="hero-s">Метрики использования сервисов ЛК · Вовлечённость партнёров · Воронки и активность</div>
+    </div>
+    <div class="hero-stats">
+      <div><div class="hs-val">2</div><div class="hs-lbl">отчёта готово</div></div>
+      <div><div class="hs-val">14</div><div class="hs-lbl">дашбордов запланировано</div></div>
+    </div>
+  </div>
+
+  <!-- ОБЩИЕ ФИЛЬТРЫ -->
+  <div class="filters-card">
+    <div class="filters-head">
+      <svg viewBox="0 0 24 24"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+      Общие фильтры — применяются ко всем сервисам
+      <span style="margin-left:auto;" class="badge-p1">1 приоритет</span>
+    </div>
+    <div class="filters-grid">
+      <div class="flt-item">
+        <span class="flt-lbl">Филиал</span>
+        <div class="flt-ctrl">Все филиалы <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </div>
+      <div class="flt-item">
+        <span class="flt-lbl">Группа КП</span>
+        <div class="flt-ctrl">Все группы <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </div>
+      <div class="flt-item">
+        <span class="flt-lbl">КП</span>
+        <div class="flt-ctrl">Все КП <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </div>
+      <div class="flt-item">
+        <span class="flt-lbl">Период</span>
+        <div class="flt-ctrl">Текущий месяц <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 1 ПРИОРИТЕТ ══ -->
+  <div class="sec-label">1 приоритет — ключевые сервисы</div>
+
+  <!-- ── ВСЕ СЕРВИСЫ (общие метрики) ── -->
+  <div class="svc-card">
+    <div class="svc-head" onclick="toggleSvc('all')">
+      <div class="svc-icon" style="background:#EDE9FF;"><svg viewBox="0 0 24 24" stroke="#5B21B6"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+      <div>
+        <div class="svc-name">Все сервисы — общие метрики</div>
+        <div class="svc-sub">Кол-во кликов · Вовлечённость · Проникновение КП</div>
+      </div>
+      <div class="svc-badges"><span class="badge-p1">1 приоритет</span><span class="badge-soon">Скоро</span></div>
+      <svg class="svc-chev" id="chev-all" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="svc-body" id="body-all">
+      <div class="svc-group">
+        <div class="svc-group-title">Клики и активность</div>
+        <div class="metric-row">
+          <div class="metric-cb"></div>
+          <div class="metric-text">Кол-во кликов в сервисах (суммарно по всем)</div>
+          <div class="metric-badges"><span class="badge-p1">P1</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-cb"></div>
+          <div class="metric-text">Кол-во кликов в выбранном сервисе (фильтр по сервису)</div>
+          <div class="metric-badges"><span class="badge-p1">P1</span></div>
+        </div>
+      </div>
+      <div class="svc-group">
+        <div class="svc-group-title">Вовлечённость / Частота / Проникновение КП</div>
+        <div class="metric-row">
+          <div class="metric-cb"></div>
+          <div class="metric-text">Доля партнёров, использующих сервисы (≥1 раз за месяц)</div>
+          <div class="metric-badges"><span class="badge-p1">P1</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-cb"></div>
+          <div class="metric-text">Частотность использования — среднее кол-во обращений к сервису в месяц на КП</div>
+          <div class="metric-badges"><span class="badge-p1">P1</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── АКТИВНОСТЬ ПОЛЬЗОВАТЕЛЯ ЯМ ── -->
+  <div class="svc-card">
+    <div class="svc-head" onclick="toggleSvc('ym')">
+      <div class="svc-icon" style="background:#DBEAFE;"><svg viewBox="0 0 24 24" stroke="#1D4ED8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+      <div>
+        <div class="svc-name">Активность пользователя (ЯМ)</div>
+        <div class="svc-sub">Посещаемость · Клики · Тепловая карта</div>
+      </div>
+      <div class="svc-badges"><span class="badge-p1">1 приоритет</span><span class="badge-soon">Скоро</span></div>
+      <svg class="svc-chev" id="chev-ym" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="svc-body" id="body-ym">
+      <div class="svc-group">
+        <div class="metric-row">
+          <div class="metric-cb"></div>
+          <div class="metric-text">Посещаемость страниц — динамика уникальных визитов по разделам</div>
+          <div class="metric-badges"><span class="badge-p1">P1</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-cb"></div>
+          <div class="metric-text">Клики внутри страниц — топ кликаемых элементов</div>
+          <div class="metric-badges"><span class="badge-p1">P1</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-cb"></div>
+          <div class="metric-text">Тепловая карта взаимодействий по разделам ЛК</div>
+          <div class="metric-badges"><span class="badge-p1">P1</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── НУЖНО ПРОДЛИТЬ ── -->
+  <div class="svc-card">
+    <div class="svc-head" onclick="toggleSvc('prolong')">
+      <div class="svc-icon" style="background:#D1FAE5;"><svg viewBox="0 0 24 24" stroke="#065F46"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></div>
+      <div>
+        <div class="svc-name">Нужно продлить</div>
+        <div class="svc-sub">Фильтры · Кнопка «Продлить» · Автокотировки vs точечная пролонгация</div>
+      </div>
+      <div class="svc-badges"><span class="badge-p1">1 приоритет</span><span class="badge-soon">Скоро</span></div>
+      <svg class="svc-chev" id="chev-prolong" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="svc-body" id="body-prolong">
+      <div class="svc-group">
+        <div class="metric-row">
+          <div class="metric-cb"></div>
+          <div class="metric-text">Использование фильтров на странице «Нужно продлить»</div>
+          <div class="metric-badges"><span class="badge-p1">P1</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-cb"></div>
+          <div class="metric-text">Клики на кнопку «Продлить» — кол-во и конверсия в оформление</div>
+          <div class="metric-badges"><span class="badge-p1">P1</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-cb"></div>
+          <div class="metric-text">Сколько пролонгируют из автокотировок vs метод точечной пролонгации (ЯМ)</div>
+          <div class="metric-badges"><span class="badge-p1">P1</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ЗАДАЧИ ── -->
+  <div class="svc-card">
+    <div class="svc-head" onclick="toggleSvc('tasks')">
+      <div class="svc-icon" style="background:#FCE7F3;"><svg viewBox="0 0 24 24" stroke="#9D174D"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+      <div>
+        <div class="svc-name">Задачи</div>
+        <div class="svc-sub">Воронка лидов · Доля активных · Просмотренные задачи</div>
+      </div>
+      <div class="svc-badges"><span class="badge-p1">1 приоритет</span><span class="badge-wip">Продумать с Леной</span></div>
+      <svg class="svc-chev" id="chev-tasks" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="svc-body" id="body-tasks">
+      <div class="svc-group">
+        <div class="note-row">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Состав метрик и логика фильтров уточняются совместно с Леной
+        </div>
+        <div class="svc-group-title">Фильтры (специфичные для Задач)</div>
+        <div class="metric-row">
+          <div class="metric-cb"></div>
+          <div class="metric-text">Тип лида</div>
+          <div class="metric-badges"><span class="badge-p1">P1</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-cb"></div>
+          <div class="metric-text">Тип продукта</div>
+          <div class="metric-badges"><span class="badge-p1">P1</span></div>
+        </div>
+      </div>
+      <div class="svc-group">
+        <div class="svc-group-title">Метрики</div>
+        <div class="metric-row">
+          <div class="metric-cb"></div>
+          <div class="metric-text">Воронка: Лид (создано) → Открыто лидов → Котировка → Продажа</div>
+          <div class="metric-badges"><span class="badge-p1">P1</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-cb"></div>
+          <div class="metric-text">Доля активных пользователей задач</div>
+          <div class="metric-badges"><span class="badge-p1">P1</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-cb"></div>
+          <div class="metric-text">Доля просмотренных задач</div>
+          <div class="metric-badges"><span class="badge-p1">P1</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ОТЧЁТ ПО ПРОДАЖАМ ── -->
+  <div class="svc-card">
+    <div class="svc-head" onclick="toggleSvc('sales')">
+      <div class="svc-icon" style="background:#FEF3C7;"><svg viewBox="0 0 24 24" stroke="#92400E"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+      <div>
+        <div class="svc-name">Отчёт по продажам</div>
+        <div class="svc-sub">Фильтры · Скачивания</div>
+      </div>
+      <div class="svc-badges"><span class="badge-p1">1 приоритет</span><span class="badge-soon">Скоро</span></div>
+      <svg class="svc-chev" id="chev-sales" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="svc-body" id="body-sales">
+      <div class="svc-group">
+        <div class="metric-row">
+          <div class="metric-cb"></div>
+          <div class="metric-text">Использование фильтров в отчёте по продажам — какие фильтры применяют чаще всего</div>
+          <div class="metric-badges"><span class="badge-p1">P1</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-cb"></div>
+          <div class="metric-text">Кол-во скачиваний отчёта по продажам</div>
+          <div class="metric-badges"><span class="badge-p2">P2/3</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── СТРАНИЦА СПИСКА ПОЛИСОВ ── -->
+  <div class="svc-card">
+    <div class="svc-head" onclick="toggleSvc('policies')">
+      <div class="svc-icon" style="background:#EDE9FF;"><svg viewBox="0 0 24 24" stroke="#5B21B6"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+      <div>
+        <div class="svc-name">Страница списка полисов</div>
+        <div class="svc-sub">Использование фильтров</div>
+      </div>
+      <div class="svc-badges"><span class="badge-p1">1 приоритет</span><span class="badge-soon">Скоро</span></div>
+      <svg class="svc-chev" id="chev-policies" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="svc-body" id="body-policies">
+      <div class="svc-group">
+        <div class="metric-row">
+          <div class="metric-cb"></div>
+          <div class="metric-text">Использование фильтров на странице списка полисов — частота применения, популярные комбинации</div>
+          <div class="metric-badges"><span class="badge-p1">P1</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 2/3 ПРИОРИТЕТ ══ -->
+  <div class="sec-label">2 / 3 приоритет</div>
+
+  <!-- ── СТАТИСТИКА ── -->
+  <div class="svc-card">
+    <div class="svc-head" onclick="toggleSvc('stats')">
+      <div class="svc-icon" style="background:#DBEAFE;"><svg viewBox="0 0 24 24" stroke="#1D4ED8"><rect x="2" y="3" width="4" height="18"/><rect x="10" y="8" width="4" height="13"/><rect x="18" y="13" width="4" height="8"/></svg></div>
+      <div>
+        <div class="svc-name">Статистика</div>
+        <div class="svc-sub">Активность по блокам · Запуск в 3–4 кв.</div>
+      </div>
+      <div class="svc-badges"><span class="badge-p2">2/3 приоритет</span><span class="badge-soon">3–4 кв.</span></div>
+      <svg class="svc-chev" id="chev-stats" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="svc-body" id="body-stats">
+      <div class="svc-group">
+        <div class="metric-row">
+          <div class="metric-cb"></div>
+          <div class="metric-text">Активность в каждом блоке статистики — кол-во кликов и действий</div>
+          <div class="metric-badges"><span class="badge-p2">P2/3</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── АКТЫ ── -->
+  <div class="svc-card">
+    <div class="svc-head" onclick="toggleSvc('acts')">
+      <div class="svc-icon" style="background:#FEF3C7;"><svg viewBox="0 0 24 24" stroke="#92400E"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+      <div>
+        <div class="svc-name">Акты</div>
+        <div class="svc-sub">Фильтры · Типы · Статусы · Подписанные</div>
+      </div>
+      <div class="svc-badges"><span class="badge-p2">2/3 приоритет</span><span class="badge-soon">Скоро</span></div>
+      <svg class="svc-chev" id="chev-acts" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="svc-body" id="body-acts">
+      <div class="svc-group">
+        <div class="metric-row">
+          <div class="metric-cb"></div>
+          <div class="metric-text">Использование фильтров на странице Актов</div>
+          <div class="metric-badges"><span class="badge-p2">P2/3</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-cb"></div>
+          <div class="metric-text">Тип акта 1 — АД / ДВОУ / и др.</div>
+          <div class="metric-badges"><span class="badge-p2">P2/3</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-cb"></div>
+          <div class="metric-text">Тип акта 2 — Бумажный / Электронный</div>
+          <div class="metric-badges"><span class="badge-p2">P2/3</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-cb"></div>
+          <div class="metric-text">Статус акта — распределение по статусам</div>
+          <div class="metric-badges"><span class="badge-p2">P2/3</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-cb"></div>
+          <div class="metric-text">Кол-во подписанных актов</div>
+          <div class="metric-badges"><span class="badge-p2">P2/3</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── МОИ КЛИЕНТЫ ── -->
+  <div class="svc-card">
+    <div class="svc-head" onclick="toggleSvc('clients')">
+      <div class="svc-icon" style="background:#D1FAE5;"><svg viewBox="0 0 24 24" stroke="#065F46"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+      <div>
+        <div class="svc-name">Мои клиенты</div>
+        <div class="svc-sub">Состав метрик уточняется</div>
+      </div>
+      <div class="svc-badges"><span class="badge-p2">2/3 приоритет</span><span class="badge-wip">В проработке</span></div>
+      <svg class="svc-chev" id="chev-clients" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="svc-body" id="body-clients">
+      <div class="svc-group">
+        <div class="note-row">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Состав метрик уточняется — добавьте задачи в backlog
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── МОИ ДОКУМЕНТЫ ── -->
+  <div class="svc-card">
+    <div class="svc-head" onclick="toggleSvc('docs')">
+      <div class="svc-icon" style="background:#EDE9FF;"><svg viewBox="0 0 24 24" stroke="#5B21B6"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
+      <div>
+        <div class="svc-name">Мои документы</div>
+        <div class="svc-sub">Статусы · Подписанные документы</div>
+      </div>
+      <div class="svc-badges"><span class="badge-p2">2/3 приоритет</span><span class="badge-soon">Скоро</span></div>
+      <svg class="svc-chev" id="chev-docs" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="svc-body" id="body-docs">
+      <div class="svc-group">
+        <div class="metric-row">
+          <div class="metric-cb"></div>
+          <div class="metric-text">Статус документов — распределение по статусам</div>
+          <div class="metric-badges"><span class="badge-p2">P2/3</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-cb"></div>
+          <div class="metric-text">Кол-во подписанных документов — динамика</div>
+          <div class="metric-badges"><span class="badge-p2">P2/3</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── НОВОСТИ ── -->
+  <div class="svc-card">
+    <div class="svc-head" onclick="toggleSvc('news')">
+      <div class="svc-icon" style="background:#DBEAFE;"><svg viewBox="0 0 24 24" stroke="#1D4ED8"><path d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10l6 6v8a2 2 0 0 1-2 2z"/><polyline points="17 20 17 14 7 14 7 20"/><polyline points="7 4 7 8 15 8"/></svg></div>
+      <div>
+        <div class="svc-name">Новости</div>
+        <div class="svc-sub">Посещения · Популярные разделы и новости</div>
+      </div>
+      <div class="svc-badges"><span class="badge-p2">2/3 приоритет</span><span class="badge-soon">Скоро</span></div>
+      <svg class="svc-chev" id="chev-news" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="svc-body" id="body-news">
+      <div class="svc-group">
+        <div class="metric-row">
+          <div class="metric-cb"></div>
+          <div class="metric-text">Кол-во посещений раздела Новости</div>
+          <div class="metric-badges"><span class="badge-p2">P2/3</span></div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-cb"></div>
+          <div class="metric-text">Какие разделы и новости просматривают — топ материалов</div>
+          <div class="metric-badges"><span class="badge-p2">P2/3</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── КУРАТОРСКИЙ КАБИНЕТ ── -->
+  <div class="svc-card">
+    <div class="svc-head" onclick="toggleSvc('curator')">
+      <div class="svc-icon" style="background:#FCE7F3;"><svg viewBox="0 0 24 24" stroke="#9D174D"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/><path d="M18 8s1 1 1 3"/><path d="M21 7l1 1"/></svg></div>
+      <div>
+        <div class="svc-name">Кураторский кабинет</div>
+        <div class="svc-sub">Активность управления настройками партнёра</div>
+      </div>
+      <div class="svc-badges"><span class="badge-p2">2/3 приоритет</span><span class="badge-soon">Скоро</span></div>
+      <svg class="svc-chev" id="chev-curator" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="svc-body" id="body-curator">
+      <div class="svc-group">
+        <div class="metric-row">
+          <div class="metric-cb"></div>
+          <div class="metric-text">Активность куратора в управлении настройками партнёра — клики, изменения, частота</div>
+          <div class="metric-badges"><span class="badge-p2">P2/3</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── УУ ── -->
+  <div class="svc-card">
+    <div class="svc-head" onclick="toggleSvc('uu')">
+      <div class="svc-icon" style="background:#FEF3C7;"><svg viewBox="0 0 24 24" stroke="#92400E"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></div>
+      <div>
+        <div class="svc-name">УУ (Управление учётными записями)</div>
+        <div class="svc-sub">Отдельный отчёт в Grafana — требует доработки</div>
+      </div>
+      <div class="svc-badges"><span class="badge-p2">2/3 приоритет</span><span class="badge-wip">Подчистить</span></div>
+      <svg class="svc-chev" id="chev-uu" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="svc-body" id="body-uu">
+      <div class="svc-group">
+        <div class="note-row">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Существующий отчёт в Grafana — нужно «подчистить» и привести к стандарту ЛК
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ ГОТОВЫЕ ОТЧЁТЫ ══ -->
+  <div class="sec-label">Готовые отчёты — внешние ссылки</div>
+
+  <div class="ready-grid">
+
+    <a href="https://sz-dashboard-eta.vercel.app/" target="_blank" class="ready-card">
+      <div class="ready-card-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.58 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.55a16 16 0 0 0 5.55 5.55l.93-.93a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+      <div class="ready-card-name">Служба заботы (СЗ)</div>
+      <div class="ready-card-sub">Готовый дашборд по обращениям</div>
+      <div style="margin-top:6px;"><span class="badge-done">● Готов</span></div>
+      <div class="ready-card-link">sz-dashboard-eta.vercel.app <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></div>
+    </a>
+
+    <a href="https://loyalty-analytics.vercel.app/" target="_blank" class="ready-card">
+      <div class="ready-card-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+      <div class="ready-card-name">Лояльность</div>
+      <div class="ready-card-sub">Аналитика программы лояльности партнёров</div>
+      <div style="margin-top:6px;"><span class="badge-done">● Готов</span></div>
+      <div class="ready-card-link">loyalty-analytics.vercel.app <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></div>
+    </a>
+
+    <div class="ready-card disabled">
+      <div class="ready-card-icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
+      <div class="ready-card-name">Обучение</div>
+      <div class="ready-card-sub">Ожидается ссылка от Лены</div>
+      <div style="margin-top:6px;"><span class="badge-soon">Ссылка появится</span></div>
+      <div class="ready-card-link" style="color:var(--muted);">Ждём от Лены</div>
+    </div>
+
+  </div>
+
+</div><!-- /main -->
+
+<script>
+function toggleSvc(id) {
+  const body = document.getElementById('body-' + id);
+  const chev = document.getElementById('chev-' + id);
+  body.classList.toggle('open');
+  chev.classList.toggle('open');
+}
+</script>
+</body>
+</html>
