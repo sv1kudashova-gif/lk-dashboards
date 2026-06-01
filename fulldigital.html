@@ -252,9 +252,25 @@ footer { text-align: center; color: var(--muted); font-size: 11px; padding: 2rem
     </div>
   </div>
 
-  <!-- KPI -->
-  <div class="sec-label">Ключевые показатели — Каско <span class="badge-concept">Концепт</span></div>
+    <!-- CONCEPT NOTE -->
+  <div class="concept-note">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    Демо-данные для проверки визуала. После подключения источника значения заменятся автоматически.
+  </div>
 
+  <!-- PRODUCT TABS -->
+  <div class="prod-tabs-wrap">
+    <div class="prod-tabs">
+      <button class="prod-tab active" onclick="switchProd('kasko')">Каско</button>
+      <button class="prod-tab"        onclick="switchProd('ifl')">ИФЛ</button>
+    </div>
+  </div>
+
+  <!-- ══════════ КАСКО ══════════ -->
+  <div class="prod-panel active" id="panel-kasko">
+
+  <!-- KPI КАСКО -->
+  <div class="sec-label">Ключевые показатели — Каско <span class="badge-concept">Концепт</span></div>
   <div class="kpi-row">
     <div class="kpi-sm k-total">
       <div class="kpi-lbl">Всего котировок</div>
@@ -274,26 +290,9 @@ footer { text-align: center; color: var(--muted); font-size: 11px; padding: 2rem
     <div class="kpi-sm k-auto">
       <div class="kpi-lbl">Авто-проверки</div>
       <div class="kpi-val">1 254</div>
-      <div class="kpi-sub">ОА + ПСО авто</div>
+      <div class="kpi-sub">ОА + ПСО Назначено</div>
     </div>
   </div>
-
-  <!-- CONCEPT NOTE -->
-  <div class="concept-note">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-    Демо-данные для проверки визуала. После подключения источника значения заменятся автоматически.
-  </div>
-
-  <!-- PRODUCT TABS -->
-  <div class="prod-tabs-wrap">
-    <div class="prod-tabs">
-      <button class="prod-tab active" onclick="switchProd('kasko')">Каско</button>
-      <button class="prod-tab"        onclick="switchProd('ifl')">ИФЛ</button>
-    </div>
-  </div>
-
-  <!-- ══════════ КАСКО ══════════ -->
-  <div class="prod-panel active" id="panel-kasko">
 
   <!-- TABLE 1: KASKO CHECKS -->
   <div class="sec-label">Таблица 1 — Проверки котировок Каско <span class="badge-concept">Концепт</span></div>
