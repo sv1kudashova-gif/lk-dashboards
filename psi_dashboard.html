@@ -223,11 +223,33 @@ body{font-family:'Golos Text',system-ui,sans-serif;background:var(--bg);color:va
       <label>Продукт</label>
       <select id="f-product" multiple size="4"></select>
     </div>
+    <div class="filter-group" id="partner-filter-wrap" style="position:relative;">
+      <label>Наименование партнёра</label>
+      <div onclick="togglePartnerDropdown()" style="display:flex;align-items:center;justify-content:space-between;background:var(--bg);border:1px solid var(--border);border-radius:var(--r-sm);padding:6px 10px;cursor:pointer;min-height:36px;font-size:12px;gap:6px;">
+        <span id="partner-trigger-lbl" style="flex:1;color:var(--muted);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">Все партнёры</span>
+        <span id="partner-count" style="display:none;background:var(--dark);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;flex-shrink:0;"></span>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div id="partner-dropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;min-width:280px;background:var(--white);border:1px solid var(--border);border-radius:var(--r-sm);box-shadow:0 8px 24px rgba(56,5,108,.12);z-index:300;">
+        <div style="padding:8px 10px;border-bottom:1px solid var(--border);">
+          <input type="text" placeholder="Поиск партнёра..." oninput="filterPartnerSearch(this.value)" style="width:100%;border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-size:12px;font-family:inherit;outline:none;">
+        </div>
+        <div style="display:flex;gap:6px;padding:6px 10px;border-bottom:1px solid var(--border);">
+          <button onclick="selectAllPartners()" style="flex:1;font-size:11px;padding:4px;border:1px solid var(--border);border-radius:6px;cursor:pointer;background:var(--bg);font-family:inherit;color:var(--dark);font-weight:500;">Выбрать все</button>
+          <button onclick="clearAllPartners()" style="flex:1;font-size:11px;padding:4px;border:1px solid var(--border);border-radius:6px;cursor:pointer;background:var(--bg);font-family:inherit;color:var(--muted);">Сбросить все</button>
+        </div>
+        <div id="f-partner-list" style="max-height:200px;overflow-y:auto;"></div>
+      </div>
+    </div>
   </div>
   <div class="filter-actions">
     <button class="btn btn-primary" onclick="applyFilters()">Применить</button>
     <button class="btn btn-ghost" onclick="resetFilters()">Сбросить</button>
     <span id="filter-info" style="font-size:12px;color:var(--muted);align-self:center;margin-left:8px;"></span>
+    <button class="btn btn-ghost" onclick="downloadExcel()" style="margin-left:auto;display:flex;align-items:center;gap:6px;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Скачать Excel
+    </button>
   </div>
 </div>
 
@@ -431,6 +453,7 @@ function parseCSV(csv) {
   const colScore = headers.findIndex(h => h.includes('Оценка') || h.includes('оценка'));
   const colProduct = headers.findIndex(h => h.includes('Продукт') || h.includes('продукт'));
   const colComment = headers.findIndex(h => h.includes('Комментарий') || h.includes('комментарий'));
+  const colPartner = headers.findIndex(h => h.includes('Полное имя') || h.includes('полное имя') || h.includes('Имя'));
   
   const records = [];
   for (let i = 1; i < lines.length; i++) {
@@ -438,6 +461,9 @@ function parseCSV(csv) {
     const cols = parseCSVLine(lines[i]);
     const score = parseInt(cols[colScore]);
     if (!score || score === 0) continue; // skip 0 scores
+    const partnerName = (cols[colPartner] || '').trim();
+    // Exclude specific partners
+    if (partnerName === 'Воднева Елена' || partnerName === 'Воднев Василий') continue;
     
     const dateStr = cols[colDate] || '';
     // Parse date — could be DD.MM.YYYY or YYYY-MM-DD
@@ -457,6 +483,7 @@ function parseCSV(csv) {
       o: score,
       p: (cols[colProduct] || '').trim(),
       k: (cols[colComment] || '').trim().slice(0, 300),
+      n: partnerName,
       m: month,
       q: quarter
     });
@@ -510,7 +537,77 @@ function initFilters() {
   const prods = [...new Set(RAW.map(r=>r.p))].sort();
   const fPr = document.getElementById('f-product');
   prods.forEach(p => { fPr.appendChild(new Option(p,p)); });
+
+  // Partner filter — multiselect with search
+  const partners = [...new Set(RAW.map(r=>r.n).filter(n=>n))].sort();
+  const fPtn = document.getElementById('f-partner-list');
+  if (fPtn) {
+    fPtn.innerHTML = '';
+    partners.forEach(n => {
+      const div = document.createElement('div');
+      div.className = 'partner-opt';
+      div.dataset.val = n;
+      div.innerHTML = `<span class="partner-cb"></span><span>${n}</span>`;
+      div.onclick = () => togglePartner(n, div);
+      fPtn.appendChild(div);
+    });
+  }
 }
+
+function togglePartner(val, el) {
+  el.classList.toggle('selected');
+  updatePartnerTrigger();
+}
+
+function updatePartnerTrigger() {
+  const selected = [...document.querySelectorAll('.partner-opt.selected')].map(e=>e.dataset.val);
+  const lbl = document.getElementById('partner-trigger-lbl');
+  const cnt = document.getElementById('partner-count');
+  if (selected.length === 0) {
+    lbl.textContent = 'Все партнёры';
+    cnt.style.display = 'none';
+  } else {
+    lbl.textContent = selected.slice(0,2).join(', ') + (selected.length > 2 ? ` +${selected.length-2}` : '');
+    cnt.textContent = selected.length;
+    cnt.style.display = 'inline';
+  }
+}
+
+function getSelectedPartners() {
+  return [...document.querySelectorAll('.partner-opt.selected')].map(e=>e.dataset.val);
+}
+
+function selectAllPartners() {
+  document.querySelectorAll('.partner-opt').forEach(e => e.classList.add('selected'));
+  updatePartnerTrigger();
+}
+
+function clearAllPartners() {
+  document.querySelectorAll('.partner-opt').forEach(e => e.classList.remove('selected'));
+  updatePartnerTrigger();
+}
+
+function filterPartnerSearch(q) {
+  const lq = q.toLowerCase();
+  document.querySelectorAll('.partner-opt').forEach(e => {
+    e.style.display = e.dataset.val.toLowerCase().includes(lq) ? '' : 'none';
+  });
+}
+
+let partnerDropdownOpen = false;
+function togglePartnerDropdown() {
+  partnerDropdownOpen = !partnerDropdownOpen;
+  const dd = document.getElementById('partner-dropdown');
+  dd.style.display = partnerDropdownOpen ? 'block' : 'none';
+}
+
+document.addEventListener('click', e => {
+  if (!document.getElementById('partner-filter-wrap')?.contains(e.target)) {
+    partnerDropdownOpen = false;
+    const dd = document.getElementById('partner-dropdown');
+    if (dd) dd.style.display = 'none';
+  }
+});
 
 function getSelected(id) {
   const sel = document.getElementById(id);
@@ -527,6 +624,7 @@ function applyFilters() {
   const cities = getSelected('f-city');
   const products = getSelected('f-product');
   
+  const partners = getSelectedPartners();
   filtered = RAW.filter(r => {
     if (dates && !dates.includes(r.d)) return false;
     if (months && !months.includes(String(r.m))) return false;
@@ -534,6 +632,7 @@ function applyFilters() {
     if (channels && !channels.includes(r.c)) return false;
     if (cities && !cities.includes(r.g)) return false;
     if (products && !products.includes(r.p)) return false;
+    if (partners.length > 0 && !partners.includes(r.n)) return false;
     return true;
   });
   render();
@@ -546,6 +645,7 @@ function resetFilters() {
     const sel = document.getElementById(id);
     Array.from(sel.options).forEach(o => o.selected = false);
   });
+  clearAllPartners();
   filtered = [...RAW];
   render();
   restorePanels(openState);
@@ -844,6 +944,39 @@ function toggleAnalysis(id) {
   const body = document.getElementById('ab-'+id);
   toggle.classList.toggle('open');
   body.classList.toggle('open');
+}
+
+function downloadExcel() {
+  if (!filtered || filtered.length === 0) {
+    alert('Нет данных для скачивания. Примените фильтры.');
+    return;
+  }
+  const headers = ['Дата','Канал продаж','Город','Оценка','Продукт','Комментарий','Наименование партнёра','Месяц','Квартал'];
+  const scoreMap = {1:'Плохо', 2:'Нормально', 3:'Отлично'};
+  const rows = filtered.map(r => [
+    r.d, r.c, r.g, scoreMap[r.o]||r.o, r.p, r.k, r.n||'', r.m, r.q
+  ]);
+
+  // Build CSV with BOM for Excel
+  const bom = '﻿';
+  const csvContent = bom + [headers, ...rows]
+    .map(row => row.map(cell => {
+      const s = String(cell ?? '').replace(/"/g, '""');
+      return s.includes(',') || s.includes('"') || s.includes('
+') ? `"${s}"` : s;
+    }).join(','))
+    .join('
+');
+
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  const now = new Date();
+  const dateStr = now.toISOString().slice(0,10);
+  a.download = `PSI_export_${dateStr}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 // Init
