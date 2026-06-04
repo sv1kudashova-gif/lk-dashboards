@@ -463,7 +463,7 @@ function parseCSV(csv) {
     if (!score || score === 0) continue; // skip 0 scores
     const partnerName = (cols[colPartner] || '').trim();
     // Exclude specific partners
-    if (partnerName === 'Воднева Елена' || partnerName === 'Воднев Василий') continue;
+    if (partnerName === 'Елена Дмитриевна Воднева' || partnerName === 'Василий Воднев') continue;
     
     const dateStr = cols[colDate] || '';
     // Parse date — could be DD.MM.YYYY or YYYY-MM-DD
