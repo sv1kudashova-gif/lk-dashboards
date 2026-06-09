@@ -38,12 +38,39 @@ body{font-family:'Golos Text',system-ui,sans-serif;background:var(--bg);color:va
 /* FILTERS */
 .filters-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1rem 1.25rem;margin-bottom:1.5rem;}
 .filters-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:0.875rem;display:flex;align-items:center;gap:6px;}
-.filters-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.filters-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
 .filter-group label{display:block;font-size:11px;color:var(--muted);margin-bottom:4px;font-weight:500;}
-.filter-group select{width:100%;border:1px solid var(--border);border-radius:var(--r-sm);padding:6px 10px;font-size:12px;font-family:inherit;color:var(--text);background:var(--white);cursor:pointer;outline:none;}
-.filter-group select:focus{border-color:var(--mid);}
-.filter-group select[multiple]{height:80px;}
 .filter-actions{display:flex;gap:8px;margin-top:10px;}
+
+/* MULTISELECT */
+.fms{position:relative;}
+.fms-trigger{display:flex;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r-sm);padding:6px 10px;cursor:pointer;min-height:34px;font-size:12px;transition:border-color .15s;user-select:none;}
+.fms-trigger:hover{border-color:var(--mid);}
+.fms-trigger.active{border-color:var(--mid);background:#F0EEFF;}
+.fms-lbl{flex:1;color:var(--muted);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+.fms-lbl.has-val{color:var(--text);}
+.fms-badge{background:var(--dark);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;flex-shrink:0;}
+.fms-arrow{width:13px;height:13px;stroke:var(--muted);fill:none;stroke-width:2;flex-shrink:0;transition:transform .15s;}
+.fms-arrow.open{transform:rotate(180deg);}
+.fms-dd{display:none;position:absolute;top:calc(100% + 4px);left:0;min-width:100%;width:max-content;max-width:320px;background:var(--white);border:1px solid var(--border);border-radius:var(--r-sm);box-shadow:0 8px 24px rgba(56,5,108,.14);z-index:400;}
+.fms-dd.open{display:block;}
+.fms-search{padding:7px 8px;border-bottom:1px solid var(--border);}
+.fms-search input{width:100%;border:1px solid var(--border);border-radius:5px;padding:4px 8px;font-size:11px;font-family:inherit;outline:none;color:var(--text);}
+.fms-search input:focus{border-color:var(--mid);}
+.fms-actions-row{display:flex;gap:5px;padding:5px 8px;border-bottom:1px solid var(--border);}
+.fms-actions-row button{flex:1;font-size:10px;padding:3px 6px;border:1px solid var(--border);border-radius:5px;cursor:pointer;background:var(--bg);font-family:inherit;color:var(--dark);font-weight:500;white-space:nowrap;}
+.fms-actions-row button:hover{background:#EEF0FF;border-color:var(--mid);}
+.fms-list{max-height:180px;overflow-y:auto;}
+.fms-opt{display:flex;align-items:center;gap:8px;padding:6px 10px;cursor:pointer;font-size:12px;color:var(--text);transition:background .1s;}
+.fms-opt:hover{background:#F5F4FB;}
+.fms-opt.checked{background:#F0EEFF;}
+.fms-cb{width:14px;height:14px;border:1.5px solid var(--border);border-radius:3px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .12s;}
+.fms-opt.checked .fms-cb{background:var(--dark);border-color:var(--dark);}
+.fms-opt.checked .fms-cb::after{content:'✓';color:#fff;font-size:8px;font-weight:700;line-height:1;}
+.fms-opt-txt{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.fms-footer{padding:5px 10px;border-top:1px solid var(--border);font-size:10px;color:var(--muted);display:flex;justify-content:space-between;align-items:center;}
+.fms-footer-btn{font-size:10px;color:var(--mid);background:none;border:none;cursor:pointer;font-family:inherit;padding:0;}
+.fms-footer-btn:hover{color:var(--dark);text-decoration:underline;}
 .btn{padding:7px 16px;border-radius:var(--r-sm);font-size:12px;font-family:inherit;cursor:pointer;border:none;font-weight:500;}
 .btn-primary{background:var(--dark);color:var(--white);}
 .btn-primary:hover{background:#4a0a8a;}
@@ -211,53 +238,8 @@ body{font-family:'Golos Text',system-ui,sans-serif;background:var(--bg);color:va
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
     Фильтры
   </div>
-  <div class="filters-grid">
-    <div class="filter-group">
-      <label>Дата</label>
-      <select id="f-date" multiple size="4"></select>
-    </div>
-    <div class="filter-group">
-      <label>Месяц</label>
-      <select id="f-month" multiple size="4"></select>
-    </div>
-    <div class="filter-group">
-      <label>Квартал</label>
-      <select id="f-quarter" multiple size="4"></select>
-    </div>
-    <div class="filter-group">
-      <label>Группа КП</label>
-      <select id="f-group" multiple size="4"></select>
-    </div>
-    <div class="filter-group">
-      <label>Канал продаж</label>
-      <select id="f-channel" multiple size="4"></select>
-    </div>
-    <div class="filter-group">
-      <label>Город</label>
-      <select id="f-city" multiple size="4"></select>
-    </div>
-    <div class="filter-group">
-      <label>Продукт</label>
-      <select id="f-product" multiple size="4"></select>
-    </div>
-    <div class="filter-group" id="partner-filter-wrap" style="position:relative;">
-      <label>Наименование партнёра</label>
-      <div onclick="togglePartnerDropdown()" style="display:flex;align-items:center;justify-content:space-between;background:var(--bg);border:1px solid var(--border);border-radius:var(--r-sm);padding:6px 10px;cursor:pointer;min-height:36px;font-size:12px;gap:6px;">
-        <span id="partner-trigger-lbl" style="flex:1;color:var(--muted);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">Все партнёры</span>
-        <span id="partner-count" style="display:none;background:var(--dark);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;flex-shrink:0;"></span>
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-      </div>
-      <div id="partner-dropdown" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;min-width:280px;background:var(--white);border:1px solid var(--border);border-radius:var(--r-sm);box-shadow:0 8px 24px rgba(56,5,108,.12);z-index:300;">
-        <div style="padding:8px 10px;border-bottom:1px solid var(--border);">
-          <input type="text" placeholder="Поиск партнёра..." oninput="filterPartnerSearch(this.value)" style="width:100%;border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-size:12px;font-family:inherit;outline:none;">
-        </div>
-        <div style="display:flex;gap:6px;padding:6px 10px;border-bottom:1px solid var(--border);">
-          <button onclick="selectAllPartners()" style="flex:1;font-size:11px;padding:4px;border:1px solid var(--border);border-radius:6px;cursor:pointer;background:var(--bg);font-family:inherit;color:var(--dark);font-weight:500;">Выбрать все</button>
-          <button onclick="clearAllPartners()" style="flex:1;font-size:11px;padding:4px;border:1px solid var(--border);border-radius:6px;cursor:pointer;background:var(--bg);font-family:inherit;color:var(--muted);">Сбросить все</button>
-        </div>
-        <div id="f-partner-list" style="max-height:200px;overflow-y:auto;"></div>
-      </div>
-    </div>
+  <div class="filters-grid" id="filters-grid">
+    <!-- фильтры рендерятся JS через fmsCreate() -->
   </div>
   <div class="filter-actions">
     <button class="btn btn-primary" onclick="applyFilters()">Применить</button>
@@ -556,115 +538,165 @@ let donutChart = null, trendChart = null;
 let filtered = [...RAW];
 
 function initFilters() {
-  const dates = [...new Set(RAW.map(r=>r.d))].sort();
-  const fDate = document.getElementById('f-date');
-  dates.forEach(d => { const o = new Option(d,d); fDate.appendChild(o); });
+  const grid = document.getElementById('filters-grid');
+  grid.innerHTML = '';
 
-  // Месяцы — динамически из данных
-  const fMonth = document.getElementById('f-month');
-  fMonth.innerHTML = '';
-  [...new Set(RAW.map(r=>r.m))].sort((a,b)=>a-b)
-    .forEach(m => { fMonth.appendChild(new Option(MONTH_NAMES_FULL[m] || ('Месяц '+m), m)); });
+  // Определяем фильтры: [id, placeholder, options, hasSearch]
+  const defs = [
+    ['date',    'Дата',          [...new Set(RAW.map(r=>r.d))].sort(), true],
+    ['month',   'Месяц',         [...new Set(RAW.map(r=>r.m))].sort((a,b)=>a-b)
+                                   .map(m=>({val:String(m), lbl:MONTH_NAMES_FULL[m]||'Месяц '+m})), false],
+    ['quarter', 'Квартал',       [...new Set(RAW.map(r=>r.q))].sort((a,b)=>a-b)
+                                   .map(q=>({val:String(q), lbl:QUARTER_NAMES[q]||'Q'+q})), false],
+    ['group',   'Группа КП',     KP_GROUPS, false],
+    ['channel', 'Канал продаж',  [...new Set(RAW.map(r=>r.c))].sort(), true],
+    ['city',    'Город',         [...new Set(RAW.map(r=>r.g))].sort(), true],
+    ['product', 'Продукт',       [...new Set(RAW.map(r=>r.p))].sort(), false],
+    ['partner', 'Партнёр',       [...new Set(RAW.map(r=>r.n).filter(Boolean))].sort(), true],
+  ];
 
-  // Кварталы — динамически из данных
-  const fQuarter = document.getElementById('f-quarter');
-  fQuarter.innerHTML = '';
-  [...new Set(RAW.map(r=>r.q))].sort((a,b)=>a-b)
-    .forEach(q => { fQuarter.appendChild(new Option(QUARTER_NAMES[q] || ('Q'+q), q)); });
-  
-  // Группа КП — из маппинга (все уникальные группы)
-  const fGroup = document.getElementById('f-group');
-  fGroup.innerHTML = '';
-  KP_GROUPS.forEach(g => { fGroup.appendChild(new Option(g, g)); });
-
-  const channels = [...new Set(RAW.map(r=>r.c))].sort();
-  const fCh = document.getElementById('f-channel');
-  channels.forEach(c => { fCh.appendChild(new Option(c,c)); });
-  
-  const cities = [...new Set(RAW.map(r=>r.g))].sort();
-  const fCi = document.getElementById('f-city');
-  cities.forEach(c => { fCi.appendChild(new Option(c,c)); });
-  
-  const prods = [...new Set(RAW.map(r=>r.p))].sort();
-  const fPr = document.getElementById('f-product');
-  prods.forEach(p => { fPr.appendChild(new Option(p,p)); });
-
-  // Partner filter — multiselect with search
-  const partners = [...new Set(RAW.map(r=>r.n).filter(n=>n))].sort();
-  const fPtn = document.getElementById('f-partner-list');
-  if (fPtn) {
-    fPtn.innerHTML = '';
-    partners.forEach(n => {
-      const div = document.createElement('div');
-      div.className = 'partner-opt';
-      div.dataset.val = n;
-      div.innerHTML = '<span class="partner-cb"></span><span class="partner-opt-name">' + n + '</span>';
-      div.onclick = () => togglePartner(n, div);
-      fPtn.appendChild(div);
-    });
-  }
-}
-
-function togglePartner(val, el) {
-  el.classList.toggle('selected');
-  updatePartnerTrigger();
-}
-
-function updatePartnerTrigger() {
-  const selected = [...document.querySelectorAll('.partner-opt.selected')].map(e=>e.dataset.val);
-  const lbl = document.getElementById('partner-trigger-lbl');
-  const cnt = document.getElementById('partner-count');
-  if (selected.length === 0) {
-    lbl.textContent = 'Все партнёры';
-    cnt.style.display = 'none';
-  } else {
-    lbl.textContent = selected.slice(0,2).join(', ') + (selected.length > 2 ? ` +${selected.length-2}` : '');
-    cnt.textContent = selected.length;
-    cnt.style.display = 'inline';
-  }
-}
-
-function getSelectedPartners() {
-  return [...document.querySelectorAll('.partner-opt.selected')].map(e=>e.dataset.val);
-}
-
-function selectAllPartners() {
-  document.querySelectorAll('.partner-opt').forEach(e => e.classList.add('selected'));
-  updatePartnerTrigger();
-}
-
-function clearAllPartners() {
-  document.querySelectorAll('.partner-opt').forEach(e => e.classList.remove('selected'));
-  updatePartnerTrigger();
-}
-
-function filterPartnerSearch(q) {
-  const lq = q.toLowerCase();
-  document.querySelectorAll('.partner-opt').forEach(e => {
-    e.style.display = e.dataset.val.toLowerCase().includes(lq) ? '' : 'none';
+  defs.forEach(([id, ph, opts, search]) => {
+    const el = fmsCreate(id, ph, search);
+    grid.appendChild(el);
+    fmsPopulate(id, opts);
   });
 }
 
-let partnerDropdownOpen = false;
-function togglePartnerDropdown() {
-  partnerDropdownOpen = !partnerDropdownOpen;
-  const dd = document.getElementById('partner-dropdown');
-  dd.style.display = partnerDropdownOpen ? 'block' : 'none';
+// partner functions removed — merged into FMS system
+
+
+// ─── MULTISELECT SYSTEM ───────────────────────────────────────────
+const FMS_STATE = {}; // id -> { opts: [{val,lbl}], sel: Set, placeholder }
+let FMS_OPEN = null;
+
+function fmsCreate(id, placeholder, hasSearch = false) {
+  FMS_STATE[id] = { opts: [], sel: new Set(), placeholder, hasSearch };
+  const wrap = document.createElement('div');
+  wrap.className = 'filter-group';
+  wrap.innerHTML = `
+    <label>${placeholder}</label>
+    <div class="fms" id="fms-${id}">
+      <div class="fms-trigger" id="fms-trig-${id}" onclick="fmsToggle('${id}')">
+        <span class="fms-lbl" id="fms-lbl-${id}">${placeholder}: все</span>
+        <span class="fms-badge" id="fms-badge-${id}" style="display:none"></span>
+        <svg class="fms-arrow" id="fms-arr-${id}" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="fms-dd" id="fms-dd-${id}">
+        ${hasSearch ? `<div class="fms-search"><input type="text" placeholder="Поиск..." oninput="fmsSearch('${id}',this.value)" id="fms-inp-${id}"></div>` : ''}
+        <div class="fms-actions-row">
+          <button onclick="fmsAll('${id}')">Выбрать все</button>
+          <button onclick="fmsClear('${id}')">Сбросить</button>
+        </div>
+        <div class="fms-list" id="fms-list-${id}"></div>
+        <div class="fms-footer">
+          <span id="fms-cnt-${id}">0 выбрано</span>
+          <button class="fms-footer-btn" onclick="fmsClear('${id}')">Очистить</button>
+        </div>
+      </div>
+    </div>`;
+  return wrap;
+}
+
+function fmsPopulate(id, options) {
+  // options: array of {val, lbl} or plain strings
+  const st = FMS_STATE[id];
+  st.opts = options.map(o => typeof o === 'string' ? {val:o, lbl:o} : o);
+  fmsRenderList(id, '');
+}
+
+function fmsRenderList(id, q) {
+  const st = FMS_STATE[id];
+  const list = document.getElementById('fms-list-' + id);
+  const lq = q.toLowerCase();
+  list.innerHTML = '';
+  st.opts.forEach(({val, lbl}) => {
+    if (q && !lbl.toLowerCase().includes(lq)) return;
+    const div = document.createElement('div');
+    div.className = 'fms-opt' + (st.sel.has(val) ? ' checked' : '');
+    div.dataset.val = val;
+    div.innerHTML = `<div class="fms-cb"></div><span class="fms-opt-txt" title="${lbl}">${lbl}</span>`;
+    div.onclick = () => fmsToggleOpt(id, val, div);
+    list.appendChild(div);
+  });
+}
+
+function fmsToggleOpt(id, val, el) {
+  const st = FMS_STATE[id];
+  if (st.sel.has(val)) { st.sel.delete(val); el.classList.remove('checked'); }
+  else                 { st.sel.add(val);    el.classList.add('checked'); }
+  fmsUpdateTrigger(id);
+}
+
+function fmsToggle(id) {
+  if (FMS_OPEN && FMS_OPEN !== id) fmsClose(FMS_OPEN);
+  const dd = document.getElementById('fms-dd-' + id);
+  const arr = document.getElementById('fms-arr-' + id);
+  const trig = document.getElementById('fms-trig-' + id);
+  const isOpen = dd.classList.contains('open');
+  if (isOpen) { fmsClose(id); }
+  else {
+    dd.classList.add('open'); arr.classList.add('open'); trig.classList.add('active');
+    FMS_OPEN = id;
+    const inp = document.getElementById('fms-inp-' + id);
+    if (inp) { inp.value = ''; fmsRenderList(id, ''); setTimeout(() => inp.focus(), 50); }
+  }
+}
+
+function fmsClose(id) {
+  document.getElementById('fms-dd-' + id)?.classList.remove('open');
+  document.getElementById('fms-arr-' + id)?.classList.remove('open');
+  document.getElementById('fms-trig-' + id)?.classList.remove('active');
+  if (FMS_OPEN === id) FMS_OPEN = null;
+}
+
+function fmsSearch(id, q) { fmsRenderList(id, q); }
+
+function fmsAll(id) {
+  const st = FMS_STATE[id];
+  st.opts.forEach(({val}) => st.sel.add(val));
+  fmsRenderList(id, document.getElementById('fms-inp-' + id)?.value || '');
+  fmsUpdateTrigger(id);
+}
+
+function fmsClear(id) {
+  FMS_STATE[id].sel.clear();
+  fmsRenderList(id, document.getElementById('fms-inp-' + id)?.value || '');
+  fmsUpdateTrigger(id);
+}
+
+function fmsUpdateTrigger(id) {
+  const st = FMS_STATE[id];
+  const lbl = document.getElementById('fms-lbl-' + id);
+  const badge = document.getElementById('fms-badge-' + id);
+  const cnt = document.getElementById('fms-cnt-' + id);
+  if (st.sel.size === 0) {
+    lbl.textContent = st.placeholder + ': все';
+    lbl.classList.remove('has-val');
+    badge.style.display = 'none';
+  } else {
+    const arr = [...st.sel];
+    // Show labels, not values
+    const lblArr = arr.map(v => st.opts.find(o=>o.val===v)?.lbl || v);
+    lbl.textContent = lblArr.slice(0,2).join(', ') + (arr.length > 2 ? ` +${arr.length-2}` : '');
+    lbl.classList.add('has-val');
+    badge.textContent = st.sel.size;
+    badge.style.display = 'inline';
+  }
+  if (cnt) cnt.textContent = st.sel.size + ' выбрано';
+}
+
+function getSelected(id) {
+  const key = id.replace('f-','');
+  const st = FMS_STATE[key];
+  if (!st) return null;
+  return st.sel.size ? [...st.sel] : null;
 }
 
 document.addEventListener('click', e => {
-  if (!document.getElementById('partner-filter-wrap')?.contains(e.target)) {
-    partnerDropdownOpen = false;
-    const dd = document.getElementById('partner-dropdown');
-    if (dd) dd.style.display = 'none';
+  if (FMS_OPEN && !document.getElementById('fms-' + FMS_OPEN)?.contains(e.target)) {
+    fmsClose(FMS_OPEN);
   }
 });
-
-function getSelected(id) {
-  const sel = document.getElementById(id);
-  const vals = Array.from(sel.selectedOptions).map(o=>o.value);
-  return vals.length ? vals : null;
-}
 
 function applyFilters() {
   const openState = getOpenPanels();
@@ -683,21 +715,19 @@ function applyFilters() {
         .map(([code]) => code))
     : null;
 
-  const partners = getSelectedPartners();
+  const partners = getSelected('f-partner');
   filtered = RAW.filter(r => {
     if (dates && !dates.includes(r.d)) return false;
     if (months && !months.includes(String(r.m))) return false;
     if (quarters && !quarters.includes(String(r.q))) return false;
-    // Фильтр группы КП — извлекаем код (первое слово) из r.c и сверяем с маппингом
     if (groupChannels) {
       const code = r.c ? r.c.trim().split(/\s+/)[0] : '';
       if (!groupChannels.has(code)) return false;
     }
-    // Фильтр канала продаж (применяется поверх группы)
     if (channels && !channels.includes(r.c)) return false;
     if (cities && !cities.includes(r.g)) return false;
     if (products && !products.includes(r.p)) return false;
-    if (partners.length > 0 && !partners.includes(r.n)) return false;
+    if (partners && !partners.includes(r.n)) return false;
     return true;
   });
   render();
@@ -706,11 +736,7 @@ function applyFilters() {
 
 function resetFilters() {
   const openState = getOpenPanels();
-  ['f-date','f-month','f-quarter','f-group','f-channel','f-city','f-product'].forEach(id => {
-    const sel = document.getElementById(id);
-    Array.from(sel.options).forEach(o => o.selected = false);
-  });
-  clearAllPartners();
+  Object.keys(FMS_STATE).forEach(id => fmsClear(id));
   filtered = [...RAW];
   render();
   restorePanels(openState);
