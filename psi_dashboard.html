@@ -678,9 +678,9 @@ function applyFilters() {
 
   // Собираем коды КП, соответствующие выбранным группам
   const groupChannels = groups
-    ? Object.entries(KP_GROUP_MAP)
+    ? new Set(Object.entries(KP_GROUP_MAP)
         .filter(([,g]) => groups.includes(g))
-        .map(([code]) => code)
+        .map(([code]) => code))
     : null;
 
   const partners = getSelectedPartners();
@@ -688,8 +688,11 @@ function applyFilters() {
     if (dates && !dates.includes(r.d)) return false;
     if (months && !months.includes(String(r.m))) return false;
     if (quarters && !quarters.includes(String(r.q))) return false;
-    // Фильтр группы КП — через маппинг кодов
-    if (groupChannels && !groupChannels.includes(r.c)) return false;
+    // Фильтр группы КП — извлекаем код (первое слово) из r.c и сверяем с маппингом
+    if (groupChannels) {
+      const code = r.c ? r.c.trim().split(/\s+/)[0] : '';
+      if (!groupChannels.has(code)) return false;
+    }
     // Фильтр канала продаж (применяется поверх группы)
     if (channels && !channels.includes(r.c)) return false;
     if (cities && !cities.includes(r.g)) return false;
