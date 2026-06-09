@@ -218,20 +218,11 @@ body{font-family:'Golos Text',system-ui,sans-serif;background:var(--bg);color:va
     </div>
     <div class="filter-group">
       <label>Месяц</label>
-      <select id="f-month" multiple size="4">
-        <option value="1">Январь</option>
-        <option value="2">Февраль</option>
-        <option value="3">Март</option>
-        <option value="4">Апрель</option>
-        <option value="5">Май</option>
-      </select>
+      <select id="f-month" multiple size="4"></select>
     </div>
     <div class="filter-group">
       <label>Квартал</label>
-      <select id="f-quarter" multiple size="4">
-        <option value="1">Q1 (янв–март)</option>
-        <option value="2">Q2 (апр–июнь)</option>
-      </select>
+      <select id="f-quarter" multiple size="4"></select>
     </div>
     <div class="filter-group">
       <label>Канал продаж</label>
@@ -546,16 +537,30 @@ const PRODUCTS_LIST = ['Каско ФЛ','Каско ЮЛ','ОСАГО ФЛ','О
 const SERVICES_LIST = ['Подписание актов','Дашборд агента','Страница списка полисов','Отчет по продажам','Мои документы','Заявить страховой случай','Программа лояльности','Управление учетными записями','Мои задачи','Нестраховые продукты','Узнать статус обращения'];
 const CURATOR_LIST = ['Добавление пользователя','Страница полисов (для куратора)','Подписание актов (для куратора)','Отчет по продажам (для куратора)','Подтверждение дочерних учетных записей'];
 const GOAL_GOOD = 72, GOAL_BAD = 10;
-const MONTH_NAMES = {1:'Янв',2:'Фев',3:'Мар',4:'Апр',5:'Май'};
+// Имена месяцев (индекс = номер месяца, 0 — заглушка)
+const MONTH_NAMES = ['','Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'];
+const MONTH_NAMES_FULL = ['','Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+const QUARTER_NAMES = {1:'Q1 (янв–март)',2:'Q2 (апр–июнь)',3:'Q3 (июл–сент)',4:'Q4 (окт–дек)'};
 
 let donutChart = null, trendChart = null;
 let filtered = [...RAW];
 
-// Init filters
 function initFilters() {
   const dates = [...new Set(RAW.map(r=>r.d))].sort();
   const fDate = document.getElementById('f-date');
   dates.forEach(d => { const o = new Option(d,d); fDate.appendChild(o); });
+
+  // Месяцы — динамически из данных
+  const fMonth = document.getElementById('f-month');
+  fMonth.innerHTML = '';
+  [...new Set(RAW.map(r=>r.m))].sort((a,b)=>a-b)
+    .forEach(m => { fMonth.appendChild(new Option(MONTH_NAMES_FULL[m] || ('Месяц '+m), m)); });
+
+  // Кварталы — динамически из данных
+  const fQuarter = document.getElementById('f-quarter');
+  fQuarter.innerHTML = '';
+  [...new Set(RAW.map(r=>r.q))].sort((a,b)=>a-b)
+    .forEach(q => { fQuarter.appendChild(new Option(QUARTER_NAMES[q] || ('Q'+q), q)); });
   
   const channels = [...new Set(RAW.map(r=>r.c))].sort();
   const fCh = document.getElementById('f-channel');
@@ -701,9 +706,9 @@ function goalBadge(val, threshold, dir='above') {
 function renderMoMDelta(months, goodData, badData) {
   const el = document.getElementById('mom-delta');
   if (!el) return;
-  // Show Mar(3), Apr(4), May(5) deltas
-  const showMonths = [3,4,5];
-  const mNames = {3:'Март',4:'Апрель',5:'Май'};
+  // Show last 3 available months
+  const showMonths = months.slice(-3);
+  const mNames = Object.fromEntries(months.map(m => [m, MONTH_NAMES_FULL[m] || ('Месяц '+m)]));
   let html = '';
   showMonths.forEach((m, i) => {
     const idx = months.indexOf(m);
@@ -798,7 +803,7 @@ function renderDonut(s) {
 }
 
 function renderTrend() {
-  const months = [1,2,3,4,5];
+  const months = [...new Set(filtered.map(r=>r.m))].sort((a,b)=>a-b);
   const goodData = months.map(m => {
     const sub = filtered.filter(r=>r.m===m);
     const s = psi(sub);
