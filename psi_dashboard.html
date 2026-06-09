@@ -97,29 +97,51 @@ body{font-family:'Golos Text',system-ui,sans-serif;background:var(--bg);color:va
 .block-body.open{display:flex;flex-direction:column;gap:0;}
 
 /* BAR LIST */
-.bar-list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;width:100%;align-self:stretch;}
-[id^="bars-"]{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;width:100%;}
-.bar-item{background:var(--bg);border:1px solid var(--border);border-radius:var(--r-sm);padding:0.875rem;position:relative;min-width:0;overflow:hidden;}
-.bar-item.is-agg{background:var(--white);border:1.5px solid var(--mid);}
-.bar-item.out-of-goal{border-color:#FEB2B2;}
-.bar-item.in-goal{border-color:#9AE6B4;}
-.bar-item-name{font-size:13px;font-weight:600;color:var(--dark);margin-bottom:6px;line-height:1.4;white-space:normal;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
-.bar-item-name.warn{color:var(--red);}
-.bar-item-name.good{color:var(--good);}
-.bar-item-icon{font-size:13px;margin-left:4px;}
-.bar-item-n{font-size:11px;color:var(--muted);margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.bar-vals{display:flex;gap:4px;margin-bottom:8px;}
-.bar-val{flex:1;text-align:center;padding:5px 2px;border-radius:4px;}
-.bar-val-num{font-size:14px;font-weight:600;line-height:1;white-space:nowrap;}
-.bar-val-lbl{font-size:9px;margin-top:2px;}
-.bv-good{background:#F0FFF4;}.bv-good .bar-val-num{color:var(--good);}
-.bv-ok{background:#FFFAF0;}.bv-ok .bar-val-num{color:var(--amber);}
-.bv-bad{background:#FFF5F5;}.bv-bad .bar-val-num{color:var(--red);}
-.bar-stacked{display:flex;height:6px;border-radius:3px;overflow:hidden;gap:1px;}
+.bar-list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;width:100%;align-self:stretch;}
+[id^="bars-"]{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;width:100%;}
+
+/* v4 card style */
+.bar-item{background:var(--white);border:0.5px solid var(--border);border-radius:var(--r);overflow:hidden;min-width:0;}
+.bar-item.is-agg .bar-item-top{background:#EEF0FF;border-left-color:var(--mid);}
+.bar-item.is-agg .bar-item-name{color:var(--dark);}
+.bar-item.is-agg .bar-item-badge{background:var(--light);color:var(--dark);}
+.bar-item.out-of-goal .bar-item-top{background:#FFF5F5;border-left-color:var(--red);}
+.bar-item.out-of-goal .bar-item-name{color:#791F1F;}
+.bar-item.out-of-goal .bar-item-badge{background:#F7C1C1;color:#791F1F;}
+.bar-item.in-goal .bar-item-top{background:#EAF3DE;border-left-color:#3B6D11;}
+.bar-item.in-goal .bar-item-name{color:#27500A;}
+.bar-item.in-goal .bar-item-badge{background:#C0DD97;color:#27500A;}
+
+.bar-item-top{padding:7px 10px 7px 14px;display:flex;align-items:center;justify-content:space-between;border-left:4px solid transparent;}
+.bar-item-name{font-size:11px;font-weight:500;line-height:1.3;white-space:normal;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;flex:1;}
+.bar-item-badge{font-size:10px;font-weight:500;padding:1px 7px;border-radius:10px;white-space:nowrap;flex-shrink:0;margin-left:4px;}
+.bar-item-body{padding:8px 10px;}
+.bar-item-n{font-size:10px;color:var(--muted);margin-bottom:6px;}
+.bar-vals{display:flex;gap:4px;margin-bottom:0;}
+.bar-val{flex:1;text-align:center;padding:5px 2px;border-radius:5px;}
+.bar-val-num{font-size:14px;font-weight:500;line-height:1;}
+.bar-val-lbl{font-size:9px;color:var(--muted);margin-top:2px;}
+
+/* Отлично */
+.bv-good{background:#EAF3DE;}
+.bv-good .bar-val-num{color:#3B6D11;}
+/* Нормально — всегда серый, нет целевых значений */
+.bv-ok{background:#F1EFE8;}
+.bv-ok .bar-val-num{color:#444441;}
+/* Плохо */
+.bv-bad{background:#FCEBEB;}
+.bv-bad .bar-val-num{color:#A32D2D;}
+/* Плохо для out-of-goal */
+.bar-item.out-of-goal .bv-bad{background:#FCEBEB;}
+/* Плохо для in-goal — нейтральный т.к. в целях */
+.bar-item.in-goal .bv-bad{background:var(--bg);}
+.bar-item.in-goal .bv-bad .bar-val-num{color:var(--muted);}
+
+.bar-stacked{display:flex;height:3px;border-radius:2px;overflow:hidden;gap:1px;margin-top:7px;}
 .bar-seg{height:100%;}
-.seg-good{background:var(--good);}
-.seg-ok{background:var(--amber);}
-.seg-bad{background:var(--red);}
+.seg-good{background:#97C459;}
+.seg-ok{background:#D3D1C7;}
+.seg-bad{background:#E24B4A;}
 
 /* ANALYSIS ACCORDION */
 .analysis-toggle{display:flex;align-items:center;gap:6px;cursor:pointer;margin-top:1rem;padding:8px 0;border-top:1px dashed var(--border);font-size:12px;font-weight:500;color:var(--mid);user-select:none;}
@@ -453,7 +475,10 @@ function parseCSV(csv) {
   const colScore = headers.findIndex(h => h.includes('Оценка') || h.includes('оценка'));
   const colProduct = headers.findIndex(h => h.includes('Продукт') || h.includes('продукт'));
   const colComment = headers.findIndex(h => h.includes('Комментарий') || h.includes('комментарий'));
-  const colPartner = headers.findIndex(h => h.includes('Полное имя') || h.includes('полное имя') || h.includes('Имя'));
+  const colLastName = headers.findIndex(h => h.trim() === 'Фамилия');
+  const colFirstName = headers.findIndex(h => h.trim() === 'Имя');
+  const colPatronymic = headers.findIndex(h => h.trim() === 'Отчество');
+  const colFullName = headers.findIndex(h => h.includes('Полное имя'));
   
   const records = [];
   for (let i = 1; i < lines.length; i++) {
@@ -461,9 +486,15 @@ function parseCSV(csv) {
     const cols = parseCSVLine(lines[i]);
     const score = parseInt(cols[colScore]);
     if (!score || score === 0) continue; // skip 0 scores
-    const partnerName = (cols[colPartner] || '').trim();
-    // Exclude specific partners
-    if (partnerName === 'Елена Дмитриевна Воднева' || partnerName === 'Василий Воднев') continue;
+    // Build FIO as Фамилия Имя Отчество
+    const lastName   = colLastName   >= 0 ? (cols[colLastName]   || '').trim() : '';
+    const firstName  = colFirstName  >= 0 ? (cols[colFirstName]  || '').trim() : '';
+    const patronymic = colPatronymic >= 0 ? (cols[colPatronymic] || '').trim() : '';
+    const partnerName = [lastName, firstName, patronymic].filter(Boolean).join(' ') 
+                        || (cols[colFullName] || '').trim();
+    // Exclude specific partners (check both FIO formats)
+    const fullNameRaw = (cols[colFullName] || '').trim();
+    if (fullNameRaw === 'Елена Дмитриевна Воднева' || fullNameRaw === 'Василий Воднев') continue;
     
     const dateStr = cols[colDate] || '';
     // Parse date — could be DD.MM.YYYY or YYYY-MM-DD
@@ -547,7 +578,7 @@ function initFilters() {
       const div = document.createElement('div');
       div.className = 'partner-opt';
       div.dataset.val = n;
-      div.innerHTML = `<span class="partner-cb"></span><span>${n}</span>`;
+      div.innerHTML = '<span class="partner-cb"></span><span class="partner-opt-name">' + n + '</span>';
       div.onclick = () => togglePartner(n, div);
       fPtn.appendChild(div);
     });
@@ -912,22 +943,25 @@ function barRow(name, s, isAgg) {
   if (!s.n) return '';
   const gW = s.pGood.toFixed(0), oW = s.pOk.toFixed(0), bW = s.pBad.toFixed(0);
   const outOfGoal = s.pGood < GOAL_GOOD || s.pBad > GOAL_BAD;
-  const inGoal = s.pGood >= GOAL_GOOD && s.pBad <= GOAL_BAD;
-  const icon = isAgg ? '' : outOfGoal ? '<span class="bar-item-icon">⚠</span>' : '<span class="bar-item-icon" style="color:var(--good)">✓</span>';
-  const nameClass = isAgg ? '' : outOfGoal ? 'warn' : 'good';
   const cardClass = isAgg ? 'is-agg' : outOfGoal ? 'out-of-goal' : 'in-goal';
+  const badgeText = isAgg ? 'все' : outOfGoal ? 'не в цели' : 'в цели';
   return `<div class="bar-item ${cardClass}">
-    <div class="bar-item-name ${nameClass}">${name}${icon}</div>
-    <div class="bar-item-n">${s.n} оценок</div>
-    <div class="bar-vals">
-      <div class="bar-val bv-good"><div class="bar-val-num">${gW}%</div><div class="bar-val-lbl" style="color:var(--good)">Отлично</div></div>
-      <div class="bar-val bv-ok"><div class="bar-val-num">${oW}%</div><div class="bar-val-lbl" style="color:var(--amber)">Норм.</div></div>
-      <div class="bar-val bv-bad"><div class="bar-val-num">${bW}%</div><div class="bar-val-lbl" style="color:var(--red)">Плохо</div></div>
+    <div class="bar-item-top">
+      <div class="bar-item-name">${name}</div>
+      <span class="bar-item-badge">${badgeText}</span>
     </div>
-    <div class="bar-stacked">
-      <div class="bar-seg seg-good" style="width:${gW}%"></div>
-      <div class="bar-seg seg-ok" style="width:${oW}%"></div>
-      <div class="bar-seg seg-bad" style="width:${bW}%"></div>
+    <div class="bar-item-body">
+      <div class="bar-item-n">${s.n.toLocaleString('ru')} оценок</div>
+      <div class="bar-vals">
+        <div class="bar-val bv-good"><div class="bar-val-num">${gW}%</div><div class="bar-val-lbl">Отлично</div></div>
+        <div class="bar-val bv-ok"><div class="bar-val-num">${oW}%</div><div class="bar-val-lbl">Норм.</div></div>
+        <div class="bar-val bv-bad"><div class="bar-val-num">${bW}%</div><div class="bar-val-lbl">Плохо</div></div>
+      </div>
+      <div class="bar-stacked">
+        <div class="bar-seg seg-good" style="width:${gW}%"></div>
+        <div class="bar-seg seg-ok" style="width:${oW}%"></div>
+        <div class="bar-seg seg-bad" style="width:${bW}%"></div>
+      </div>
     </div>
   </div>`;
 }
