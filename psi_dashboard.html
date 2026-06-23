@@ -68,6 +68,19 @@ table.cmp tr.cmp-total td{background:#F7F6FF;font-weight:600;}
 .cmp-pill-gray{background:#EEF0FF;color:var(--dark);}
 .cmp-n{font-size:11px;color:var(--muted);}
 .cmp-sort-hint{font-size:11px;color:var(--muted);margin-bottom:.75rem;}
+table.cmp th.sortable{cursor:pointer;user-select:none;white-space:nowrap;}
+table.cmp th.sortable:hover{background:#EEF0FF;color:var(--dark);}
+table.cmp th .sort-icon{display:inline-flex;flex-direction:column;gap:1px;margin-left:5px;vertical-align:middle;opacity:.35;}
+table.cmp th.sort-asc .sort-icon,
+table.cmp th.sort-desc .sort-icon{opacity:1;}
+table.cmp th .sort-icon .si-up,
+table.cmp th .sort-icon .si-dn{width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;display:block;}
+table.cmp th .sort-icon .si-up{border-bottom:5px solid var(--muted);}
+table.cmp th .sort-icon .si-dn{border-top:5px solid var(--muted);}
+table.cmp th.sort-asc .sort-icon .si-up{border-bottom-color:var(--dark);}
+table.cmp th.sort-asc .sort-icon .si-dn{opacity:.25;}
+table.cmp th.sort-desc .sort-icon .si-dn{border-top-color:var(--dark);}
+table.cmp th.sort-desc .sort-icon .si-up{opacity:.25;}
 
 /* FILTERS */
 .filters-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1rem 1.25rem;margin-bottom:1.5rem;}
@@ -424,7 +437,7 @@ table.cmp tr.cmp-total td{background:#F7F6FF;font-weight:600;}
 <!-- ═══════════ ПО ГРУППАМ КП ═══════════ -->
 <div class="page-panel" id="pp-groups">
   <div class="sec-label">Сравнение PSI по группам КП</div>
-  <div class="cmp-sort-hint">Сортировка: по доле «Отлично» ↓ · Общие фильтры применяются</div>
+  <div class="cmp-sort-hint">Кликните на заголовок колонки для сортировки · Общие фильтры применяются</div>
   <div class="cmp-table-wrap">
     <div class="cmp-table-head">
       <div>
@@ -432,12 +445,12 @@ table.cmp tr.cmp-total td{background:#F7F6FF;font-weight:600;}
         <div class="cmp-table-sub">Только группы с данными после применения фильтров</div>
       </div>
     </div>
-    <table class="cmp"><thead><tr>
-      <th>Группа КП</th>
-      <th>Оценок</th>
-      <th>Отлично</th>
-      <th>Нормально</th>
-      <th>Плохо</th>
+    <table class="cmp" id="cmp-groups-table"><thead><tr>
+      <th class="sortable" onclick="cmpSort('groups','name')">Группа КП<span class="sort-icon"><i class="si-up"></i><i class="si-dn"></i></span></th>
+      <th class="sortable" onclick="cmpSort('groups','n')">Оценок<span class="sort-icon"><i class="si-up"></i><i class="si-dn"></i></span></th>
+      <th class="sortable sort-desc" onclick="cmpSort('groups','good')">Отлично<span class="sort-icon"><i class="si-up"></i><i class="si-dn"></i></span></th>
+      <th class="sortable" onclick="cmpSort('groups','ok')">Нормально<span class="sort-icon"><i class="si-up"></i><i class="si-dn"></i></span></th>
+      <th class="sortable" onclick="cmpSort('groups','bad')">Плохо<span class="sort-icon"><i class="si-up"></i><i class="si-dn"></i></span></th>
       <th>Цель</th>
       <th class="cmp-bar-cell">Распределение</th>
     </tr></thead>
@@ -449,7 +462,7 @@ table.cmp tr.cmp-total td{background:#F7F6FF;font-weight:600;}
 <!-- ═══════════ ПО ГОРОДАМ ═══════════ -->
 <div class="page-panel" id="pp-cities">
   <div class="sec-label">Сравнение PSI по городам</div>
-  <div class="cmp-sort-hint">Сортировка: по доле «Отлично» ↓ · Общие фильтры применяются</div>
+  <div class="cmp-sort-hint">Кликните на заголовок колонки для сортировки · Общие фильтры применяются</div>
   <div class="cmp-table-wrap">
     <div class="cmp-table-head">
       <div>
@@ -457,12 +470,12 @@ table.cmp tr.cmp-total td{background:#F7F6FF;font-weight:600;}
         <div class="cmp-table-sub">Только города с данными после применения фильтров</div>
       </div>
     </div>
-    <table class="cmp"><thead><tr>
-      <th>Город</th>
-      <th>Оценок</th>
-      <th>Отлично</th>
-      <th>Нормально</th>
-      <th>Плохо</th>
+    <table class="cmp" id="cmp-cities-table"><thead><tr>
+      <th class="sortable" onclick="cmpSort('cities','name')">Город<span class="sort-icon"><i class="si-up"></i><i class="si-dn"></i></span></th>
+      <th class="sortable" onclick="cmpSort('cities','n')">Оценок<span class="sort-icon"><i class="si-up"></i><i class="si-dn"></i></span></th>
+      <th class="sortable sort-desc" onclick="cmpSort('cities','good')">Отлично<span class="sort-icon"><i class="si-up"></i><i class="si-dn"></i></span></th>
+      <th class="sortable" onclick="cmpSort('cities','ok')">Нормально<span class="sort-icon"><i class="si-up"></i><i class="si-dn"></i></span></th>
+      <th class="sortable" onclick="cmpSort('cities','bad')">Плохо<span class="sort-icon"><i class="si-up"></i><i class="si-dn"></i></span></th>
       <th>Цель</th>
       <th class="cmp-bar-cell">Распределение</th>
     </tr></thead>
@@ -927,45 +940,93 @@ function cmpRow(name, s, isTotal) {
   </tr>`;
 }
 
+// Sort state: type -> { col, dir }  ('asc'|'desc')
+const CMP_SORT = {
+  groups: { col: 'good', dir: 'desc' },
+  cities: { col: 'good', dir: 'desc' }
+};
+
+function cmpSort(type, col) {
+  const st = CMP_SORT[type];
+  if (st.col === col) {
+    st.dir = st.dir === 'desc' ? 'asc' : 'desc';
+  } else {
+    st.col = col;
+    st.dir = col === 'name' ? 'asc' : 'desc';
+  }
+  // Update header classes
+  const tableId = type === 'groups' ? 'cmp-groups-table' : 'cmp-cities-table';
+  const table = document.getElementById(tableId);
+  if (table) {
+    table.querySelectorAll('th.sortable').forEach(th => {
+      th.classList.remove('sort-asc','sort-desc');
+      const onClick = th.getAttribute('onclick') || '';
+      if (onClick.includes(`'${col}'`)) {
+        th.classList.add(st.dir === 'asc' ? 'sort-asc' : 'sort-desc');
+      }
+    });
+  }
+  renderComparison(type);
+}
+
+function buildCmpRows(type, items) {
+  // items: [{name, s}]
+  const st = CMP_SORT[type];
+  const sorted = [...items].sort((a, b) => {
+    let va, vb;
+    switch (st.col) {
+      case 'name': va = a.name; vb = b.name; break;
+      case 'n':    va = a.s.n;  vb = b.s.n;  break;
+      case 'good': va = a.s.pGood; vb = b.s.pGood; break;
+      case 'ok':   va = a.s.pOk;  vb = b.s.pOk;  break;
+      case 'bad':  va = a.s.pBad; vb = b.s.pBad; break;
+      default:     va = a.s.pGood; vb = b.s.pGood;
+    }
+    if (typeof va === 'string') return st.dir === 'asc' ? va.localeCompare(vb, 'ru') : vb.localeCompare(va, 'ru');
+    return st.dir === 'asc' ? va - vb : vb - va;
+  });
+  return sorted.map(({name, s}) => cmpRow(name, s, false)).join('');
+}
+
 function renderComparison(type) {
   const bodyId = type === 'groups' ? 'cmp-groups-body' : 'cmp-cities-body';
   const tbody = document.getElementById(bodyId);
   if (!tbody) return;
 
-  let groups;
+  const total = psi(filtered);
+  let items;
+
   if (type === 'groups') {
-    // Определяем группу по коду канала
     const getGroup = c => {
       const code = c ? c.trim().split(/\s+/)[0] : '';
       return KP_GROUP_MAP[code] || 'Без группы';
     };
-    groups = [...new Set(filtered.map(r => getGroup(r.c)))].sort();
-    const total = psi(filtered);
-    let html = cmpRow('Все группы', total, true);
-    html += groups
-      .map(g => {
-        const sub = filtered.filter(r => getGroup(r.c) === g);
-        return { g, s: psi(sub) };
-      })
-      .filter(({s}) => s.n > 0)
-      .sort((a,b) => b.s.pGood - a.s.pGood)
-      .map(({g, s}) => cmpRow(g, s, false))
-      .join('');
-    tbody.innerHTML = html || '<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:2rem;">Нет данных</td></tr>';
+    const groupNames = [...new Set(filtered.map(r => getGroup(r.c)))];
+    items = groupNames
+      .map(g => ({ name: g, s: psi(filtered.filter(r => getGroup(r.c) === g)) }))
+      .filter(({s}) => s.n > 0);
   } else {
-    const cities = [...new Set(filtered.map(r => r.g || 'Не указан'))].sort();
-    const total = psi(filtered);
-    let html = cmpRow('Все города', total, true);
-    html += cities
-      .map(c => {
-        const sub = filtered.filter(r => (r.g || 'Не указан') === c);
-        return { c, s: psi(sub) };
-      })
-      .filter(({s}) => s.n > 0)
-      .sort((a,b) => b.s.pGood - a.s.pGood)
-      .map(({c, s}) => cmpRow(c, s, false))
-      .join('');
-    tbody.innerHTML = html || '<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:2rem;">Нет данных</td></tr>';
+    const cityNames = [...new Set(filtered.map(r => r.g || 'Не указан'))];
+    items = cityNames
+      .map(c => ({ name: c, s: psi(filtered.filter(r => (r.g || 'Не указан') === c)) }))
+      .filter(({s}) => s.n > 0);
+  }
+
+  const totalLabel = type === 'groups' ? 'Все группы' : 'Все города';
+  const html = cmpRow(totalLabel, total, true) + buildCmpRows(type, items);
+  tbody.innerHTML = html || '<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:2rem;">Нет данных</td></tr>';
+
+  // Sync header sort indicators
+  const tableId = type === 'groups' ? 'cmp-groups-table' : 'cmp-cities-table';
+  const table = document.getElementById(tableId);
+  const st = CMP_SORT[type];
+  if (table) {
+    table.querySelectorAll('th.sortable').forEach(th => {
+      th.classList.remove('sort-asc','sort-desc');
+      if ((th.getAttribute('onclick') || '').includes(`'${st.col}'`)) {
+        th.classList.add(st.dir === 'asc' ? 'sort-asc' : 'sort-desc');
+      }
+    });
   }
 }
 
