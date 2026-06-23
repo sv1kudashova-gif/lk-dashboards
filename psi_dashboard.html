@@ -35,6 +35,40 @@ body{font-family:'Golos Text',system-ui,sans-serif;background:var(--bg);color:va
 .t-green{color:var(--green);}
 .t-red{color:#FC8181;}
 
+/* PAGE TABS */
+.page-tabs{display:flex;gap:4px;background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:5px;margin-bottom:1.5rem;width:fit-content;}
+.page-tab{font-size:13px;font-weight:500;padding:8px 22px;border-radius:var(--r-sm);border:none;background:transparent;color:var(--muted);cursor:pointer;font-family:inherit;transition:all .15s;white-space:nowrap;}
+.page-tab.active{background:var(--dark);color:var(--white);font-weight:600;}
+.page-tab:hover:not(.active){background:var(--bg);color:var(--dark);}
+.page-panel{display:none;}
+.page-panel.active{display:block;}
+
+/* COMPARISON TABLE */
+.cmp-table-wrap{background:var(--white);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:1rem;}
+.cmp-table-head{background:#F7F6FF;border-bottom:1px solid var(--border);padding:.75rem 1.25rem;display:flex;align-items:center;justify-content:space-between;}
+.cmp-table-title{font-size:13px;font-weight:600;color:var(--dark);}
+.cmp-table-sub{font-size:11px;color:var(--muted);}
+table.cmp{width:100%;border-collapse:collapse;}
+table.cmp th{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;padding:.625rem 1rem;text-align:left;border-bottom:1px solid var(--border);background:#FAFAFE;white-space:nowrap;}
+table.cmp th:not(:first-child){text-align:right;}
+table.cmp td{font-size:13px;padding:.75rem 1rem;border-bottom:1px solid var(--border);color:var(--text);vertical-align:middle;}
+table.cmp td:not(:first-child){text-align:right;}
+table.cmp tr:last-child td{border-bottom:none;}
+table.cmp tr:hover td{background:#FAFAFE;}
+table.cmp tr.cmp-total td{background:#F7F6FF;font-weight:600;}
+.cmp-bar-cell{width:140px;}
+.cmp-stacked{height:8px;border-radius:4px;overflow:hidden;display:flex;min-width:80px;}
+.cmp-seg-good{background:#38A169;height:100%;}
+.cmp-seg-ok{background:#DD6B20;height:100%;}
+.cmp-seg-bad{background:#E53E3E;height:100%;}
+.cmp-pill{display:inline-flex;font-size:10px;font-weight:600;padding:2px 8px;border-radius:12px;}
+.cmp-pill-good{background:#C6F6D5;color:#276749;}
+.cmp-pill-bad{background:#FED7D7;color:#9B2C2C;}
+.cmp-pill-ok{background:#FEEBC8;color:#7B341E;}
+.cmp-pill-gray{background:#EEF0FF;color:var(--dark);}
+.cmp-n{font-size:11px;color:var(--muted);}
+.cmp-sort-hint{font-size:11px;color:var(--muted);margin-bottom:.75rem;}
+
 /* FILTERS */
 .filters-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1rem 1.25rem;margin-bottom:1.5rem;}
 .filters-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:0.875rem;display:flex;align-items:center;gap:6px;}
@@ -252,6 +286,16 @@ body{font-family:'Golos Text',system-ui,sans-serif;background:var(--bg);color:va
   </div>
 </div>
 
+<!-- PAGE TABS -->
+<div class="page-tabs">
+  <button class="page-tab active" onclick="switchPage('overview')">Обзор</button>
+  <button class="page-tab" onclick="switchPage('groups')">По группам КП</button>
+  <button class="page-tab" onclick="switchPage('cities')">По городам</button>
+</div>
+
+<!-- ═══════════ ОБЗОР ═══════════ -->
+<div class="page-panel active" id="pp-overview">
+
 <!-- KPI ROW -->
 <div class="sec-label">Общая оценка по кабинету</div>
 <div class="kpi-grid">
@@ -374,6 +418,58 @@ body{font-family:'Golos Text',system-ui,sans-serif;background:var(--bg);color:va
     <div class="analysis-body" id="ab-curator"></div>
   </div>
 </div>
+
+</div><!-- /pp-overview -->
+
+<!-- ═══════════ ПО ГРУППАМ КП ═══════════ -->
+<div class="page-panel" id="pp-groups">
+  <div class="sec-label">Сравнение PSI по группам КП</div>
+  <div class="cmp-sort-hint">Сортировка: по доле «Отлично» ↓ · Общие фильтры применяются</div>
+  <div class="cmp-table-wrap">
+    <div class="cmp-table-head">
+      <div>
+        <div class="cmp-table-title">PSI по группам КП</div>
+        <div class="cmp-table-sub">Только группы с данными после применения фильтров</div>
+      </div>
+    </div>
+    <table class="cmp"><thead><tr>
+      <th>Группа КП</th>
+      <th>Оценок</th>
+      <th>Отлично</th>
+      <th>Нормально</th>
+      <th>Плохо</th>
+      <th>Цель</th>
+      <th class="cmp-bar-cell">Распределение</th>
+    </tr></thead>
+    <tbody id="cmp-groups-body"></tbody>
+    </table>
+  </div>
+</div><!-- /pp-groups -->
+
+<!-- ═══════════ ПО ГОРОДАМ ═══════════ -->
+<div class="page-panel" id="pp-cities">
+  <div class="sec-label">Сравнение PSI по городам</div>
+  <div class="cmp-sort-hint">Сортировка: по доле «Отлично» ↓ · Общие фильтры применяются</div>
+  <div class="cmp-table-wrap">
+    <div class="cmp-table-head">
+      <div>
+        <div class="cmp-table-title">PSI по городам</div>
+        <div class="cmp-table-sub">Только города с данными после применения фильтров</div>
+      </div>
+    </div>
+    <table class="cmp"><thead><tr>
+      <th>Город</th>
+      <th>Оценок</th>
+      <th>Отлично</th>
+      <th>Нормально</th>
+      <th>Плохо</th>
+      <th>Цель</th>
+      <th class="cmp-bar-cell">Распределение</th>
+    </tr></thead>
+    <tbody id="cmp-cities-body"></tbody>
+    </table>
+  </div>
+</div><!-- /pp-cities -->
 
 </div><!-- /main -->
 
@@ -796,6 +892,83 @@ function renderMoMDelta(months, goodData, badData) {
   el.innerHTML = html || '<div style="color:var(--muted);font-size:12px;">Недостаточно данных для сравнения</div>';
 }
 
+let CURRENT_PAGE = 'overview';
+
+function switchPage(id) {
+  CURRENT_PAGE = id;
+  document.querySelectorAll('.page-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.page-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`.page-tab[onclick="switchPage('${id}')"]`).classList.add('active');
+  document.getElementById('pp-' + id).classList.add('active');
+  // Re-render comparison panels when switching to them
+  if (id === 'groups') renderComparison('groups');
+  if (id === 'cities') renderComparison('cities');
+}
+
+function cmpRow(name, s, isTotal) {
+  if (!s.n) return '';
+  const inGoal = s.pGood >= GOAL_GOOD && s.pBad <= GOAL_BAD;
+  const pillCls = isTotal ? 'cmp-pill-gray' : inGoal ? 'cmp-pill-good' : 'cmp-pill-bad';
+  const pillTxt = isTotal ? 'итого' : inGoal ? '✓ в цели' : '✗ не в цели';
+  return `<tr${isTotal ? ' class="cmp-total"' : ''}>
+    <td>${name}</td>
+    <td><span class="cmp-n">${s.n.toLocaleString('ru')}</span></td>
+    <td><strong style="color:#38A169">${fmt(s.pGood)}%</strong></td>
+    <td><strong style="color:#DD6B20">${fmt(s.pOk)}%</strong></td>
+    <td><strong style="color:#E53E3E">${fmt(s.pBad)}%</strong></td>
+    <td><span class="cmp-pill ${pillCls}">${pillTxt}</span></td>
+    <td class="cmp-bar-cell">
+      <div class="cmp-stacked">
+        <div class="cmp-seg-good" style="width:${s.pGood.toFixed(1)}%"></div>
+        <div class="cmp-seg-ok"   style="width:${s.pOk.toFixed(1)}%"></div>
+        <div class="cmp-seg-bad"  style="width:${s.pBad.toFixed(1)}%"></div>
+      </div>
+    </td>
+  </tr>`;
+}
+
+function renderComparison(type) {
+  const bodyId = type === 'groups' ? 'cmp-groups-body' : 'cmp-cities-body';
+  const tbody = document.getElementById(bodyId);
+  if (!tbody) return;
+
+  let groups;
+  if (type === 'groups') {
+    // Определяем группу по коду канала
+    const getGroup = c => {
+      const code = c ? c.trim().split(/\s+/)[0] : '';
+      return KP_GROUP_MAP[code] || 'Без группы';
+    };
+    groups = [...new Set(filtered.map(r => getGroup(r.c)))].sort();
+    const total = psi(filtered);
+    let html = cmpRow('Все группы', total, true);
+    html += groups
+      .map(g => {
+        const sub = filtered.filter(r => getGroup(r.c) === g);
+        return { g, s: psi(sub) };
+      })
+      .filter(({s}) => s.n > 0)
+      .sort((a,b) => b.s.pGood - a.s.pGood)
+      .map(({g, s}) => cmpRow(g, s, false))
+      .join('');
+    tbody.innerHTML = html || '<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:2rem;">Нет данных</td></tr>';
+  } else {
+    const cities = [...new Set(filtered.map(r => r.g || 'Не указан'))].sort();
+    const total = psi(filtered);
+    let html = cmpRow('Все города', total, true);
+    html += cities
+      .map(c => {
+        const sub = filtered.filter(r => (r.g || 'Не указан') === c);
+        return { c, s: psi(sub) };
+      })
+      .filter(({s}) => s.n > 0)
+      .sort((a,b) => b.s.pGood - a.s.pGood)
+      .map(({c, s}) => cmpRow(c, s, false))
+      .join('');
+    tbody.innerHTML = html || '<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:2rem;">Нет данных</td></tr>';
+  }
+}
+
 function render() {
   const s = psi(filtered);
   document.getElementById('filter-info').textContent = `Показано ${s.n.toLocaleString('ru')} оценок`;
@@ -814,6 +987,10 @@ function render() {
   renderBlock('products', PRODUCTS_LIST, 'pill-prod-good', 'pill-prod-bad');
   renderBlock('services', SERVICES_LIST, 'pill-svc-good', 'pill-svc-bad');
   renderBlock('curator', CURATOR_LIST, 'pill-cur-good', 'pill-cur-bad');
+
+  // Обновляем активную вкладку сравнения
+  if (CURRENT_PAGE === 'groups') renderComparison('groups');
+  if (CURRENT_PAGE === 'cities') renderComparison('cities');
 }
 
 // Preserved open-state helper
